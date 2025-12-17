@@ -52,3 +52,8 @@
 - **메타데이터 설정**: 검색 엔진 최적화(SEO)를 위한 Title, Description, Keywords 메타 태그 설정.
 - **Open Graph (OG) 태그**: SNS(Facebook, Twitter, KakaoTalk 등) 공유 시 링크 미리보기를 위한 제목, 설명, 썸네일 이미지 설정.
 - **파비콘 (Favicon)**: 브라우저 탭 및 홈 화면 바로가기에 표시될 애플리케이션 아이콘 설정.
+- **검색 로봇 제어 (Robots.txt)**: 검색 엔진 크롤러의 접근을 제어하고 사이트맵 위치를 명시.
+- **사이트맵 (Sitemap)**: 검색 엔진이 사이트 구조를 파악할 수 있도록 URL 목록 제공 (`sitemap.xml`).
+- **웹 앱 매니페스트 (Web App Manifest)**: 모바일 홈 화면 추가 시 앱처럼 동작하도록 `manifest.json` 설정 (PWA 기본 요건).
+- **구조화된 데이터 (JSON-LD)**: 검색 결과에 소프트웨어/앱 정보가 잘 표시되도록 Schema.org 표준 데이터 추가.
+- **표준 주소 (Canonical URL)**: 중복 콘텐츠 방지를 위한 대표 URL 설정.

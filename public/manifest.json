@@ -1,0 +1,21 @@
+{
+    "name": "Singlue - AI Music Language Learning",
+    "short_name": "Singlue",
+    "description": "Master languages through music with Singlue. AI-powered lyrics analysis, pronunciation guides, and translations.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#6366f1",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "/og-image.png",
+            "sizes": "1200x630",
+            "type": "image/png"
+        }
+    ]
+}

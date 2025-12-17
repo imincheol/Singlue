@@ -149,6 +149,14 @@ export const useAppStore = create<AppState>()(
                 showTranslation: state.showTranslation,
                 history: state.history,
             }),
+            merge: (persistedState, currentState) => {
+                const merged = { ...currentState, ...(persistedState as object) } as AppState;
+                // If persisted apiKey is null/empty but we have an env key, use the env key
+                if (!merged.apiKey && import.meta.env.VITE_GEMINI_API_KEY) {
+                    merged.apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+                }
+                return merged;
+            },
         }
     )
 );
