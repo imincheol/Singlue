@@ -47,3 +47,8 @@
 ## 3. 설정 (Settings)
 - **발음/해석 표시 설정**: 학습 스타일에 따라 UI를 커스터마이징 할 수 있습니다.
 - **API 키 관리**: 사용자가 본인의 Gemini API 키를 안전하게 등록하고 사용할 수 있습니다.
+
+## 4. 배포 및 SEO 설정 (Deployment & SEO)
+- **메타데이터 설정**: 검색 엔진 최적화(SEO)를 위한 Title, Description, Keywords 메타 태그 설정.
+- **Open Graph (OG) 태그**: SNS(Facebook, Twitter, KakaoTalk 등) 공유 시 링크 미리보기를 위한 제목, 설명, 썸네일 이미지 설정.
+- **파비콘 (Favicon)**: 브라우저 탭 및 홈 화면 바로가기에 표시될 애플리케이션 아이콘 설정.
