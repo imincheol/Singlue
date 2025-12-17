@@ -43,6 +43,7 @@
         "generate_btn": "Generate Lyrics",
         "preview_result": "Preview Result",
         "save_start": "Save & Start",
+        "enrich_btn": "Enrich with AI",
         "more_lines": "more lines"
     },
     "lyrics": {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { generateLyrics } from '../services/gemini';
+import { saveSongAndMapping } from '../services/supabase';
 import type { Song, VideoMapping } from '../types';
 import { Loader2, Sparkles, Save, Key } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -50,16 +51,32 @@ export const Curator: React.FC<Props> = ({ videoId }) => {
         }
     };
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (previewSong) {
-            setCurrentSong(previewSong);
+            setIsLoading(true);
+            try {
+                // Save to Supabase first
+                const mapping: VideoMapping = {
+                    videoId,
+                    songId: previewSong.id,
+                    globalOffset: 0 // Default 0
+                };
 
-            const mapping: VideoMapping = {
-                videoId,
-                songId: previewSong.id,
-                globalOffset: 0 // Default 0
-            };
-            setVideoMapping(mapping);
+                await saveSongAndMapping(previewSong, mapping);
+
+                // Update Local State
+                setCurrentSong(previewSong);
+                setVideoMapping(mapping);
+
+                // Optional: success feedback or close mode?
+                // For now, just update state which might trigger UI changes if parent re-renders or assumes curator mode ends?
+                // Actually Curator is usually embedded.
+            } catch (err: any) {
+                console.error("Failed to save to Supabase", err);
+                setError("Failed to save to database. " + err.message);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 

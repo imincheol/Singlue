@@ -51,3 +51,57 @@ export const generateLyrics = async (apiKey: string, videoTitle: string, userHin
     throw new Error('Failed to generate lyrics. Please check your API Key and try again.');
   }
 };
+
+export const enrichLyrics = async (apiKey: string, currentSong: Song): Promise<Song> => {
+  if (!apiKey) throw new Error('API Key is required');
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+  // Prepare a simplified version of lyrics to send to save tokens, or just send the source/time
+  const lyricsToEnrich = currentSong.lyrics.map(l => ({ time: l.time, source: l.source }));
+
+  const prompt = `
+    You are an AI Lyrics Curator for "Singlue".
+    Task: Enrich the provided lyrics with Pronunciation and Translation.
+
+    Song Info:
+    Title: "${currentSong.title}"
+    Artist: "${currentSong.artist}"
+
+    Input Lyrics (JSON):
+    ${JSON.stringify(lyricsToEnrich)}
+
+    Requirements:
+    1. Keep the "time" and "source" EXACTLY as provided. Do not add or remove lines.
+    2. Fill in "pron": Pronunciation (Romanized for Korean/Japanese/etc). If source is English, leave empty.
+    3. Fill in "trans": Translation to Korean (if source is not Korean). If source is Korean, translate to English.
+    
+    Return ONLY a JSON object with this structure (no markdown code blocks):
+    {
+      "lyrics": [
+         { "time": 0, "source": "...", "pron": "...", "trans": "..." },
+         ...
+      ]
+    }
+  `;
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    const data = JSON.parse(jsonStr);
+
+    // Merge back ensuring safety
+    // Ideally existing structure is maintained.
+    return {
+      ...currentSong,
+      lyrics: data.lyrics
+    };
+  } catch (error) {
+    console.error('Gemini Enrichment Error:', error);
+    throw new Error('Failed to enrich lyrics. Please check your API Key and try again.');
+  }
+};

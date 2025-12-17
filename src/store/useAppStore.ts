@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { updateVideoMappingOffset } from '../services/supabase';
 import type { Song, VideoMapping, HistoryItem } from '../types';
 
 interface AppState {
@@ -44,12 +45,15 @@ interface AppState {
     // Player Sync
     requestedSeekTime: number | null;
     requestSeek: (time: number | null) => void;
+
+    // Sync Persistence
+    saveCurrentOffset: () => Promise<void>;
 }
 
 export const useAppStore = create<AppState>()(
     persist(
-        (set) => ({
-            apiKey: null,
+        (set, get) => ({
+            apiKey: import.meta.env.VITE_GEMINI_API_KEY || null,
             setApiKey: (key) => set({ apiKey: key }),
 
             currentSong: null,
@@ -111,6 +115,31 @@ export const useAppStore = create<AppState>()(
 
             requestedSeekTime: null,
             requestSeek: (time) => set({ requestedSeekTime: time }),
+
+            saveCurrentOffset: async () => {
+                const state = get();
+                const { videoMapping, userOffset } = state;
+
+                if (!videoMapping) return;
+
+                const newGlobalOffset = (videoMapping.globalOffset || 0) + userOffset;
+
+                try {
+                    await updateVideoMappingOffset(videoMapping.videoId, newGlobalOffset);
+
+                    // Update local state
+                    set({
+                        videoMapping: {
+                            ...videoMapping,
+                            globalOffset: newGlobalOffset
+                        },
+                        userOffset: 0 // Reset user offset as it's now merged
+                    });
+                } catch (error) {
+                    console.error("Failed to save offset:", error);
+                    throw error;
+                }
+            },
         }),
         {
             name: 'singlue-storage',

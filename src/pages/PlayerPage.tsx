@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/useAppStore';
+import { getSongByVideoId } from '../services/supabase';
 import { YouTubePlayer } from '../components/YouTubePlayer';
 import { LyricsDisplay } from '../components/LyricsDisplay';
 import LyricsSearchModal from '../components/LyricsSearchModal';
@@ -18,7 +19,16 @@ export default function PlayerPage() {
         return <div className="text-white text-center pt-24">{t('player.video_not_found')}</div>;
     }
 
-    const { currentSong, history, triggerMetadataRefresh } = useAppStore();
+    const { currentSong, setCurrentSong, setVideoMapping, history, triggerMetadataRefresh } = useAppStore();
+
+    useEffect(() => {
+        if (id) {
+            getSongByVideoId(id).then(({ song, mapping }) => {
+                if (song) setCurrentSong(song);
+                if (mapping) setVideoMapping(mapping);
+            }).catch(console.error);
+        }
+    }, [id, setCurrentSong, setVideoMapping]);
 
     const isConfigured = !!currentSong;
 

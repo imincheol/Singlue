@@ -1,25 +1,59 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
-import { Type, Languages, Zap } from 'lucide-react';
+import { Type, Languages, Zap, Sparkles, Loader2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useTranslation } from 'react-i18next';
+import { enrichLyrics } from '../services/gemini';
 
 export const LyricsDisplay: React.FC = () => {
     const {
         currentSong,
+        setCurrentSong,
         currentTime,
         userOffset,
         showPronunciation,
         togglePronunciation,
         showTranslation,
         toggleTranslation,
-        videoMapping
+        videoMapping,
+        apiKey,
+        linkSongToHistory
     } = useAppStore();
     const { t } = useTranslation();
 
     const containerRef = useRef<HTMLDivElement>(null);
     const activeLineRef = useRef<HTMLDivElement>(null);
     const [activeLineIndex, setActiveLineIndex] = useState<number>(-1);
+    const [enriching, setEnriching] = useState(false);
+
+    // Check if lyrics are "incomplete" (missing pron and trans)
+    // We check if more than 50% of lines define pron or trans as empty.
+    const isIncomplete = currentSong && currentSong.lyrics.length > 0 &&
+        (currentSong.lyrics.filter(l => !l.pron).length > currentSong.lyrics.length / 2) &&
+        (currentSong.lyrics.filter(l => !l.trans).length > currentSong.lyrics.length / 2);
+
+    const handleEnrich = async () => {
+        if (!currentSong || !apiKey) {
+            if (!apiKey) alert(t('curator.enter_api_key'));
+            return;
+        }
+
+        setEnriching(true);
+        try {
+            const enrichedSong = await enrichLyrics(apiKey, currentSong);
+            setCurrentSong(enrichedSong);
+
+            // Also update history
+            if (videoMapping?.videoId) {
+                linkSongToHistory(videoMapping.videoId, enrichedSong);
+            }
+        } catch (error) {
+            console.error(error);
+            alert(t('search.error'));
+        } finally {
+            setEnriching(false);
+        }
+    };
 
     // Calculate synchronized time
     // If offset is positive (~3s), it means we want to delay the lyrics matching
@@ -61,7 +95,19 @@ export const LyricsDisplay: React.FC = () => {
     return (
         <div className="flex flex-col h-full bg-zinc-900/50 rounded-xl border border-white/5 backdrop-blur-sm overflow-hidden">
             {/* Controls Header */}
-            <div className="flex items-center justify-end p-4 border-b border-white/5 bg-black/20">
+            <div className="flex items-center justify-between p-4 border-b border-white/5 bg-black/20">
+                <div className="flex items-center">
+                    {isIncomplete && (
+                        <button
+                            onClick={handleEnrich}
+                            disabled={enriching}
+                            className="flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-lg text-sm font-medium transition-colors border border-indigo-500/20"
+                        >
+                            {enriching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                            {enriching ? t('curator.generating') : t('curator.enrich_btn') || "AI 채우기"}
+                        </button>
+                    )}
+                </div>
                 <div className="flex items-center space-x-2">
                     <button
                         onClick={togglePronunciation}

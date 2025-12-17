@@ -43,6 +43,7 @@
         "generate_btn": "가사 생성",
         "preview_result": "결과 미리보기",
         "save_start": "저장 & 시작",
+        "enrich_btn": "AI로 채우기",
         "more_lines": "줄 더보기"
     },
     "lyrics": {

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Play, Pause, SkipBack, SkipForward, Gauge, Clock, SearchCode } from 'lucide-react';
+import React, { useState } from 'react';
+import { Play, Pause, SkipBack, SkipForward, Gauge, Clock, SearchCode, Save, Loader2 } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 
 interface PlayerControlsProps {
@@ -16,8 +16,24 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
         playbackRate,
         setPlaybackRate,
         userOffset,
-        setUserOffset
+        setUserOffset,
+        saveCurrentOffset
     } = useAppStore();
+
+    const [isSaving, setIsSaving] = useState(false);
+
+    // Wrap save function to handle loading state
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            await saveCurrentOffset();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to save sync offset");
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     const formatTime = (time: number) => {
         const m = Math.floor(time / 60);
@@ -127,6 +143,19 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
                             <button onClick={() => adjustSync(0.1)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-white rounded transition-colors font-mono" title="+0.1s">+.1</button>
                             <button onClick={() => adjustSync(1.0)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-white rounded transition-colors font-mono" title="+1.0s">+1</button>
                         </div>
+
+                        {/* Save Button - Only show if offset is modified */}
+                        {userOffset !== 0 && (
+                            <button
+                                onClick={handleSave}
+                                disabled={isSaving}
+                                className="ml-2 px-2 py-1 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 rounded text-[10px] font-medium transition-colors flex items-center gap-1 border border-indigo-500/20 animate-in fade-in zoom-in duration-300"
+                                title="Save Sync to Database"
+                            >
+                                {isSaving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                                <span>Save</span>
+                            </button>
+                        )}
                     </div>
                 </div>
 
