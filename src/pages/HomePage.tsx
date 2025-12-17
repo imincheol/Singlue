@@ -28,7 +28,7 @@ export default function HomePage() {
         <div className="flex-1 flex flex-col items-center justify-center space-y-8 animate-in fade-in zoom-in duration-500 min-h-[calc(100vh-4rem)] relative">
 
             <div className="text-center space-y-4 max-w-2xl">
-                <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-600 whitespace-pre-line">
+                <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-600 whitespace-pre-line pb-2">
                     {t('home.title')}
                 </h1>
                 <p className="text-xl text-zinc-400">
