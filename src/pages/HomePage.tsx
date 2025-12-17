@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, Music, Headphones, Archive } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const getVideoId = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -11,6 +12,7 @@ const getVideoId = (url: string) => {
 export default function HomePage() {
     const [urlInput, setUrlInput] = useState('');
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,18 +20,19 @@ export default function HomePage() {
         if (id) {
             navigate(`/watch/${id}`);
         } else {
-            alert('Invalid YouTube URL');
+            alert(t('home.invalid_url'));
         }
     };
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center space-y-8 animate-in fade-in zoom-in duration-500 min-h-[calc(100vh-4rem)]">
+        <div className="flex-1 flex flex-col items-center justify-center space-y-8 animate-in fade-in zoom-in duration-500 min-h-[calc(100vh-4rem)] relative">
+
             <div className="text-center space-y-4 max-w-2xl">
-                <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-600">
-                    Stick the Rhythm,<br />Master the Fluency.
+                <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-600 whitespace-pre-line">
+                    {t('home.title')}
                 </h1>
                 <p className="text-xl text-zinc-400">
-                    AI-powered language learning through your favorite music videos.
+                    {t('home.subtitle')}
                 </p>
             </div>
 
@@ -39,7 +42,7 @@ export default function HomePage() {
                     <Search className="w-5 h-5 text-zinc-500 mr-3" />
                     <input
                         type="text"
-                        placeholder="Paste YouTube URL..."
+                        placeholder={t('home.placeholder')}
                         className="flex-1 bg-transparent border-none outline-none text-white placeholder-zinc-600 h-10"
                         value={urlInput}
                         onChange={(e) => setUrlInput(e.target.value)}
@@ -48,7 +51,7 @@ export default function HomePage() {
                         type="submit"
                         className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-full font-medium transition-colors"
                     >
-                        Start
+                        {t('home.start')}
                     </button>
                 </div>
             </form>
@@ -56,18 +59,18 @@ export default function HomePage() {
             <div className="flex items-center space-x-8 text-zinc-500 text-sm mt-12">
                 <div className="flex items-center space-x-2">
                     <Music className="w-4 h-4" />
-                    <span>Synchronized Lyrics</span>
+                    <span>{t('home.synced_lyrics')}</span>
                 </div>
                 <div className="w-1 h-1 bg-zinc-800 rounded-full" />
                 <div className="flex items-center space-x-2">
                     <Headphones className="w-4 h-4" />
-                    <span>AI Curator</span>
+                    <span>{t('home.ai_curator')}</span>
                 </div>
             </div>
 
             <Link to="/library" className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mt-8">
                 <Archive className="w-4 h-4" />
-                <span>Go to Library</span>
+                <span>{t('home.go_to_library')}</span>
             </Link>
         </div>
     );

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { Type, Languages, Zap, Gauge } from 'lucide-react';
 import { clsx } from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 export const LyricsDisplay: React.FC = () => {
     const {
@@ -17,6 +18,7 @@ export const LyricsDisplay: React.FC = () => {
         playbackRate,
         setPlaybackRate
     } = useAppStore();
+    const { t } = useTranslation();
 
     const containerRef = useRef<HTMLDivElement>(null);
     const activeLineRef = useRef<HTMLDivElement>(null);
@@ -54,7 +56,7 @@ export const LyricsDisplay: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 space-y-4">
                 <Zap className="w-12 h-12 opacity-20" />
-                <p>No song loaded. Provide a YouTube link to start.</p>
+                <p>{t('lyrics.no_song')}</p>
             </div>
         );
     }
@@ -65,7 +67,7 @@ export const LyricsDisplay: React.FC = () => {
             <div className="flex items-center justify-between p-4 border-b border-white/5 bg-black/20">
                 <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
-                        <span className="text-xs font-mono text-zinc-400">SYNC</span>
+                        <span className="text-xs font-mono text-zinc-400">{t('lyrics.sync')}</span>
                         <input
                             type="range"
                             min="-5"
@@ -86,7 +88,7 @@ export const LyricsDisplay: React.FC = () => {
                             "p-2 rounded-lg transition-colors",
                             showPronunciation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 hover:text-zinc-400"
                         )}
-                        title="Toggle Pronunciation"
+                        title={t('lyrics.toggle_pron')}
                     >
                         <Type size={18} />
                     </button>
@@ -96,7 +98,7 @@ export const LyricsDisplay: React.FC = () => {
                             "p-2 rounded-lg transition-colors",
                             showTranslation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 hover:text-zinc-400"
                         )}
-                        title="Toggle Translation"
+                        title={t('lyrics.toggle_trans')}
                     >
                         <Languages size={18} />
                     </button>
@@ -109,7 +111,7 @@ export const LyricsDisplay: React.FC = () => {
                     <div className="flex items-center space-x-2">
                         <Gauge size={14} className="text-zinc-400" />
                         <span className="font-mono">
-                            RATE:
+                            {t('lyrics.rate')}:
                         </span>
                         {[0.5, 0.75, 1, 1.25, 1.5].map((rate) => (
                             <button

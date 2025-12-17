@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import LibraryPage from './pages/LibraryPage';
 import PlayerPage from './pages/PlayerPage';
 import { Headphones, Github } from 'lucide-react';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
 
 function App() {
   const location = useLocation();
@@ -27,6 +28,7 @@ function App() {
                 History
               </Link>
             )}
+            <LanguageSwitcher />
             <a href="https://github.com" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors">
               <Github className="w-5 h-5" />
             </a>

@@ -1,0 +1,55 @@
+{
+    "home": {
+        "title": "Stick the Rhythm,\nMaster the Fluency.",
+        "subtitle": "AI-powered language learning through your favorite music videos.",
+        "placeholder": "Paste YouTube URL...",
+        "start": "Start",
+        "synced_lyrics": "Synchronized Lyrics",
+        "ai_curator": "AI Curator",
+        "go_to_library": "Go to Library",
+        "invalid_url": "Invalid YouTube URL"
+    },
+    "player": {
+        "video_not_found": "Video ID not found.",
+        "unknown_track": "Unknown Track",
+        "load_lyrics_msg": "Load lyrics to see artist info",
+        "change_lyrics": "Change Lyrics",
+        "search_lyrics": "Search Lyrics",
+        "no_lyrics_title": "No Lyrics Loaded",
+        "no_lyrics_desc": "Search for the song lyrics to start your practice session.",
+        "refetch_info": "Refetch Video Info"
+    },
+    "search": {
+        "title": "Search Lyrics",
+        "placeholder": "Song title, artist...",
+        "search_btn": "Search",
+        "searching": "Searching...",
+        "no_results": "No synced lyrics found.",
+        "error": "Failed to fetch lyrics.",
+        "empty_state": "Start by searching for a song.",
+        "exact_match": "Exact Match",
+        "diff": "s diff"
+    },
+    "curator": {
+        "enter_api_key": "Enter Gemini API Key",
+        "api_key_desc": "To use the AI Curator, you need a Google Gemini API key.\nYour key is stored locally in your browser.",
+        "api_key_placeholder": "Gemini API Key...",
+        "save": "Save",
+        "mode_title": "Singlue Curator Mode",
+        "mode_desc": "Generate synchronized lyrics for this video using Gemini 1.5 Flash.",
+        "hint_label": "Song Title & Artist (Hint)",
+        "hint_placeholder": "e.g. NewJeans - ETA",
+        "generating": "AI is generating lyrics and pronunciation...",
+        "generate_btn": "Generate Lyrics",
+        "preview_result": "Preview Result",
+        "save_start": "Save & Start",
+        "more_lines": "more lines"
+    },
+    "lyrics": {
+        "no_song": "No song loaded. Provide a YouTube link to start.",
+        "sync": "SYNC",
+        "toggle_pron": "Toggle Pronunciation",
+        "toggle_trans": "Toggle Translation",
+        "rate": "RATE"
+    }
+}

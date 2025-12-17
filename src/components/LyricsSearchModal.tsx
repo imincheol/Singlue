@@ -4,6 +4,7 @@ import { searchLyrics, type LRCSearchResult } from '../services/lyrics';
 import { parseLRC } from '../utils/lrcParser';
 import { useAppStore } from '../store/useAppStore';
 import type { Song, LyricsLine } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface LyricsSearchModalProps {
     isOpen: boolean;
@@ -15,6 +16,7 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
     const [results, setResults] = useState<LRCSearchResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { t } = useTranslation();
 
     const {
         setCurrentSong,
@@ -53,7 +55,7 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
         try {
             const data = await searchLyrics(query);
             if (data.length === 0) {
-                setError('No synced lyrics found.');
+                setError(t('search.no_results'));
             } else {
                 // Sort by duration match if videoDuration available
                 let sortedData = data;
@@ -68,7 +70,7 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
             }
         } catch (err) {
             console.error(err);
-            setError('Failed to fetch lyrics.');
+            setError(t('search.error'));
         } finally {
             setLoading(false);
         }
@@ -120,7 +122,7 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
                 <div className="p-4 border-b border-gray-800 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-white flex items-center gap-2">
                         <Music className="w-5 h-5 text-indigo-400" />
-                        Search Lyrics
+                        {t('search.title')}
                     </h2>
                     <button onClick={onClose} className="p-2 hover:bg-gray-800 rounded-full text-gray-400 hover:text-white transition-colors">
                         <X className="w-5 h-5" />
@@ -134,7 +136,7 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
                         <input
                             type="text"
                             className="w-full bg-gray-800 text-white rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 border border-gray-700 placeholder-gray-500"
-                            placeholder="Song title, artist..."
+                            placeholder={t('search.placeholder')}
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -145,7 +147,7 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
                         disabled={loading}
                         className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
-                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Search'}
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('search.search_btn')}
                     </button>
                 </div>
 
@@ -154,7 +156,7 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
                     {loading && (
                         <div className="text-center py-8 text-gray-500 flex flex-col items-center gap-2">
                             <Loader2 className="w-8 h-8 animate-spin" />
-                            <span>Searching...</span>
+                            <span>{t('search.searching')}</span>
                         </div>
                     )}
 
@@ -166,7 +168,7 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
 
                     {!loading && !error && results.length === 0 && (
                         <div className="text-center py-8 text-gray-500">
-                            Start by searching for a song.
+                            {t('search.empty_state')}
                         </div>
                     )}
 
@@ -192,8 +194,8 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
                                 </span>
                                 {videoDuration > 0 && (
                                     <span className="text-[10px] text-gray-600">
-                                        {Math.abs(result.duration - videoDuration) < 2 ? 'Exact Match' :
-                                            `${Math.abs(Math.round(result.duration - videoDuration))}s diff`}
+                                        {Math.abs(result.duration - videoDuration) < 2 ? t('search.exact_match') :
+                                            `${Math.abs(Math.round(result.duration - videoDuration))}${t('search.diff')}`}
                                     </span>
                                 )}
                             </div>

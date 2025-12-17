@@ -1,0 +1,55 @@
+{
+    "home": {
+        "title": "Bắt nhịp điệu,\nThành thạo ngoại ngữ.",
+        "subtitle": "Học ngoại ngữ thông qua video âm nhạc yêu thích của bạn với AI.",
+        "placeholder": "Dán URL YouTube...",
+        "start": "Bắt đầu",
+        "synced_lyrics": "Lời bài hát đồng bộ",
+        "ai_curator": "Trợ lý AI",
+        "go_to_library": "Đến thư viện",
+        "invalid_url": "URL YouTube không hợp lệ"
+    },
+    "player": {
+        "video_not_found": "Không tìm thấy ID video.",
+        "unknown_track": "Bài hát không xác định",
+        "load_lyrics_msg": "Tải lời bài hát để xem thông tin nghệ sĩ",
+        "change_lyrics": "Đổi lời bài hát",
+        "search_lyrics": "Tìm lời bài hát",
+        "no_lyrics_title": "Chưa tải lời bài hát",
+        "no_lyrics_desc": "Tìm kiếm lời bài hát để bắt đầu luyện tập.",
+        "refetch_info": "Làm mới thông tin video"
+    },
+    "search": {
+        "title": "Tìm lời bài hát",
+        "placeholder": "Tên bài hát, nghệ sĩ...",
+        "search_btn": "Tìm kiếm",
+        "searching": "Đang tìm...",
+        "no_results": "Không tìm thấy lời bài hát đồng bộ.",
+        "error": "Không thể tải lời bài hát.",
+        "empty_state": "Bắt đầu bằng cách tìm kiếm bài hát.",
+        "exact_match": "Khớp chính xác",
+        "diff": "giây chênh lệch"
+    },
+    "curator": {
+        "enter_api_key": "Nhập khóa API Gemini",
+        "api_key_desc": "Để sử dụng Trợ lý AI, bạn cần có khóa API Google Gemini.\nKhóa của bạn được lưu cục bộ trong trình duyệt.",
+        "api_key_placeholder": "Khóa API Gemini...",
+        "save": "Lưu",
+        "mode_title": "Chế độ Trợ lý Singlue",
+        "mode_desc": "Tạo lời bài hát đồng bộ cho video này bằng Gemini 1.5 Flash.",
+        "hint_label": "Tên bài hát & Nghệ sĩ (Gợi ý)",
+        "hint_placeholder": "ví dụ: NewJeans - ETA",
+        "generating": "AI đang tạo lời bài hát và phát âm...",
+        "generate_btn": "Tạo lời bài hát",
+        "preview_result": "Xem trước kết quả",
+        "save_start": "Lưu & Bắt đầu",
+        "more_lines": "dòng nữa"
+    },
+    "lyrics": {
+        "no_song": "Chưa tải bài hát nào. Cung cấp liên kết YouTube để bắt đầu.",
+        "sync": "ĐỒNG BỘ",
+        "toggle_pron": "Chuyển đổi phát âm",
+        "toggle_trans": "Chuyển đổi dịch thuật",
+        "rate": "TỐC ĐỘ"
+    }
+}

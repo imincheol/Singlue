@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/useAppStore';
 import { YouTubePlayer } from '../components/YouTubePlayer';
 import { LyricsDisplay } from '../components/LyricsDisplay';
@@ -7,15 +8,14 @@ import LyricsSearchModal from '../components/LyricsSearchModal';
 import { Search, Music, SearchCode, RefreshCw } from 'lucide-react';
 import { PlayerControls } from '../components/PlayerControls';
 import { ThreeLineLyrics } from '../components/ThreeLineLyrics';
-// ...
 
 export default function PlayerPage() {
     const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
+    const { t } = useTranslation();
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
     if (!id) {
-        return <div className="text-white text-center pt-24">Video ID not found.</div>;
+        return <div className="text-white text-center pt-24">{t('player.video_not_found')}</div>;
     }
 
     const { currentSong, history, triggerMetadataRefresh } = useAppStore();
@@ -28,8 +28,8 @@ export default function PlayerPage() {
     const currentHistory = history.find(h => h.videoId === id);
 
     // Default Unknown
-    let displayTitle = 'Unknown Track';
-    let displayArtist = 'Load lyrics to see artist info';
+    let displayTitle = t('player.unknown_track');
+    let displayArtist = t('player.load_lyrics_msg');
     let showRefetch = false;
 
     if (currentSong?.title) {
@@ -37,7 +37,7 @@ export default function PlayerPage() {
         displayArtist = currentSong.artist;
     } else if (currentHistory?.title) {
         displayTitle = currentHistory.title;
-        displayArtist = currentHistory.author;
+        displayArtist = currentHistory.author || t('player.unknown_track');
     } else {
         // Really unknown, allow refetch
         showRefetch = true;
@@ -45,14 +45,14 @@ export default function PlayerPage() {
 
     // Verify if history title itself is "unknown" or empty? 
     // Usually YouTube API might return empty if adblock or error.
-    if (!currentHistory?.title || displayTitle === 'Unknown Track') {
+    if (!currentHistory?.title || displayTitle === t('player.unknown_track')) {
         showRefetch = true;
     }
 
     // ...
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-8rem)] animate-in fade-in duration-500 pt-24 px-6 max-w-7xl mx-auto overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-8rem)] animate-in fade-in duration-500 pt-24 px-6 max-w-7xl mx-auto overflow-hidden relative">
             <div className="lg:col-span-7 flex flex-col space-y-4 h-full relative">
                 {/* Video Player + Controls Wrapper */}
 
@@ -69,7 +69,7 @@ export default function PlayerPage() {
                             {showRefetch && (
                                 <button
                                     onClick={triggerMetadataRefresh}
-                                    title="Refetch Video Info"
+                                    title={t('player.refetch_info')}
                                     className="p-1 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
                                 >
                                     <RefreshCw className="w-3 h-3" />
@@ -85,7 +85,7 @@ export default function PlayerPage() {
                         className="p-2 hover:bg-gray-800 rounded-lg text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-2 text-sm font-medium"
                     >
                         <SearchCode className="w-4 h-4" />
-                        {currentSong ? 'Change Lyrics' : 'Search Lyrics'}
+                        {currentSong ? t('player.change_lyrics') : t('player.search_lyrics')}
                     </button>
                 </div>
 
@@ -104,16 +104,16 @@ export default function PlayerPage() {
                         <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4">
                             <Music className="w-8 h-8 text-zinc-500" />
                         </div>
-                        <h3 className="text-xl font-bold text-white">No Lyrics Loaded</h3>
+                        <h3 className="text-xl font-bold text-white">{t('player.no_lyrics_title')}</h3>
                         <p className="text-zinc-400 max-w-xs">
-                            Search for the song lyrics to start your practice session.
+                            {t('player.no_lyrics_desc')}
                         </p>
                         <button
                             onClick={() => setIsSearchModalOpen(true)}
                             className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-medium transition-colors flex items-center gap-2"
                         >
                             <Search className="w-4 h-4" />
-                            Search Lyrics
+                            {t('player.search_lyrics')}
                         </button>
                     </div>
                 )}

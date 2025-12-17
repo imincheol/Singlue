@@ -1,0 +1,55 @@
+{
+    "home": {
+        "title": "리듬을 타며,\n언어를 마스터하세요.",
+        "subtitle": "좋아하는 뮤직비디오로 배우는 AI 기반 언어 학습.",
+        "placeholder": "YouTube URL 붙여넣기...",
+        "start": "시작하기",
+        "synced_lyrics": "싱크 가사",
+        "ai_curator": "AI 큐레이터",
+        "go_to_library": "보관함으로 이동",
+        "invalid_url": "유효하지 않은 YouTube URL입니다"
+    },
+    "player": {
+        "video_not_found": "동영상 ID를 찾을 수 없습니다.",
+        "unknown_track": "알 수 없는 트랙",
+        "load_lyrics_msg": "아티스트 정보를 보려면 가사를 불러오세요",
+        "change_lyrics": "가사 변경",
+        "search_lyrics": "가사 검색",
+        "no_lyrics_title": "가사가 로드되지 않음",
+        "no_lyrics_desc": "연습을 시작하려면 노래 가사를 검색하세요.",
+        "refetch_info": "동영상 정보 새로고침"
+    },
+    "search": {
+        "title": "가사 검색",
+        "placeholder": "노래 제목, 아티스트...",
+        "search_btn": "검색",
+        "searching": "검색 중...",
+        "no_results": "싱크 가사를 찾을 수 없습니다.",
+        "error": "가사를 불러오지 못했습니다.",
+        "empty_state": "노래를 검색하여 시작하세요.",
+        "exact_match": "정확히 일치",
+        "diff": "초 차이"
+    },
+    "curator": {
+        "enter_api_key": "Gemini API 키 입력",
+        "api_key_desc": "AI 큐레이터를 사용하려면 Google Gemini API 키가 필요합니다.\n키는 브라우저에 로컬로 저장됩니다.",
+        "api_key_placeholder": "Gemini API 키...",
+        "save": "저장",
+        "mode_title": "Singlue 큐레이터 모드",
+        "mode_desc": "Gemini 1.5 Flash를 사용하여 이 동영상의 싱크 가사를 생성합니다.",
+        "hint_label": "노래 제목 & 아티스트 (힌트)",
+        "hint_placeholder": "예: NewJeans - ETA",
+        "generating": "AI가 가사와 발음을 뚝딱 만들고 있어요...",
+        "generate_btn": "가사 생성",
+        "preview_result": "결과 미리보기",
+        "save_start": "저장 & 시작",
+        "more_lines": "줄 더보기"
+    },
+    "lyrics": {
+        "no_song": "로드된 노래가 없습니다. 시작하려면 YouTube 링크를 입력하세요.",
+        "sync": "싱크",
+        "toggle_pron": "발음 표시 전환",
+        "toggle_trans": "해석 표시 전환",
+        "rate": "배속"
+    }
+}
