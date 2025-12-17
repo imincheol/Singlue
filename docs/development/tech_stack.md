@@ -42,6 +42,10 @@ src/
 ```
 
 ## 6. 데이터베이스 및 백엔드 (Backend & DB)
-- **현재 상태**: Serverless / Client-Side only.
-- **Persistence**: 브라우저 `localStorage`를 통한 데이터 영속성 (Zustand Persist).
+- **Database**: **Supabase** (PostgreSQL)
+  - `songs`: 가사 데이터 저장
+  - `video_mappings`: 유튜브 비디오-가사 매핑 정보
+- **Persistence**: 
+  - 공용 데이터 (가사, 매핑): Supabase
+  - 개인 데이터 (설정, 히스토리, API Key): 브라우저 `localStorage` (Zustand Persist)
 - **AI Processing**: Client-Side에서 Google Gemini API 직접 호출.

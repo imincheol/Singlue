@@ -26,9 +26,28 @@
 - **songId** (`string`): 매핑된 `Song` 객체의 ID.
 - **globalOffset** (`number`): 전체 가사 씽크 조절을 위한 오프셋 값 (초 단위, +/-).
 
-## 4. 히스토리 (History)
+
+## 4. 데이터베이스 스키마 (Database Schema)
+Supabase (PostgreSQL)에 저장되는 테이블 구조입니다.
+
+### `songs` Table
+가사 데이터를 저장하는 메인 테이블입니다.
+- **id** (`uuid`, PK): 노래 고유 ID.
+- **title** (`text`): 노래 제목.
+- **artist** (`text`): 아티스트 이름.
+- **lyrics** (`jsonb`): `LyricsLine[]` 구조의 JSON 데이터.
+- **created_at** (`timestamptz`): 생성 시각.
+
+### `video_mappings` Table
+YouTube 비디오와 노래를 연결하는 매핑 테이블입니다.
+- **video_id** (`text`, PK): YouTube Video ID.
+- **song_id** (`uuid`, FK): `songs.id` 참조.
+- **global_offset** (`float8`): 싱크 오프셋.
+- **created_at** (`timestamptz`): 생성 시각.
+
+## 5. 히스토리 (History)
 ### `HistoryItem`
-사용자의 시청 기록 및 '내 서재' 항목입니다.
+사용자의 시청 기록 및 '내 서재' 항목입니다. (LocalStorage 저장)
 - **videoId** (`string`): YouTube Video ID.
 - **title** (`string?`): 영상 제목.
 - **author** (`string?`): 채널명 또는 아티스트.
