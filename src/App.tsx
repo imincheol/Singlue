@@ -4,6 +4,7 @@ import LibraryPage from './pages/LibraryPage';
 import PlayerPage from './pages/PlayerPage';
 import { Headphones, Github } from 'lucide-react';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
+import pkg from '../package.json';
 
 function App() {
   const location = useLocation();
@@ -17,9 +18,12 @@ function App() {
             <div className="bg-indigo-600 p-2 rounded-lg">
               <Headphones className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
-              Singlue
-            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
+                Singlue
+              </span>
+              <span className="text-xs text-zinc-600 font-mono">v{pkg.version}</span>
+            </div>
           </Link>
 
           <div className="flex items-center gap-6">
