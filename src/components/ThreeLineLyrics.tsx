@@ -57,8 +57,11 @@ export const ThreeLineLyrics: React.FC = () => {
                         )}>
                             {item.line.source}
                         </p>
+                        {isCurrent && item.line.pron && (
+                            <p className="text-sm text-indigo-300/80 font-mono mt-1 tracking-wide">{item.line.pron}</p>
+                        )}
                         {isCurrent && item.line.trans && (
-                            <p className="text-sm text-indigo-300 mt-1 font-medium">{item.line.trans}</p>
+                            <p className="text-sm text-zinc-400 mt-1 font-medium">{item.line.trans}</p>
                         )}
                     </div>
                 );

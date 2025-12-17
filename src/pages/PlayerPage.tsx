@@ -5,7 +5,7 @@ import { useAppStore } from '../store/useAppStore';
 import { YouTubePlayer } from '../components/YouTubePlayer';
 import { LyricsDisplay } from '../components/LyricsDisplay';
 import LyricsSearchModal from '../components/LyricsSearchModal';
-import { Search, Music, SearchCode, RefreshCw } from 'lucide-react';
+import { Search, Music, RefreshCw } from 'lucide-react';
 import { PlayerControls } from '../components/PlayerControls';
 import { ThreeLineLyrics } from '../components/ThreeLineLyrics';
 
@@ -80,18 +80,11 @@ export default function PlayerPage() {
                             {displayArtist}
                         </p>
                     </div>
-                    <button
-                        onClick={() => setIsSearchModalOpen(true)}
-                        className="p-2 hover:bg-gray-800 rounded-lg text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-2 text-sm font-medium"
-                    >
-                        <SearchCode className="w-4 h-4" />
-                        {currentSong ? t('player.change_lyrics') : t('player.search_lyrics')}
-                    </button>
                 </div>
 
                 {/* Controls & Mini Lyrics */}
                 <div className="flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto pb-4 scrollbar-hide">
-                    <PlayerControls />
+                    <PlayerControls onSearchClick={() => setIsSearchModalOpen(true)} />
                     <ThreeLineLyrics />
                 </div>
             </div>

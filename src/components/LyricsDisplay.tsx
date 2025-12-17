@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
-import { Type, Languages, Zap, Gauge } from 'lucide-react';
+import { Type, Languages, Zap } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useTranslation } from 'react-i18next';
 
@@ -9,14 +9,11 @@ export const LyricsDisplay: React.FC = () => {
         currentSong,
         currentTime,
         userOffset,
-        setUserOffset,
         showPronunciation,
         togglePronunciation,
         showTranslation,
         toggleTranslation,
-        videoMapping,
-        playbackRate,
-        setPlaybackRate
+        videoMapping
     } = useAppStore();
     const { t } = useTranslation();
 
@@ -64,23 +61,7 @@ export const LyricsDisplay: React.FC = () => {
     return (
         <div className="flex flex-col h-full bg-zinc-900/50 rounded-xl border border-white/5 backdrop-blur-sm overflow-hidden">
             {/* Controls Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/5 bg-black/20">
-                <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-2">
-                        <span className="text-xs font-mono text-zinc-400">{t('lyrics.sync')}</span>
-                        <input
-                            type="range"
-                            min="-5"
-                            max="5"
-                            step="0.1"
-                            value={userOffset}
-                            onChange={(e) => setUserOffset(parseFloat(e.target.value))}
-                            className="w-24 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-                        />
-                        <span className="text-xs w-8 text-right text-indigo-400">{userOffset > 0 ? '+' : ''}{userOffset.toFixed(1)}s</span>
-                    </div>
-                </div>
-
+            <div className="flex items-center justify-end p-4 border-b border-white/5 bg-black/20">
                 <div className="flex items-center space-x-2">
                     <button
                         onClick={togglePronunciation}
@@ -102,30 +83,6 @@ export const LyricsDisplay: React.FC = () => {
                     >
                         <Languages size={18} />
                     </button>
-                </div>
-            </div>
-
-            {/* Playback Controls Helper */}
-            <div className="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-black/10 text-xs text-zinc-500">
-                <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-2">
-                        <Gauge size={14} className="text-zinc-400" />
-                        <span className="font-mono">
-                            {t('lyrics.rate')}:
-                        </span>
-                        {[0.5, 0.75, 1, 1.25, 1.5].map((rate) => (
-                            <button
-                                key={rate}
-                                onClick={() => setPlaybackRate(rate)}
-                                className={clsx(
-                                    "px-1.5 py-0.5 rounded hover:bg-white/10 transition-colors",
-                                    playbackRate === rate ? "text-indigo-400 font-bold bg-indigo-500/10" : "text-zinc-500"
-                                )}
-                            >
-                                {rate}x
-                            </button>
-                        ))}
-                    </div>
                 </div>
             </div>
 
@@ -186,6 +143,6 @@ export const LyricsDisplay: React.FC = () => {
                 {/* Fill empty space at bottom for scrolling */}
                 <div className="h-[50vh]" />
             </div>
-        </div>
+        </div >
     );
 };

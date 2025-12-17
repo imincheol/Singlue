@@ -20,6 +20,7 @@
 ## 4. 주요 라이브러리 (Key Libraries)
 - **Media**: `react-youtube` (YouTube IFrame API Wrapper) - *Sandbox 보안 설정 적용됨*
 - **AI**: `@google/generative-ai` (Gemini 1.5 Flash 활용 가사/발음 생성)
+- **Lyrics Service**: **LRCLIB** (오픈소스 가사 API 연동)
 - **I18n**: `i18next`, `react-i18next` (다국어 지원: KO, EN, VI)
 - **Icons**: `lucide-react`
 - **Routing**: `react-router-dom`
