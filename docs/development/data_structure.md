@@ -8,8 +8,13 @@
 노래의 한 줄 가사를 구성하는 최소 단위입니다.
 - **time** (`number`): 가사가 시작되는 시간 (초 단위).
 - **source** (`string`): 원문 가사.
-- **pron** (`string`): 발음 (Pronunciation). 한국어/일본어 등의 경우 로마자 표기, 영어의 경우 IPA 등.
-- **trans** (`string`): 해석 (Translation). 사용자 언어(주로 한국어)로 번역된 텍스트.
+- **pron** (`object`): 발음 (Pronunciation) 정보.
+  - `ko` (string?): 한국어 발음 (한글 표기).
+  - `en` (string?): 영어 발음 (로마자 표기).
+  - `vi` (string?): 베트남어 발음 (원문 유지, 다른 언어로 표기 시 북부 발음 기준).
+- **trans** (`object`): 해석 (Translation) 정보.
+  - `ko` (string?): 한국어 해석.
+  - `en` (string?): 영어 해석.
 
 ## 2. 노래 데이터 (Song)
 ### `Song`
@@ -24,25 +29,26 @@
 유튜브 비디오와 Singlue의 Song 데이터를 연결하고 싱크를 조절합니다.
 - **videoId** (`string`): YouTube Video ID.
 - **songId** (`string`): 매핑된 `Song` 객체의 ID.
-- **globalOffset** (`number`): 전체 가사 씽크 조절을 위한 오프셋 값 (초 단위, +/-).
-
+- **globalOffset** (`number`): 전체 가사 싱크 조절을 위한 오프셋 값 (초 단위, +/-).
 
 ## 4. 데이터베이스 스키마 (Database Schema)
 Supabase (PostgreSQL)에 저장되는 테이블 구조입니다.
 
-### `songs` Table
+### 4.1. Songs Table (`songs`)
 가사 데이터를 저장하는 메인 테이블입니다.
 - **id** (`uuid`, PK): 노래 고유 ID.
 - **title** (`text`): 노래 제목.
 - **artist** (`text`): 아티스트 이름.
 - **lyrics** (`jsonb`): `LyricsLine[]` 구조의 JSON 데이터.
+  - 구조: `Array<{ time: number, source: string, pron?: Record<string, string>, trans?: Record<string, string> }>`
+  - **중요**: `pron` (발음) 및 `trans` (번역) 필드가 반드시 포함되어야 함.
 - **created_at** (`timestamptz`): 생성 시각.
 
-### `video_mappings` Table
+### 4.2. Video Mappings Table (`video_mappings`)
 YouTube 비디오와 노래를 연결하는 매핑 테이블입니다.
 - **video_id** (`text`, PK): YouTube Video ID.
 - **song_id** (`uuid`, FK): `songs.id` 참조.
-- **global_offset** (`float8`): 싱크 오프셋.
+- **global_offset** (`float8`): 싱크 오프셋 (초 단위).
 - **created_at** (`timestamptz`): 생성 시각.
 
 ## 5. 히스토리 (History)

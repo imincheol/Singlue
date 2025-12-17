@@ -1,11 +1,20 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { Song } from '../types';
 
-export const generateLyrics = async (apiKey: string, videoTitle: string, userHint?: string): Promise<Song> => {
+// List of models to try in order of preference
+const MODELS = [
+  'gemini-3-pro-preview', // Newest state-of-the-art model
+  'gemini-1.5-flash-002', // Latest stable flash
+  'gemini-1.5-flash',     // Standard flash alias
+  'gemini-1.5-flash-001', // Older stable flash
+  'gemini-1.5-pro',       // Higher capacity, fallback
+  'gemini-2.0-flash-exp'  // Experimental
+];
+
+export const generateLyrics = async (apiKey: string, videoTitle: string, userLanguage: string, userHint?: string): Promise<Song> => {
   if (!apiKey) throw new Error('API Key is required');
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   const prompt = `
     You are an AI Lyrics Curator for "Singlue".
@@ -13,12 +22,29 @@ export const generateLyrics = async (apiKey: string, videoTitle: string, userHin
     Additional Context/Hint: "${userHint || ''}".
 
     Requirements:
-    1. Identify the Artist and Title.
-    2. detailed lyrics with 3 parts for each line:
-       - time: Approximate start time in seconds (number).
-       - source: Original lyrics text.
-       - pron: Pronunciation (Romanized for Korean/Japanese/etc, or IPA/phonetic for others if needed, but simple Romanization is preferred for ease). If English, leave empty or same.
-       - trans: Translation to Korean (if source is not Korean). If source is Korean, translate to English.
+       - pron: Object with 'ko', 'en', and '${userLanguage}' keys (if different).
+       - trans: Object with 'ko', 'en', and '${userLanguage}' keys (if different).
+    
+    Structure Example:
+    {
+      "time": 0, 
+      "source": "Xin chào", 
+      "pron": { "ko": "씬 짜오", "en": "Xin chao" }, 
+      "trans": { "ko": "안녕", "en": "Hello", "vi": "Xin chào" }
+    }
+    
+    Detailed Rules:
+    - Always provide "ko" (Korean) and "en" (English) for both "pron" and "trans".
+    - If User Language ("${userLanguage}") is not "ko" or "en", also provide it.
+    - "pron.ko": Hangul pronunciation.
+    - "pron.en": Romanized pronunciation.
+    - "trans.ko": Korean translation.
+    - "trans.en": English translation.
+    - If source is already Korean, "trans.ko" can be empty/same.
+    - If source is already English, "trans.en" can be empty/same.
+    - **Vietnamese Pronunciation Standard**: When transcribing Vietnamese lyrics to other languages (ko/en), use Northern Vietnamese pronunciation (Hanoi standard).
+      - Example: "Không" -> "콩" (ko), "khong" (en) [Northern], NOT "쿰"/"khum" [Southern]
+      - Example: "Cảm ơn" -> "깜 언" (ko), "cam un" (en) [Northern]
     
     Return ONLY a JSON object with this structure (no markdown code blocks):
     {
@@ -33,30 +59,39 @@ export const generateLyrics = async (apiKey: string, videoTitle: string, userHin
     Make sure timing is as accurate as possible for specific lines.
   `;
 
-  try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+  let lastError: any;
 
-    // Clean up potential markdown formatting
-    const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    const data = JSON.parse(jsonStr);
+  for (const modelName of MODELS) {
+    try {
+      console.log(`Attempting to generate lyrics with model: ${modelName}`);
+      const model = genAI.getGenerativeModel({ model: modelName });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
 
-    return {
-      id: crypto.randomUUID(), // Generate a temp ID
-      ...data
-    } as Song;
-  } catch (error) {
-    console.error('Gemini API Error:', error);
-    throw new Error('Failed to generate lyrics. Please check your API Key and try again.');
+      // Clean up potential markdown formatting
+      const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+      const data = JSON.parse(jsonStr);
+
+      return {
+        id: crypto.randomUUID(), // Generate a temp ID
+        ...data
+      } as Song;
+    } catch (error: any) {
+      console.warn(`Failed with model ${modelName}:`, error.message || error);
+      lastError = error;
+      // Continue to next model
+    }
   }
+
+  console.error('All Gemini models failed:', lastError);
+  throw new Error('Failed to generate lyrics with all available models. Please check your API Key and try again.');
 };
 
-export const enrichLyrics = async (apiKey: string, currentSong: Song): Promise<Song> => {
+export const enrichLyrics = async (apiKey: string, currentSong: Song, userLanguage: string): Promise<Song> => {
   if (!apiKey) throw new Error('API Key is required');
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   // Prepare a simplified version of lyrics to send to save tokens, or just send the source/time
   const lyricsToEnrich = currentSong.lyrics.map(l => ({ time: l.time, source: l.source }));
@@ -73,9 +108,28 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song): Promise<S
     ${JSON.stringify(lyricsToEnrich)}
 
     Requirements:
-    1. Keep the "time" and "source" EXACTLY as provided. Do not add or remove lines.
-    2. Fill in "pron": Pronunciation (Romanized for Korean/Japanese/etc). If source is English, leave empty.
-    3. Fill in "trans": Translation to Korean (if source is not Korean). If source is Korean, translate to English.
+    2. Fill in "pron" object: { "ko": "...", "en": "...", "${userLanguage}": "..." }
+    3. Fill in "trans" object: { "ko": "...", "en": "...", "${userLanguage}": "..." }
+
+    Structure Example:
+    {
+      "time": 0, 
+      "source": "Xin chào", 
+      "pron": { "ko": "씬 짜오", "en": "Xin chao" }, 
+      "trans": { "ko": "안녕", "en": "Hello", "vi": "Xin chào" }
+    }
+
+    Rules:
+    - Always provide "ko" (Korean) and "en" (English).
+    - If User Language ("${userLanguage}") is not "ko" or "en", also provide it.
+    - "pron.ko": Hangul pronunciation.
+    - "pron.en": Romanized pronunciation.
+    - "trans.ko": Korean translation.
+    - "trans.en": English translation.
+    - Maintain strict JSON format.
+    - **Vietnamese Pronunciation Standard**: When transcribing Vietnamese lyrics to other languages (ko/en), use Northern Vietnamese pronunciation (Hanoi standard).
+      - Example: "Không" -> "콩" (ko), "khong" (en) [Northern], NOT "쿰"/"khum" [Southern]
+      - Example: "Cảm ơn" -> "깜 언" (ko), "cam un" (en) [Northern]
     
     Return ONLY a JSON object with this structure (no markdown code blocks):
     {
@@ -86,22 +140,55 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song): Promise<S
     }
   `;
 
-  try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+  let lastError: any;
 
-    const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    const data = JSON.parse(jsonStr);
+  for (const modelName of MODELS) {
+    try {
+      console.log(`Attempting to enrich lyrics with model: ${modelName}`);
+      const model = genAI.getGenerativeModel({ model: modelName });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
 
-    // Merge back ensuring safety
-    // Ideally existing structure is maintained.
-    return {
-      ...currentSong,
-      lyrics: data.lyrics
-    };
-  } catch (error) {
-    console.error('Gemini Enrichment Error:', error);
-    throw new Error('Failed to enrich lyrics. Please check your API Key and try again.');
+      const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+      const data = JSON.parse(jsonStr);
+
+      // Merge back ensuring safety and preserving existing languages
+      const mergedLyrics = currentSong.lyrics.map((existingLine, index) => {
+        const newLine = data.lyrics[index];
+
+        // If structure doesn't match or newLine is missing, keep existing and warn
+        if (!newLine) {
+          console.warn(`Line mismatch at index ${index} during enrichment`);
+          return existingLine;
+        }
+
+        return {
+          ...existingLine,
+          // Merge pronunciation keys (e.g. keep 'fr' while adding 'vi')
+          pron: {
+            ...(typeof existingLine.pron === 'object' ? existingLine.pron : {}),
+            ...(typeof newLine.pron === 'object' ? newLine.pron : {})
+          },
+          // Merge translation keys
+          trans: {
+            ...(typeof existingLine.trans === 'object' ? existingLine.trans : {}),
+            ...(typeof newLine.trans === 'object' ? newLine.trans : {})
+          }
+        };
+      });
+
+      return {
+        ...currentSong,
+        lyrics: mergedLyrics
+      };
+    } catch (error: any) {
+      console.warn(`Failed with model ${modelName}:`, error.message || error);
+      lastError = error;
+      // Continue to next model
+    }
   }
+
+  console.error('All Gemini models failed enrichment:', lastError);
+  throw new Error('Failed to enrich lyrics. Please check your API Key and try again.');
 };
