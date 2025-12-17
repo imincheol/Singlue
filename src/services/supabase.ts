@@ -78,3 +78,22 @@ export const updateVideoMappingOffset = async (videoId: string, globalOffset: nu
 
     if (error) throw error;
 };
+
+export const getAllMappings = async () => {
+    const { data, error } = await supabase
+        .from('video_mappings')
+        .select(`
+            video_id,
+            global_offset,
+            created_at,
+            songs (
+                id,
+                title,
+                artist
+            )
+        `)
+        .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+};
