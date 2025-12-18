@@ -123,8 +123,8 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song, userLangua
     ${JSON.stringify(lyricsToEnrich)}
 
     Requirements:
-    2. Fill in "pron" object: { "ko": "...", "en": "...", "${userLanguage}": "..." }
-    3. Fill in "trans" object: { "ko": "...", "en": "...", "${userLanguage}": "..." }
+    1. Fill in "pron" object: { "ko": "...", "en": "...", "${userLanguage}": "..." }
+    2. Fill in "trans" object: { "ko": "...", "en": "...", "${userLanguage}": "..." }
 
     Structure Example:
     {
