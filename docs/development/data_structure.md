@@ -51,7 +51,6 @@ Supabase (PostgreSQL)에 저장되는 테이블 구조입니다.
 - **id** (`uuid`, PK): 사용자 ID (`auth.users.id` 참조).
 - **nickname** (`text`): 닉네임.
 - **role** (`text`): 역할 (`'admin' | 'user'`).
-- **status** (`text`): 상태 (`'pending' | 'approved' | 'rejected'`).
 - **created_at** (`timestamptz`): 가입 시각.
 
 
