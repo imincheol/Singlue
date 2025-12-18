@@ -4,9 +4,10 @@ import { useAppStore } from '../store/useAppStore';
 
 interface Props {
     videoId: string;
+    onVideoData?: (data: { title: string; author: string; duration: number }) => void;
 }
 
-export const YouTubePlayer: React.FC<Props> = ({ videoId }) => {
+export const YouTubePlayer: React.FC<Props> = ({ videoId, onVideoData }) => {
     const {
         isPlaying,
         setIsPlaying,
@@ -18,7 +19,6 @@ export const YouTubePlayer: React.FC<Props> = ({ videoId }) => {
         requestSeek,
         metadataRefreshTrigger,
         setCurrentSong,
-        history
     } = useAppStore();
 
     const playerRef = useRef<any>(null);
@@ -118,16 +118,6 @@ export const YouTubePlayer: React.FC<Props> = ({ videoId }) => {
             setVideoDuration(duration);
         }
 
-        // Add to History & Restore Lyrics
-        // Find existing history for restoration
-        // Note: We access history from store directly or use prop if updated
-        // Inside onReady, `history` from closure might be stale if it changed recently?
-        // Actually addToHistory handles merge.
-        // We just need to check if there is a linkedSong for this videoId in the CURRENT store state.
-        // But `history` in `const { history } = useAppStore()` will update on render.
-        // This `onReady` runs once (mostly).
-        // Let's rely on standard logic:
-
         // 1. Add/Update History (Update timestamp)
         if (videoData) {
             addToHistory({
@@ -139,11 +129,12 @@ export const YouTubePlayer: React.FC<Props> = ({ videoId }) => {
             });
         }
 
-        // 2. Restore Linked Song
-        const existingItem = history.find(h => h.videoId === videoId);
-        if (existingItem?.linkedSong) {
-            console.log("Restoring linked song:", existingItem.linkedSong.title);
-            setCurrentSong(existingItem.linkedSong);
+        if (onVideoData && videoData) {
+            onVideoData({
+                title: videoData.title,
+                author: videoData.author,
+                duration: duration
+            });
         }
     };
 

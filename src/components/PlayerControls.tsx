@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Gauge, Clock, SearchCode, Save, Loader2 } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Gauge, Clock, Save, Loader2 } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 
 interface PlayerControlsProps {
-    onSearchClick: () => void;
 }
 
-export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick }) => {
+export const PlayerControls: React.FC<PlayerControlsProps> = () => {
     const {
         isPlaying,
         setIsPlaying,
@@ -159,16 +158,8 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
                     </div>
                 </div>
 
-                {/* Right: Change Lyrics */}
-                <div className="flex justify-end">
-                    <button
-                        onClick={onSearchClick}
-                        className="flex items-center gap-2 bg-zinc-200 dark:bg-black/20 hover:bg-indigo-100 dark:hover:bg-indigo-500/10 text-zinc-600 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-xs font-medium px-3 py-1.5 rounded-lg border border-zinc-300 dark:border-white/5 hover:border-indigo-500/30 transition-all"
-                    >
-                        <SearchCode size={14} />
-                        <span>Lyrics</span>
-                    </button>
-                </div>
+                {/* Right: Empty for alignment */}
+                <div className="flex justify-end" />
             </div>
         </div>
     );

@@ -5,8 +5,14 @@ import { clsx } from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { enrichLyrics } from '../services/gemini';
 import { saveSong } from '../services/supabase';
+import type { Song } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
-export const LyricsDisplay: React.FC = () => {
+interface LyricsDisplayProps {
+    onSearchClick?: () => void;
+}
+
+export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) => {
     const {
         currentSong,
         setCurrentSong,
@@ -17,20 +23,53 @@ export const LyricsDisplay: React.FC = () => {
         showTranslation,
         toggleTranslation,
         apiKey,
-        linkSongToHistory
+        requestSeek,
     } = useAppStore();
     const { t } = useTranslation();
+    const { user } = useAuth();
 
     const containerRef = useRef<HTMLDivElement>(null);
     const activeLineRef = useRef<HTMLDivElement>(null);
     const [activeLineIndex, setActiveLineIndex] = useState<number>(-1);
     const [enriching, setEnriching] = useState(false);
+    const [enrichProgress, setEnrichProgress] = useState(0);
 
-    // Check if lyrics are "incomplete" (missing pron and trans)
-    // We check if more than 50% of lines define pron or trans as empty.
+    // AI Enriching Progress Timer
+    useEffect(() => {
+        let interval: any;
+
+        if (enriching) {
+            setEnrichProgress(0);
+            const startTime = Date.now();
+            const duration = 120000; // 2 minutes in ms
+
+            interval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const rawProgress = (elapsed / duration) * 95; // Go up to 95%
+                // Add some randomness to make it feel more "real"
+                const easing = 1 - Math.pow(1 - rawProgress / 95, 2); // Slow down as it reaches 95%
+                setEnrichProgress(Math.min(easing * 95, 95));
+            }, 500);
+        } else {
+            // Quick finish animation
+            if (enrichProgress > 0) {
+                setEnrichProgress(100);
+                setTimeout(() => setEnrichProgress(0), 1000);
+            }
+        }
+
+        return () => clearInterval(interval);
+    }, [enriching]);
+
+    // Check if lyrics are "incomplete" (missing pron or trans)
+    // Show AI enrich button if:
+    // 1. Song has lyrics
+    // 2. Data is missing content (checks for null, undefined, or empty object)
+    // 3. Song is in stage 2 or below (not yet completed)
     const isIncomplete = currentSong && currentSong.lyrics.length > 0 &&
-        (currentSong.lyrics.filter(l => !l.pron).length > currentSong.lyrics.length / 2) &&
-        (currentSong.lyrics.filter(l => !l.trans).length > currentSong.lyrics.length / 2);
+        currentSong.stage !== 3 &&
+        (currentSong.lyrics.some(l => !l.pron || Object.keys(l.pron).length === 0) ||
+            currentSong.lyrics.some(l => !l.trans || Object.keys(l.trans).length === 0));
 
     const handleEnrich = async () => {
         if (!currentSong || !apiKey) {
@@ -42,30 +81,28 @@ export const LyricsDisplay: React.FC = () => {
         try {
             const enrichedSong = await enrichLyrics(apiKey, currentSong, t('language_code', { defaultValue: 'en' }));
 
-            // Save to Supabase
-            // Persist the changes (enriched lyrics)
-            await saveSong(enrichedSong);
+            // Stage 3: Promote to Public
+            const finalSong: Song = {
+                ...enrichedSong,
+                stage: 3,
+                is_public: true,
+                published_at: new Date().toISOString()
+            };
 
-            setCurrentSong(enrichedSong);
+            // Save to Supabase (enriched lyrics)
+            await saveSong(finalSong);
 
-            // Also update history
-            if (currentSong?.video_id) {
-                linkSongToHistory(currentSong.video_id, enrichedSong);
-            }
+            setCurrentSong(finalSong);
         } catch (error) {
             console.error(error);
             alert(t('search.error'));
+            setEnrichProgress(0); // Reset progress on error
         } finally {
             setEnriching(false);
         }
     };
 
     // Calculate synchronized time
-    // If offset is positive (~3s), it means we want to delay the lyrics matching
-    // or delay the video time?
-    // Let's stick to standard: adjustedTime = currentTime - offset.
-    // If offset is 3s, and current time is 10s, we look for lyrics at 7s.
-    // This effectively "delays" the lyrics (lyrics at 10s will show when video is at 13s).
     const globalOffset = currentSong?.global_offset || 0;
     const totalOffset = globalOffset + userOffset;
     const syncedTime = currentTime - totalOffset;
@@ -74,7 +111,6 @@ export const LyricsDisplay: React.FC = () => {
         if (!currentSong) return;
 
         // Find active line
-        // The active line is the one where time <= syncedTime, and the next line is > syncedTime
         const index = currentSong.lyrics.findLastIndex((line) => line.time <= syncedTime);
         setActiveLineIndex(index);
     }, [syncedTime, currentSong]);
@@ -88,113 +124,147 @@ export const LyricsDisplay: React.FC = () => {
         }
     }, [activeLineIndex]);
 
-    if (!currentSong) {
-        return (
-            <div className="flex flex-col items-center justify-center h-full text-zinc-500 dark:text-zinc-500 space-y-4">
-                <Zap className="w-12 h-12 opacity-20" />
-                <p>{t('lyrics.no_song')}</p>
-            </div>
-        );
-    }
+    const handleLineClick = (lineTime: number) => {
+        // seekTime = lineTime + offset
+        // If lyrics at 7s should show at video 10s (offset 3), we seek to 10s.
+        requestSeek(lineTime + totalOffset);
+    };
+
+
+    if (!currentSong) return null;
 
     return (
         <div className="flex flex-col h-full bg-zinc-100 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-sm overflow-hidden">
             {/* Controls Header */}
-            <div className="flex items-center justify-between p-4 border-b border-zinc-300 dark:border-white/5 bg-zinc-200 dark:bg-black/20">
-                <div className="flex items-center">
-                    {isIncomplete && (
+            <div className="flex flex-col border-b border-zinc-300 dark:border-white/5">
+                <div className="flex items-center justify-between p-4 bg-zinc-200 dark:bg-black/20">
+                    <div className="flex items-center gap-2">
+                        {/* 가사 변경 버튼 */}
+                        {currentSong.stage !== 3 && currentSong.created_by === user?.id && (
+                            <button
+                                onClick={onSearchClick}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-zinc-500/10 hover:bg-zinc-500/20 text-zinc-600 dark:text-zinc-400 rounded-lg text-sm font-medium transition-colors border border-zinc-500/20"
+                            >
+                                <Languages className="w-4 h-4" />
+                                가사 변경
+                            </button>
+                        )}
+                        {isIncomplete && (
+                            <button
+                                onClick={handleEnrich}
+                                disabled={enriching}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-lg text-sm font-medium transition-colors border border-indigo-500/20"
+                            >
+                                {enriching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                                {enriching ? `생성 중... ${Math.round(enrichProgress)}%` : t('curator.enrich_btn') || "AI 발음/뜻 생성"}
+                            </button>
+                        )}
+                    </div>
+                    <div className="flex items-center space-x-2">
                         <button
-                            onClick={handleEnrich}
-                            disabled={enriching}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-lg text-sm font-medium transition-colors border border-indigo-500/20"
+                            onClick={togglePronunciation}
+                            className={clsx(
+                                "p-2 rounded-lg transition-colors",
+                                showPronunciation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-400"
+                            )}
+                            title={t('lyrics.toggle_pron')}
                         >
-                            {enriching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                            {enriching ? t('curator.generating') : t('curator.enrich_btn') || "AI 채우기"}
+                            <Type size={18} />
                         </button>
-                    )}
+                        <button
+                            onClick={toggleTranslation}
+                            className={clsx(
+                                "p-2 rounded-lg transition-colors",
+                                showTranslation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-400"
+                            )}
+                            title={t('lyrics.toggle_trans')}
+                        >
+                            <Languages size={18} />
+                        </button>
+                    </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                    <button
-                        onClick={togglePronunciation}
-                        className={clsx(
-                            "p-2 rounded-lg transition-colors",
-                            showPronunciation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-400"
-                        )}
-                        title={t('lyrics.toggle_pron')}
-                    >
-                        <Type size={18} />
-                    </button>
-                    <button
-                        onClick={toggleTranslation}
-                        className={clsx(
-                            "p-2 rounded-lg transition-colors",
-                            showTranslation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-400"
-                        )}
-                        title={t('lyrics.toggle_trans')}
-                    >
-                        <Languages size={18} />
-                    </button>
-                </div>
+
+                {/* Progress Bar Container */}
+                {enrichProgress > 0 && (
+                    <div className="w-full h-1 bg-zinc-200 dark:bg-white/5 relative overflow-hidden">
+                        <div
+                            className="h-full bg-indigo-500 transition-all duration-500 ease-out shadow-[0_0_8px_rgba(99,102,241,0.5)]"
+                            style={{ width: `${enrichProgress}%` }}
+                        />
+                    </div>
+                )}
             </div>
 
             {/* Lyrics Scroll Area */}
-            <div ref={containerRef} className="flex-1 overflow-y-auto px-6 py-12 space-y-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700">
-                {currentSong.lyrics.map((line, idx) => {
-                    const isActive = idx === activeLineIndex;
+            <div ref={containerRef} className="flex-1 overflow-y-auto px-6 py-12 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700">
+                {currentSong.lyrics.length > 0 ? (
+                    <div className="space-y-8">
+                        {currentSong.lyrics.map((line, idx) => {
+                            const isActive = idx === activeLineIndex;
 
-                    // Format time
-                    const m = Math.floor(line.time / 60);
-                    const s = Math.floor(line.time % 60).toString().padStart(2, '0');
-                    const timeStr = `${m}:${s}`;
+                            // Format time
+                            const m = Math.floor(line.time / 60);
+                            const s = Math.floor(line.time % 60).toString().padStart(2, '0');
+                            const timeStr = `${m}:${s}`;
 
-                    return (
-                        <div
-                            key={idx}
-                            ref={isActive ? activeLineRef : null}
-                            className={clsx(
-                                "transition-all duration-300 flex items-start space-x-6",
-                                isActive ? "opacity-100 scale-105 origin-left" : "opacity-30 blur-[0.5px] scale-100"
-                            )}
-                        >
-                            {/* Timestamp */}
-                            <div className={clsx(
-                                "flex-shrink-0 w-12 text-sm font-mono pt-2 text-right",
-                                isActive ? "text-indigo-600 dark:text-indigo-400" : "text-zinc-500 dark:text-zinc-600"
-                            )}>
-                                {timeStr}
-                            </div>
+                            return (
+                                <div
+                                    key={idx}
+                                    ref={isActive ? activeLineRef : null}
+                                    onClick={() => handleLineClick(line.time)}
+                                    className={clsx(
+                                        "transition-all duration-300 flex items-start space-x-6 cursor-pointer group/line",
+                                        isActive ? "opacity-100 scale-105 origin-left" : "opacity-30 blur-[0.5px] scale-100 hover:opacity-70"
+                                    )}
+                                >
+                                    {/* Timestamp */}
+                                    <div className={clsx(
+                                        "flex-shrink-0 w-12 text-sm font-mono pt-2 text-right",
+                                        isActive ? "text-indigo-600 dark:text-indigo-400" : "text-zinc-500 dark:text-zinc-600"
+                                    )}>
+                                        {timeStr}
+                                    </div>
 
-                            <div className="flex flex-col space-y-1">
-                                {/* Source (Original) - Bold */}
-                                <p className={clsx(
-                                    "text-2xl font-bold tracking-tight leading-normal",
-                                    isActive ? "text-zinc-900 dark:text-white" : "text-zinc-500 dark:text-zinc-300"
-                                )}>
-                                    {line.source}
-                                </p>
+                                    <div className="flex flex-col space-y-1">
+                                        {/* Source (Original) - Bold */}
+                                        <p className={clsx(
+                                            "text-2xl font-bold tracking-tight leading-normal",
+                                            isActive ? "text-zinc-900 dark:text-white" : "text-zinc-500 dark:text-zinc-300"
+                                        )}>
+                                            {line.source}
+                                        </p>
 
-                                {/* Pronunciation */}
-                                {showPronunciation && line.pron && (
-                                    <p className="text-sm font-mono text-indigo-600 dark:text-indigo-300/80 tracking-wide">
-                                        {/* @ts-ignore: Handle migration where pron might be string temporarily */}
-                                        {typeof line.pron === 'string' ? line.pron : (line.pron[t('language_code', { defaultValue: 'en' })] || line.pron['en'] || Object.values(line.pron)[0])}
-                                    </p>
-                                )}
+                                        {/* Pronunciation */}
+                                        {showPronunciation && line.pron && (
+                                            <p className="text-sm font-mono text-indigo-600 dark:text-indigo-300/80 tracking-wide">
+                                                {/* @ts-ignore: Handle migration */}
+                                                {typeof line.pron === 'string' ? line.pron : (line.pron[t('language_code', { defaultValue: 'en' })] || line.pron['en'] || Object.values(line.pron)[0])}
+                                            </p>
+                                        )}
 
-                                {/* Translation */}
-                                {showTranslation && line.trans && (
-                                    <p className="text-base font-medium text-zinc-600 dark:text-zinc-400 mt-1">
-                                        {/* @ts-ignore: Handle migration */}
-                                        {typeof line.trans === 'string' ? line.trans : (line.trans[t('language_code', { defaultValue: 'en' })] || line.trans['en'] || Object.values(line.trans)[0])}
-                                    </p>
-                                )}
-                            </div>
+                                        {/* Translation */}
+                                        {showTranslation && line.trans && (
+                                            <p className="text-base font-medium text-zinc-600 dark:text-zinc-400 mt-1">
+                                                {/* @ts-ignore: Handle migration */}
+                                                {typeof line.trans === 'string' ? line.trans : (line.trans[t('language_code', { defaultValue: 'en' })] || line.trans['en'] || Object.values(line.trans)[0])}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        {/* Fill empty space at bottom for scrolling */}
+                        <div className="h-[50vh]" />
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center h-full text-zinc-500 dark:text-zinc-500 space-y-4 py-20 px-4 text-center">
+                        <Zap className="w-12 h-12 opacity-20" />
+                        <div>
+                            <p className="font-bold text-lg mb-1">{t('player.no_lyrics_title') || "가사가 로드되지 않음"}</p>
+                            <p className="text-sm opacity-60">No public lyrics available yet.</p>
                         </div>
-                    );
-                })}
-
-                {/* Fill empty space at bottom for scrolling */}
-                <div className="h-[50vh]" />
+                    </div>
+                )}
             </div>
         </div >
     );

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/useAppStore';
-import { getSongsForVideo } from '../services/supabase';
+import { getSongsForVideo, saveSong } from '../services/supabase';
 import { YouTubePlayer } from '../components/YouTubePlayer';
 import { LyricsDisplay } from '../components/LyricsDisplay';
 import LyricsSearchModal from '../components/LyricsSearchModal';
@@ -67,7 +67,7 @@ export default function PlayerPage() {
     if (!id) return <div>Invalid Video ID</div>;
 
     // View State Logic
-    const hasActiveSong = !!currentSong;
+    const hasSelectedSong = currentSong !== null;
     const isMySong = currentSong?.created_by === user?.id;
     const canCreate = user && isApproved && !loading && !songs.find(s => s.created_by === user.id);
 
@@ -76,7 +76,35 @@ export default function PlayerPage() {
             <div className="lg:col-span-7 flex flex-col space-y-4 h-full relative">
                 {/* Video Player */}
                 <div className="w-full shrink-0">
-                    <YouTubePlayer videoId={id} />
+                    <YouTubePlayer
+                        videoId={id}
+                        onVideoData={async (data) => {
+                            // Auto-Register Song (Stage 1)
+                            if (user && isApproved && !loading && !hasSelectedSong && !songs.find(s => s.created_by === user.id)) {
+                                console.log("Auto-registering new song (Stage 1)...");
+                                const newSong: Song = {
+                                    id: crypto.randomUUID(),
+                                    video_id: id,
+                                    title: data.title,
+                                    artist: data.author,
+                                    lyrics: [],
+                                    created_by: user.id,
+                                    stage: 1,
+                                    is_public: false,
+                                    global_offset: 0,
+                                    created_at: new Date().toISOString()
+                                };
+
+                                try {
+                                    await saveSong(newSong);
+                                    // Refresh songs to reflect the new entry
+                                    loadSongs(id);
+                                } catch (err) {
+                                    console.error("Failed to auto-register song:", err);
+                                }
+                            }
+                        }}
+                    />
                 </div>
 
                 {/* Quick Info & Controls */}
@@ -84,7 +112,9 @@ export default function PlayerPage() {
                     <div>
                         <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-1 flex items-center gap-2">
                             {currentSong?.title || t('player.unknown_track')}
-                            {isMySong && <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">My Version (Stage {currentSong?.stage})</span>}
+                            {isMySong && <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">
+                                내 버전 ({currentSong?.stage === 3 ? '완료' : currentSong?.stage === 2 ? '가사 매칭' : '영상 등록'})
+                            </span>}
                         </h2>
                         <p className="text-zinc-600 dark:text-zinc-400 text-sm">
                             {currentSong?.artist}
@@ -98,7 +128,7 @@ export default function PlayerPage() {
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto pb-4 scrollbar-hide">
-                    <PlayerControls onSearchClick={() => setIsSearchModalOpen(true)} />
+                    <PlayerControls />
                     <ThreeLineLyrics />
                 </div>
             </div>
@@ -108,8 +138,8 @@ export default function PlayerPage() {
                     <div className="flex h-full items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500" />
                     </div>
-                ) : hasActiveSong ? (
-                    <LyricsDisplay />
+                ) : hasSelectedSong ? (
+                    <LyricsDisplay onSearchClick={() => setIsSearchModalOpen(true)} />
                 ) : isCreating ? (
                     <SongCreationWizard
                         videoId={id}
