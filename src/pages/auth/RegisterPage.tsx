@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../../services/supabase';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
