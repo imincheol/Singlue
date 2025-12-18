@@ -23,7 +23,7 @@
 - **title** (`string`): 곡 제목.
 - **artist** (`string`): 아티스트 이름.
 - **lyrics** (`LyricsLine[]`): 시간순으로 정렬된 가사 라인 배열.
-- **country_code** (`string?`): 국가 코드 (ISO 3166-1 alpha-2, 예: KR, VN).
+- **country_code** (`string?`): 국가 코드 (ISO 3166-1 alpha-2, 예: KR, VN). 해당 국가의 국기를 표시하는 데 사용됩니다.
 
 ## 3. 비디오 매핑 (Video Mapping)
 유튜브 비디오와 Singlue의 Song 데이터는 `Song` 객체 내부의 `video_id`를 통해 연결됩니다. 별도의 매핑 테이블 없이 `songs` 테이블에서 직접 통합 관리됩니다.
@@ -52,6 +52,9 @@ Supabase (PostgreSQL)에 저장되는 테이블 구조입니다.
 - **nickname** (`text`): 닉네임.
 - **role** (`text`): 역할 (`'admin' | 'user'`).
 - **created_at** (`timestamptz`): 가입 시각.
+- **usage_count** (`int`): 무료 AI 생성 기능 사용 횟수. (0 ~ 10)
+- **gemini_api_key** (`text?`): 사용자가 등록한 개인별 Gemini API Key (암호화되지 않은 상태로 저장됨, 보안 주의).
+- **email** (`text`): 사용자 이메일 주소.
 
 
 
