@@ -35,7 +35,12 @@ export default function LoginPage() {
             });
             console.log('signInWithPassword result:', { data, error });
 
-            if (error) throw error;
+            if (error) {
+                if (error.message.includes('Email not confirmed')) {
+                    throw new Error(t('auth.email_not_confirmed'));
+                }
+                throw error;
+            }
 
             if (data.user) {
                 console.log('User found, fetching profile status...');
@@ -92,7 +97,7 @@ export default function LoginPage() {
                         <input
                             type="email"
                             required
-                            className="relative block w-full rounded-md border-0 py-2 px-3 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-zinc-900 dark:text-white dark:ring-zinc-700"
+                            className="relative block w-full rounded-md border-0 py-2.5 px-3 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-zinc-900 dark:text-white dark:ring-zinc-700 outline-none"
                             placeholder={t('auth.email')}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -100,7 +105,7 @@ export default function LoginPage() {
                         <input
                             type="password"
                             required
-                            className="relative block w-full rounded-md border-0 py-2 px-3 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-zinc-900 dark:text-white dark:ring-zinc-700"
+                            className="relative block w-full rounded-md border-0 py-2.5 px-3 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-zinc-900 dark:text-white dark:ring-zinc-700 outline-none"
                             placeholder={t('auth.password')}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -108,14 +113,14 @@ export default function LoginPage() {
                     </div>
 
                     {error && (
-                        <div className="text-red-500 text-sm text-center">{error}</div>
+                        <div className="text-red-500 text-sm text-center font-medium bg-red-50 dark:bg-red-500/10 py-2 rounded-md border border-red-200 dark:border-red-500/20">{error}</div>
                     )}
 
                     <div>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
+                            className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 transition-all shadow-md active:scale-[0.98]"
                         >
                             {loading && <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />}
                             {t('nav.signin')}

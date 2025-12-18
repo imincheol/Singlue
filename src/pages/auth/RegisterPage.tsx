@@ -11,7 +11,6 @@ export default function RegisterPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isSuccess, setIsSuccess] = useState(false);
-    const navigate = useNavigate();
     const { t } = useTranslation();
 
     const handleRegister = async (e: React.FormEvent) => {
