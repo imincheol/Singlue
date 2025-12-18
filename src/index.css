@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Tailwind v4 dark mode configuration */
+@variant dark (&:where(.dark, .dark *));
+
 html,
 body,
 #root {
@@ -9,28 +12,25 @@ body,
   overflow-x: hidden;
 }
 
-@media (prefers-color-scheme: dark) {
-
-  html,
-  body {
-    background-color: black;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-
-  html,
-  body {
-    background-color: white;
-  }
+/* Explicit fallback for root colors in case utilities are delayed */
+:root {
+  background-color: white;
+  color: #18181b;
 }
 
 html.dark,
 html.dark body {
   background-color: black;
+  color: white;
 }
 
-html:not(.dark),
-html:not(.dark) body {
-  background-color: white;
+/* Base styles using Tailwind */
+@layer base {
+  html {
+    @apply bg-white dark:bg-black;
+  }
+
+  body {
+    @apply bg-white dark:bg-black text-zinc-900 dark:text-white transition-colors duration-200;
+  }
 }
