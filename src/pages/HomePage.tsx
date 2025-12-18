@@ -21,6 +21,7 @@ export default function HomePage() {
     const { user } = useAuth();
     const { t } = useTranslation();
     const [recentSongs, setRecentSongs] = useState<Song[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         getRecentPublicSongs().then(setRecentSongs).catch(console.error);
@@ -28,11 +29,12 @@ export default function HomePage() {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
         const id = getVideoId(urlInput);
         if (id) {
             navigate(`/watch/${id}`);
         } else {
-            alert(t('home.invalid_url'));
+            setError(t('home.invalid_url'));
         }
     };
 
@@ -66,6 +68,11 @@ export default function HomePage() {
                         {t('home.start')}
                     </button>
                 </div>
+                {error && (
+                    <div className="mt-4 text-red-500 text-sm font-medium animate-in fade-in slide-in-from-top-1 duration-200">
+                        {error}
+                    </div>
+                )}
             </form>
 
             <div className="flex items-center space-x-8 text-zinc-400 dark:text-zinc-500 text-sm mt-12">

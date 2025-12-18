@@ -8,6 +8,7 @@ export default function AdminDashboard() {
     const { t } = useTranslation();
     const [profiles, setProfiles] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetchProfiles();
@@ -36,7 +37,8 @@ export default function AdminDashboard() {
 
         if (error) {
             console.error('Error updating status:', error);
-            alert('Failed to update status');
+            setError(t('admin.update_failed'));
+            setTimeout(() => setError(null), 3000);
         } else {
             // Optimistic update
             setProfiles(profiles.map(p => p.id === id ? { ...p, status: newStatus } : p));
@@ -50,6 +52,12 @@ export default function AdminDashboard() {
     return (
         <div className="min-h-screen pt-24 px-6 max-w-7xl mx-auto">
             <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-8">{t('admin.title')}</h1>
+
+            {error && (
+                <div className="mb-4 bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-3 rounded-md text-sm">
+                    {error}
+                </div>
+            )}
 
             <div className="bg-white dark:bg-zinc-900 rounded-xl shadow overflow-hidden border border-zinc-200 dark:border-zinc-800">
                 <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800">

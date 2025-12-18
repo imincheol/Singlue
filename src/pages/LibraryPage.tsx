@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getMySongs, getRecentPublicSongs, getFavorites, getFavoriteIds, toggleFavorite } from '../services/supabase';
-import { Play, Mic2, ChevronLeft, Globe, User, Heart } from 'lucide-react';
+import { Mic2, ChevronLeft, Globe, User } from 'lucide-react';
 import type { Song } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +28,7 @@ export default function LibraryPage() {
 
     // UI states
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
 
     // Update tab if user status changes (e.g. logout -> force public)
@@ -84,7 +85,8 @@ export default function LibraryPage() {
     const handleToggleFavorite = async (e: React.MouseEvent, song: Song) => {
         e.preventDefault(); // Prevent navigation
         if (!user) {
-            alert('Please sign in to add favorites!');
+            setError(t('library.signin_required'));
+            setTimeout(() => setError(null), 3000);
             return;
         }
 
@@ -139,7 +141,8 @@ export default function LibraryPage() {
                         <button
                             onClick={() => {
                                 if (!user) {
-                                    alert('Please sign in to view your library.');
+                                    setError(t('library.signin_required_view'));
+                                    setTimeout(() => setError(null), 3000);
                                     return;
                                 }
                                 setActiveTab('my');
@@ -163,6 +166,12 @@ export default function LibraryPage() {
                             {t('library.tab_public')}
                         </button>
                     </div>
+
+                    {error && (
+                        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-2 rounded-full shadow-lg animate-in fade-in slide-in-from-top-4 duration-300">
+                            {error}
+                        </div>
+                    )}
                 </div>
 
                 {isLoading ? (

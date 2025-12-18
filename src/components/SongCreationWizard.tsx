@@ -21,6 +21,7 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
     const [currentSong, setCurrentSong] = useState<Song | null>(null);
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     // Form State
     const [title, setTitle] = useState(videoTitle || '');
@@ -49,7 +50,7 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
             setStep(2);
         } catch (error) {
             console.error(error);
-            alert('Failed to save song');
+            setError(t('wizard.save_failed'));
         } finally {
             setLoading(false);
         }
@@ -75,7 +76,7 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
             setStep(3);
         } catch (error) {
             console.error(error);
-            alert('Failed to save lyrics');
+            setError(t('wizard.lyrics_failed'));
         } finally {
             setLoading(false);
         }
@@ -103,11 +104,11 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
             activeKey = userKey;
         } else {
             if (currentUsage >= 10) {
-                alert("Free quota exceeded (10 songs). Please add your own Gemini API Key in Settings to continue.");
+                setError(t('wizard.quota_exceeded'));
                 return;
             }
             if (!platformKey) {
-                alert("Platform configuration error: No Platform API Key available. Please contact support.");
+                setError(t('wizard.config_error'));
                 return;
             }
             activeKey = platformKey;
@@ -146,7 +147,7 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
             onComplete(finalSong);
         } catch (error: any) {
             console.error(error);
-            alert('AI Enrichment Failed: ' + error.message);
+            setError(t('wizard.enrich_failed') + ': ' + error.message);
         } finally {
             setLoading(false);
         }
@@ -185,6 +186,12 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
                 {t('wizard.title')}
                 <span className="text-sm font-normal text-zinc-500 bg-zinc-200 dark:bg-zinc-800 px-2 py-0.5 rounded">{t('wizard.step')} {step}/3</span>
             </h2>
+
+            {error && (
+                <div className="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-3 rounded-md text-sm">
+                    {error}
+                </div>
+            )}
 
             {step === 1 && (
                 <div className="space-y-4">
