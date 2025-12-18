@@ -25,8 +25,7 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
         setCurrentSong,
         currentSong,
         videoDuration,
-        history,
-        linkSongToHistory
+        history
     } = useAppStore();
 
     // Pre-fill query
@@ -95,21 +94,25 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
             return;
         }
 
+        // Keep existing ID and owner if this is my song, otherwise new
+        const isMyCurrentSong = currentSong && currentSong.created_by === user?.id;
+        const songId = isMyCurrentSong ? currentSong.id : crypto.randomUUID();
+
         const newSong: Song = {
-            id: crypto.randomUUID(), // Must be UUID
+            id: songId,
             video_id: currentVideo.videoId,
             title: item.trackName,
             artist: item.artistName,
             lyrics: newLyrics,
-            created_by: user?.id || 'guest',
-            stage: 3,
-            is_public: true,
-            global_offset: 0,
-            created_at: new Date().toISOString()
+            created_by: isMyCurrentSong ? currentSong.created_by : (user?.id || 'guest'),
+            stage: 2,
+            is_public: false,
+            global_offset: isMyCurrentSong ? currentSong.global_offset : 0,
+            created_at: isMyCurrentSong ? currentSong.created_at : new Date().toISOString()
         };
 
         setCurrentSong(newSong);
-        linkSongToHistory(currentVideo.videoId, newSong);
+
 
         // Only persist to Supabase if logged in
         if (user) {

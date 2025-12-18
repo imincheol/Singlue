@@ -42,9 +42,17 @@ export const generateLyrics = async (apiKey: string, videoTitle: string, userLan
     - "trans.en": English translation.
     - If source is already Korean, "trans.ko" can be empty/same.
     - If source is already English, "trans.en" can be empty/same.
-    - **Vietnamese Pronunciation Standard**: When transcribing Vietnamese lyrics to other languages (ko/en), use Northern Vietnamese pronunciation (Hanoi standard).
-      - Example: "Không" -> "콩" (ko), "khong" (en) [Northern], NOT "쿰"/"khum" [Southern]
-      - Example: "Cảm ơn" -> "깜 언" (ko), "cam un" (en) [Northern]
+    - **Vietnamese Pronunciation Standard**: When transcribing Vietnamese lyrics to other languages (ko/en), STRICTLY use Northern Vietnamese pronunciation (Hanoi standard).
+      - Consonant Rules (Northern): 
+        - 'r', 'd', 'gi' -> pronounced as 'z' (Korean 'ㅈ' or 'ㅉ', English 'z')
+        - 'v' -> pronounced as 'v' (Korean 'ㅂ/ㅂㅂ', NOT 'y/j' sound)
+        - 'ch', 'tr' -> pronounced as 'ch' (Korean 'ㅊ/ㅉ')
+      - Examples:
+        - "rộng" -> "쫑" (ko), "zong/jong" (en) [Northern], NOT "롱/공/쿰" (Southern)
+        - "vẫn" -> "번" (ko), "vun" (en) [Northern], NOT "언/연" (Southern)
+        - "dù" -> "주" (ko), "zu" (en) [Northern], NOT "유" (Southern)
+        - "Không" -> "콩" (ko), "khong" (en)
+        - "Cảm ơn" -> "깜 언" (ko), "cam un" (en)
     
     Return ONLY a JSON object with this structure (no markdown code blocks):
     {
@@ -127,9 +135,17 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song, userLangua
     - "trans.ko": Korean translation.
     - "trans.en": English translation.
     - Maintain strict JSON format.
-    - **Vietnamese Pronunciation Standard**: When transcribing Vietnamese lyrics to other languages (ko/en), use Northern Vietnamese pronunciation (Hanoi standard).
-      - Example: "Không" -> "콩" (ko), "khong" (en) [Northern], NOT "쿰"/"khum" [Southern]
-      - Example: "Cảm ơn" -> "깜 언" (ko), "cam un" (en) [Northern]
+    - **Vietnamese Pronunciation Standard**: When transcribing Vietnamese lyrics to other languages (ko/en), STRICTLY use Northern Vietnamese pronunciation (Hanoi standard).
+      - Consonant Rules (Northern): 
+        - 'r', 'd', 'gi' -> pronounced as 'z' (Korean 'ㅈ' or 'ㅉ', English 'z')
+        - 'v' -> pronounced as 'v' (Korean 'ㅂ/ㅂㅂ', NOT 'y/j' sound)
+        - 'ch', 'tr' -> pronounced as 'ch' (Korean 'ㅊ/ㅉ')
+      - Examples:
+        - "rộng" -> "쫑" (ko), "zong/jong" (en) [Northern], NOT "롱/공/쿰" (Southern)
+        - "vẫn" -> "번" (ko), "vun" (en) [Northern], NOT "언/연" (Southern)
+        - "dù" -> "주" (ko), "zu" (en) [Northern], NOT "유" (Southern)
+        - "Không" -> "콩" (ko), "khong" (en)
+        - "Cảm ơn" -> "깜 언" (ko), "cam un" (en)
     
     Return ONLY a JSON object with this structure (no markdown code blocks):
     {
