@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, Settings as SettingsIcon, LogOut, Headphones } from 'lucide-react';
@@ -20,6 +21,11 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ user, profile, isAdmin, 
     const { t } = useTranslation();
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Prevent scrolling when menu is open
     useEffect(() => {
@@ -35,27 +41,19 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ user, profile, isAdmin, 
 
     const closeMenu = () => setIsOpen(false);
 
-    return (
-        <div className="md:hidden">
-            <button
-                onClick={() => setIsOpen(true)}
-                className="p-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-            >
-                <Menu className="w-6 h-6" />
-                <span className="sr-only">Open menu</span>
-            </button>
-
+    const menuContent = (
+        <>
             {/* Backdrop */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity animate-in fade-in duration-200"
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] transition-opacity animate-in fade-in duration-200"
                     onClick={closeMenu}
                 />
             )}
 
             {/* Drawer */}
             <div
-                className={`fixed top-0 right-0 h-full w-[80%] max-w-sm bg-white dark:bg-black border-l border-zinc-200 dark:border-zinc-800 z-50 transform transition-transform duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : 'translate-x-full'
+                className={`fixed top-0 right-0 h-full w-[80%] max-w-sm bg-white dark:bg-black border-l border-zinc-200 dark:border-zinc-800 z-[100] transform transition-transform duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : 'translate-x-full'
                     }`}
             >
                 <div className="flex flex-col h-full">
@@ -165,6 +163,19 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ user, profile, isAdmin, 
                     </div>
                 </div>
             </div>
+        </>
+    );
+
+    return (
+        <div className="md:hidden">
+            <button
+                onClick={() => setIsOpen(true)}
+                className="p-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+            >
+                <Menu className="w-6 h-6" />
+                <span className="sr-only">Open menu</span>
+            </button>
+            {mounted && createPortal(menuContent, document.body)}
         </div>
     );
 };
