@@ -56,10 +56,9 @@
 - **Right**: 
   - Library 링크 (회원일 경우 표시)
   - Admin 링크 (관리자일 경우만 표시)
-  - **User Info**: 닉네임 표시. 클릭 시 드롭다운 메뉴 (`Settings`, `Sign Out`) 제공.
-  - **다국어 지원**: 모든 네비게이션 링크(Library, Admin, Settings, Sign In/Out)는 다국어 처리되어야 합니다.
-  - **Sign In**: 비로그인 상태일 경우 표시.
   - 언어 변경 (LanguageSwitcher)
+  - **User Info**: 닉네임 표시. 클릭 시 드롭다운 메뉴 (`Settings`, `Sign Out`) 제공.
+  - **Sign In**: 비로그인 상태일 경우 표시.
   - 테마 토글
 
 ### 3.2. Theme Toggle
