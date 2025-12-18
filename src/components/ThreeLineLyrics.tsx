@@ -45,16 +45,14 @@ export const ThreeLineLyrics: React.FC = () => {
         setActiveLineIndex(index);
     }, [syncedTime, currentSong]);
 
-    // Get 3 lines: prev, current, next
+    // Get 2 lines: current, next
     const lines = useMemo(() => {
         if (!currentSong) return [];
 
-        const prev = currentSong.lyrics[activeLineIndex - 1];
         const curr = currentSong.lyrics[activeLineIndex];
         const next = currentSong.lyrics[activeLineIndex + 1];
 
         return [
-            { line: prev, type: 'prev' },
             { line: curr, type: 'curr' },
             { line: next, type: 'next' }
         ];
@@ -134,7 +132,7 @@ export const ThreeLineLyrics: React.FC = () => {
             </div>
 
             {/* Lyrics Content */}
-            <div className="w-full p-8 flex flex-col items-center justify-center space-y-4">
+            <div className="w-full p-8 flex flex-col items-center justify-center space-y-6">
                 {lines.map((item, idx) => {
                     if (!item.line) {
                         // Placeholder for empty lines (start/end of song)
@@ -150,24 +148,24 @@ export const ThreeLineLyrics: React.FC = () => {
                             className={clsx(
                                 "text-center transition-all duration-300 max-w-2xl px-4 flex flex-col items-center",
                                 isCurrent ? "scale-105 opacity-100" :
-                                    isNext ? "scale-100 opacity-80" : // 시인성 상향 (70% -> 80%)
+                                    isNext ? "scale-100 opacity-90" : // Opacity 90%
                                         "scale-90 opacity-20 blur-[1px]"
                             )}
                         >
                             <p className={clsx(
                                 "font-bold leading-tight",
-                                isCurrent ? "text-2xl text-zinc-900 dark:text-white md:text-3xl" : "text-base text-zinc-600 dark:text-zinc-300"
+                                isCurrent ? "text-2xl text-zinc-900 dark:text-white md:text-2xl" : "text-base text-zinc-600 dark:text-zinc-300"
                             )}>
                                 {item.line.source}
                             </p>
 
-                            {/* Pronunciation */}
+                            {/* Pronunciation (Base Size) */}
                             {showPronunciation && item.line.pron && (
                                 <p className={clsx(
                                     "font-mono tracking-wide",
                                     "transition-all duration-300",
-                                    isCurrent ? "text-sm text-indigo-600 dark:text-indigo-300/80 mt-1" :
-                                        isNext ? "text-sm text-indigo-500/70 dark:text-indigo-400/70 mt-0.5" : // 다음 가사 발음 강조
+                                    isCurrent ? "text-base text-indigo-600 dark:text-indigo-300/80 mt-1" :
+                                        isNext ? "text-base text-indigo-500/70 dark:text-indigo-400/70 mt-0.5" :
                                             "text-xs text-zinc-500 mt-0.5"
                                 )}>
                                     {typeof item.line.pron === 'string'
@@ -176,7 +174,7 @@ export const ThreeLineLyrics: React.FC = () => {
                                 </p>
                             )}
 
-                            {/* Translation */}
+                            {/* Translation (Small Size) */}
                             {showTranslation && item.line.trans && (
                                 <p className={clsx(
                                     "font-medium",

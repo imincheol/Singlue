@@ -283,7 +283,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
 
                                         {/* Pronunciation */}
                                         {showPronunciation && line.pron && (
-                                            <p className="text-sm font-mono text-indigo-600 dark:text-indigo-300/80 tracking-wide">
+                                            <p className="text-base font-mono text-indigo-600 dark:text-indigo-300/80 tracking-wide">
                                                 {/* @ts-ignore: Handle migration */}
                                                 {typeof line.pron === 'string' ? line.pron : (line.pron[t('language_code', { defaultValue: 'en' })] || line.pron['en'] || Object.values(line.pron)[0])}
                                             </p>
@@ -291,7 +291,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
 
                                         {/* Translation */}
                                         {showTranslation && line.trans && (
-                                            <p className="text-base font-medium text-zinc-600 dark:text-zinc-400 mt-1">
+                                            <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mt-1">
                                                 {/* @ts-ignore: Handle migration */}
                                                 {typeof line.trans === 'string' ? line.trans : (line.trans[t('language_code', { defaultValue: 'en' })] || line.trans['en'] || Object.values(line.trans)[0])}
                                             </p>
