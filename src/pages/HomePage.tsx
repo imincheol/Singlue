@@ -108,7 +108,7 @@ export default function HomePage() {
                         {t('home.recently_added')}
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {recentSongs.slice(0, 8).map((song) => (
+                        {recentSongs.slice(0, 20).map((song) => (
                             <SongCard
                                 key={song.id}
                                 song={song}
