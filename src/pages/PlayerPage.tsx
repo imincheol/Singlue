@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/useAppStore';
 import { getSongsForVideo, saveSong } from '../services/supabase';
 import { YouTubePlayer } from '../components/YouTubePlayer';
 import { LyricsDisplay } from '../components/LyricsDisplay';
 import LyricsSearchModal from '../components/LyricsSearchModal';
-import { Music, Plus, Lock, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { PlayerControls } from '../components/PlayerControls';
 import { ThreeLineLyrics } from '../components/ThreeLineLyrics';
 import { useAuth } from '../contexts/AuthContext';
@@ -17,7 +17,7 @@ import { getFlagEmoji } from '../utils/country';
 export default function PlayerPage() {
     const { id } = useParams<{ id: string }>();
     const { t } = useTranslation();
-    const { user, isApproved } = useAuth();
+    const { user } = useAuth();
 
     // State
     const [songs, setSongs] = useState<Song[]>([]);
@@ -71,10 +71,10 @@ export default function PlayerPage() {
     // View State Logic
     const hasSelectedSong = currentSong !== null;
     const isMySong = currentSong?.created_by === user?.id;
-    const canCreate = user && isApproved && !loading && !songs.find(s => s.created_by === user.id);
+    const canCreate = !!(user && !loading && !songs.find(s => s.created_by === user.id));
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black grid grid-cols-1 lg:grid-cols-12 gap-6 lg:h-[calc(100vh-8rem)] animate-in fade-in duration-500 pt-20 lg:pt-24 px-4 sm:px-6 max-w-7xl mx-auto lg:overflow-hidden relative">
+        <div className="min-h-screen bg-white dark:bg-black grid grid-cols-1 lg:grid-cols-12 gap-6 lg:h-[calc(100vh-8rem)] animate-in fade-in duration-500 pt-20 lg:pt-24 px-4 sm:px-6 max-w-7xl mx-auto lg:overflow-hidden relative pb-8">
             {error && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-2 rounded-full shadow-lg animate-in fade-in slide-in-from-top-4 duration-300 text-sm font-medium">
                     {error}
@@ -87,7 +87,7 @@ export default function PlayerPage() {
                         videoId={id}
                         onVideoData={async (data) => {
                             // Auto-Register Song (Stage 1)
-                            if (user && isApproved && !loading && !hasSelectedSong && !songs.find(s => s.created_by === user.id)) {
+                            if (user && !loading && !hasSelectedSong && !songs.find(s => s.created_by === user.id)) {
                                 console.log("Auto-registering new song (Stage 1)...");
                                 const newSong: Song = {
                                     id: crypto.randomUUID(),
@@ -277,8 +277,6 @@ export default function PlayerPage() {
                     <div className="flex min-h-[300px] lg:h-full items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500" />
                     </div>
-                ) : hasSelectedSong ? (
-                    <LyricsDisplay onSearchClick={() => setIsSearchModalOpen(true)} />
                 ) : isCreating ? (
                     <SongCreationWizard
                         videoId={id}
@@ -290,44 +288,11 @@ export default function PlayerPage() {
                         onCancel={() => setIsCreating(false)}
                     />
                 ) : (
-                    <div className="w-full h-full min-h-[400px] bg-zinc-100 dark:bg-zinc-900/30 rounded-2xl border border-zinc-200 dark:border-white/5 flex flex-col items-center justify-center p-8 text-center space-y-4">
-                        <div className="w-16 h-16 bg-zinc-200 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-4">
-                            <Music className="w-8 h-8 text-zinc-400 dark:text-zinc-500" />
-                        </div>
-                        <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{t('player.no_lyrics_title')}</h3>
-
-                        {canCreate ? (
-                            <div className="space-y-4">
-                                <p className="text-zinc-600 dark:text-zinc-400 max-w-xs">
-                                    No song info found. You can register it!
-                                </p>
-                                <button
-                                    onClick={() => setIsCreating(true)}
-                                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-medium transition-colors flex items-center gap-2 mx-auto"
-                                >
-                                    <Plus className="w-4 h-4" />
-                                    Register Song
-                                </button>
-                            </div>
-                        ) : !user ? (
-                            <div className="space-y-4">
-                                <p className="text-zinc-600 dark:text-zinc-400 max-w-xs">
-                                    Sign in to view more songs or register new ones.
-                                </p>
-                                <Link
-                                    to="/login"
-                                    className="inline-flex bg-zinc-900 dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-xl font-medium transition-colors items-center gap-2"
-                                >
-                                    <Lock className="w-4 h-4" />
-                                    Sign In
-                                </Link>
-                            </div>
-                        ) : (
-                            <p className="text-zinc-600 dark:text-zinc-400 max-w-xs">
-                                No public lyrics available yet.
-                            </p>
-                        )}
-                    </div>
+                    <LyricsDisplay
+                        onSearchClick={() => setIsSearchModalOpen(true)}
+                        onRegisterClick={() => setIsCreating(true)}
+                        canCreate={canCreate}
+                    />
                 )}
             </div>
 

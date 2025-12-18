@@ -1,18 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
-import { Type, Languages, Zap, Sparkles, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Type, Languages, Sparkles, Loader2, ChevronDown, ChevronUp, Music, Plus, Lock } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { enrichLyrics } from '../services/gemini';
 import { saveSong } from '../services/supabase';
 import type { Song } from '../types';
 import { useAuth } from '../contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 interface LyricsDisplayProps {
     onSearchClick?: () => void;
+    onRegisterClick?: () => void;
+    canCreate?: boolean;
 }
 
-export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) => {
+export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onRegisterClick, canCreate = false }) => {
     const {
         currentSong,
         setCurrentSong,
@@ -149,9 +152,6 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
         requestSeek(lineTime + totalOffset);
     };
 
-
-    if (!currentSong) return null;
-
     return (
         <div className={clsx(
             "flex flex-col bg-zinc-100 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-sm overflow-hidden transition-all duration-300",
@@ -164,12 +164,12 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
                     {error}
                 </div>
             )}
-            {/* Controls Header */}
-            <div className="flex flex-col border-b border-zinc-300 dark:border-white/5">
+            {/* Controls Header - Always Visible */}
+            <div className="flex flex-col border-b border-zinc-300 dark:border-white/5 shrink-0">
                 <div className="flex items-center justify-between p-4 bg-zinc-200 dark:bg-black/20">
                     <div className="flex items-center gap-2">
                         {/* 가사 변경 버튼 */}
-                        {currentSong.stage !== 3 && currentSong.created_by === user?.id && (
+                        {currentSong && currentSong.stage !== 3 && currentSong.created_by === user?.id && (
                             <button
                                 onClick={onSearchClick}
                                 className="flex items-center gap-2 px-3 py-1.5 bg-zinc-500/10 hover:bg-zinc-500/20 text-zinc-600 dark:text-zinc-400 rounded-lg text-sm font-medium transition-colors border border-zinc-500/20"
@@ -241,7 +241,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
                 )}
                 style={{ maxHeight: !isExpanded ? '0px' : undefined }}
             >
-                {currentSong.lyrics.length > 0 ? (
+                {currentSong && currentSong.lyrics.length > 0 ? (
                     <div className="space-y-8">
                         {/* Empty space at top for scrolling centering */}
                         <div className="h-[20vh] lg:hidden" />
@@ -304,12 +304,45 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
                         <div className="h-[50vh]" />
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center h-full text-zinc-500 dark:text-zinc-500 space-y-4 py-20 px-4 text-center">
-                        <Zap className="w-12 h-12 opacity-20" />
-                        <div>
-                            <p className="font-bold text-lg mb-1">{t('player.no_lyrics_title') || "가사가 로드되지 않음"}</p>
-                            <p className="text-sm opacity-60">No public lyrics available yet.</p>
+                    <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center space-y-4">
+                        <div className="w-16 h-16 bg-zinc-200 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-4">
+                            <Music className="w-8 h-8 text-zinc-400 dark:text-zinc-500" />
                         </div>
+                        <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{t('player.no_lyrics_title')}</h3>
+
+                        {canCreate ? (
+                            <div className="space-y-4">
+                                <p className="text-zinc-600 dark:text-zinc-400 max-w-xs">
+                                    No song info found. You can register it!
+                                </p>
+                                <button
+                                    onClick={onRegisterClick}
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-medium transition-colors flex items-center gap-2 mx-auto"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    Register Song
+                                </button>
+                            </div>
+                        ) : !user ? (
+                            <div className="space-y-4">
+                                <p className="text-zinc-600 dark:text-zinc-400 max-w-xs">
+                                    Sign in to view more songs or register new ones.
+                                </p>
+                                <Link
+                                    to="/login"
+                                    className="inline-flex bg-zinc-900 dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-xl font-medium transition-colors items-center gap-2"
+                                >
+                                    <Lock className="w-4 h-4" />
+                                    Sign In
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                <p className="text-zinc-600 dark:text-zinc-400 max-w-xs">
+                                    No public lyrics available yet.
+                                </p>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

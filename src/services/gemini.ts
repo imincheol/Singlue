@@ -54,6 +54,9 @@ export const generateLyrics = async (apiKey: string, videoTitle: string, userLan
         - "dù" -> "주" (ko), "zu" (en) [Northern], NOT "유" (Southern)
         - "Không" -> "콩" (ko), "khong" (en)
         - "Cảm ơn" -> "깜 언" (ko), "cam un" (en)
+    - **Korean Pronunciation Style**: When transcribing Korean lyrics to alphabet-based languages (English, Vietnamese, etc.), add a hyphen (-) between each syllable block to clearly distinguish words and improve readability.
+      - Example: "안녕하세요" -> "an-nyeong-ha-se-yo" (NOT "annyeong haseyo")
+      - Example: "사랑해" -> "sa-rang-hae"
     
     Return ONLY a JSON object with this structure (no markdown code blocks):
     {
@@ -153,6 +156,9 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song, userLangua
         - "dù" -> "주" (ko), "zu" (en) [Northern], NOT "유" (Southern)
         - "Không" -> "콩" (ko), "khong" (en)
         - "Cảm ơn" -> "깜 언" (ko), "cam un" (en)
+    - **Korean Pronunciation Style**: When transcribing Korean lyrics to alphabet-based languages (English, Vietnamese, etc.), add a hyphen (-) between each syllable block to clearly distinguish words and improve readability.
+      - Example: "안녕하세요" -> "an-nyeong-ha-se-yo" (NOT "annyeong haseyo")
+      - Example: "사랑해" -> "sa-rang-hae"
     
     Return ONLY a JSON object with this structure (no markdown code blocks):
     {
