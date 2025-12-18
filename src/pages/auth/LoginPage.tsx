@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../../services/supabase';
-import { useNavigate, Link } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export default function LoginPage() {
@@ -10,7 +10,16 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const location = useLocation();
     const { t } = useTranslation();
+    const [successMessage, setSuccessMessage] = useState<string | null>(location.state?.message || null);
+
+    useEffect(() => {
+        if (successMessage) {
+            const timer = setTimeout(() => setSuccessMessage(null), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [successMessage]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -42,13 +51,13 @@ export default function LoginPage() {
                 if (profile?.status === 'pending') {
                     console.log('Status pending, signing out...');
                     await supabase.auth.signOut();
-                    throw new Error('Your account is pending approval by an administrator.');
+                    throw new Error(t('auth.pending_approval'));
                 }
 
                 if (profile?.status === 'rejected') {
                     console.log('Status rejected, signing out...');
                     await supabase.auth.signOut();
-                    throw new Error('Your account registration has been rejected.');
+                    throw new Error(t('auth.rejected_approval'));
                 }
             }
 
@@ -56,7 +65,7 @@ export default function LoginPage() {
             navigate('/');
         } catch (err: any) {
             console.error('Login error:', err);
-            setError(err.message === 'Invalid login credentials' ? 'Invalid email or password' : err.message);
+            setError(err.message === 'Invalid login credentials' ? t('auth.invalid_credentials') : err.message);
         } finally {
             console.log('Setting loading false');
             setLoading(false);
@@ -69,6 +78,15 @@ export default function LoginPage() {
                 <div className="text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">{t('auth.login_title')}</h2>
                 </div>
+
+                {successMessage && (
+                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4 flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                        <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+                            {successMessage}
+                        </p>
+                    </div>
+                )}
                 <form className="mt-8 space-y-6" onSubmit={handleLogin}>
                     <div className="space-y-4 rounded-md shadow-sm">
                         <input
@@ -106,7 +124,7 @@ export default function LoginPage() {
                 </form>
                 <div className="text-center">
                     <Link to="/register" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                        Don't have an account? Sign up
+                        {t('auth.no_account')}
                     </Link>
                 </div>
             </div>
