@@ -59,9 +59,26 @@
   - 언어 변경 (LanguageSwitcher)
   - **User Info**: 닉네임 표시. 클릭 시 드롭다운 메뉴 (`Settings`, `Sign Out`) 제공.
   - **Sign In**: 비로그인 상태일 경우 표시.
+  - **User Info**: 닉네임 표시. 클릭 시 드롭다운 메뉴 (`Settings`, `Sign Out`) 제공.
+  - **Sign In**: 비로그인 상태일 경우 표시.
   - 테마 토글
 
-### 3.2. Theme Toggle
+### 3.2. Responsive Implementation (Mobile GNB)
+- **Breakpoints**: 모바일 화면(`sm` 이하)에서는 상단 메뉴 아이템들이 공간 부족으로 겹치거나 잘리지 않도록 레이아웃을 변경합니다.
+- **Hamburger Menu**:
+  - 기존의 `Right` 섹션 아이템들(Library, Admin, Language, User Info, Theme)을 모두 숨기고, **햄버거 메뉴 아이콘(Menu)** 하나만 표시합니다.
+  - 아이콘 클릭 시, 화면 우측에서 좌측으로 슬라이드되는 **사이드 드로어(Side Drawer)** 메뉴가 열립니다.
+- **Side Drawer**:
+  - **구성**:
+    - 최상단: 닫기 버튼(X) 및 사용자 프로필 요약.
+    - 메인 메뉴: Library, Admin 등 네비게이션 링크.
+    - 설정: 언어 변경, 테마 토글 등.
+  - **Interaction**:
+    - 메뉴 외부 영역(Overlay) 클릭 시 닫힘.
+    - 메뉴 항목 클릭 시 해당 페이지로 이동하며 드로어 닫힘.
+  - **Animation**: 부드러운 슬라이드 인/아웃 효과 (`transform` & `transition` 활용).
+
+### 3.3. Theme Toggle
 - **동작 원칙**:
   1. `localStorage`에 저장된 테마(`theme`)가 있으면 최우선 적용.
   2. 저장된 테마가 없으면 시스템 설정(`prefers-color-scheme`)을 따름.
