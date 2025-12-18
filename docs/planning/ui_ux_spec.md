@@ -47,19 +47,27 @@
   - Library 링크 (회원일 경우 표시)
   - Admin 링크 (관리자일 경우만 표시)
   - **User Info**: 닉네임 표시. 클릭 시 드롭다운 메뉴 (`Settings`, `Sign Out`) 제공.
+  - **다국어 지원**: 모든 네비게이션 링크(Library, Admin, Settings, Sign In/Out)는 다국어 처리되어야 합니다.
   - **Sign In**: 비로그인 상태일 경우 표시.
   - 언어 변경 (LanguageSwitcher)
   - 테마 토글
 
 ### 3.2. Theme Toggle
-- **Default**: 시스템 설정(prefers-color-scheme)을 따르거나 Dark Mode를 기본으로 설정.
-- **Interaction**: 토글 클릭 시 즉시 테마 변경 적용.
+- **동작 원칙**:
+  1. `localStorage`에 저장된 테마(`theme`)가 있으면 최우선 적용.
+  2. 저장된 테마가 없으면 시스템 설정(`prefers-color-scheme`)을 따름.
+  3. 시스템 설정이 불투명할 경우 `light` 모드를 기본으로 설정.
+- **Interaction**: 토글 클릭 시 즉시 테마 변경 적용 (`html` 태그의 `.dark` 클래스 토글) 및 `localStorage` 업데이트.
 - **Persistence**: `localStorage`에 사용자 테마 설정 저장 (`theme`: 'dark' | 'light').
 
 ## 4. Theme System
 
 ### 4.1. Dark/Light Mode Support
-- **Color Palette**: `index.css`의 `:root` 및 `.dark` 클래스를 활용하여 시멘틱 컬러 변수 정의.
+- **Framework**: Tailwind CSS v4 (`@tailwindcss/vite`) 기반.
+- **Config Strategy**: `darkMode: 'selector'` 전략을 사용하며, `index.css`의 `@variant dark`를 통해 `.dark` 클래스 기반의 테마 전환을 지원합니다.
+- **Implementation**: 
+  - `useTheme` 커스텀 훅을 통해 상태 관리 및 `localStorage` 동기화.
+  - `src/index.css`에 직접적인 `.dark` 클래스 배경색 fallback을 설정하여 유틸리티 지연 시에도 시각적 피드백 보장.
 - **Components**: 모든 페이지(홈, 플레이어, 라이브러리) 및 팝업(가사 검색 등)은 현재 테마에 맞춰 배경색, 텍스트 색상이 변경되어야 함.
 
 ## 5. Player Page - Mini Lyrics Display (ThreeLineLyrics)
