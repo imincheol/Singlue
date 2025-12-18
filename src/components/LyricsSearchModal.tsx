@@ -79,14 +79,27 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
     };
 
     const handleSelect = (item: LRCSearchResult) => {
-        const parsedLyrics = parseLRC(item.syncedLyrics);
+        let newLyrics: LyricsLine[] = [];
 
-        const newLyrics: LyricsLine[] = parsedLyrics.map(line => ({
-            time: line.time,
-            source: line.text,
-            pron: {},
-            trans: {}
-        }));
+        if (item.syncedLyrics) {
+            const parsedLyrics = parseLRC(item.syncedLyrics);
+            newLyrics = parsedLyrics.map(line => ({
+                time: line.time,
+                source: line.text,
+                pron: {},
+                trans: {}
+            }));
+        } else if (item.plainLyrics) {
+            // Split by lines and assign 0 time if not synced
+            newLyrics = item.plainLyrics.split('\n')
+                .filter(line => line.trim())
+                .map(line => ({
+                    time: 0,
+                    source: line.trim(),
+                    pron: {},
+                    trans: {}
+                }));
+        }
 
         const currentVideo = history[0];
         if (!currentVideo) {
@@ -195,11 +208,23 @@ export default function LyricsSearchModal({ isOpen, onClose }: LyricsSearchModal
                             onClick={() => handleSelect(result)}
                             className="p-3 hover:bg-zinc-100 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition-colors group flex items-center gap-4 border border-transparent hover:border-indigo-500/30"
                         >
-                            <div className="w-12 h-12 bg-zinc-200 dark:bg-gray-700 rounded-lg flex items-center justify-center text-zinc-500 dark:text-gray-400 group-hover:bg-zinc-300 dark:group-hover:bg-gray-600 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
+                            <div className="w-12 h-12 bg-zinc-200 dark:bg-gray-700 rounded-lg flex items-center justify-center text-zinc-500 dark:text-gray-400 group-hover:bg-zinc-300 dark:group-hover:bg-gray-600 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors relative">
                                 <Music className="w-6 h-6" />
+                                {result.syncedLyrics && (
+                                    <div className="absolute -top-1 -right-1 bg-indigo-500 text-white text-[8px] font-bold px-1 rounded shadow-sm">
+                                        SYNC
+                                    </div>
+                                )}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h3 className="text-zinc-900 dark:text-white font-semibold truncate">{result.trackName}</h3>
+                                <div className="flex items-center gap-2">
+                                    <h3 className="text-zinc-900 dark:text-white font-semibold truncate">{result.trackName}</h3>
+                                    {!result.syncedLyrics && (
+                                        <span className="text-[10px] text-zinc-400 dark:text-gray-500 border border-zinc-200 dark:border-gray-800 px-1 rounded">
+                                            Plain
+                                        </span>
+                                    )}
+                                </div>
                                 <p className="text-zinc-600 dark:text-gray-400 text-sm truncate">{result.artistName}</p>
                             </div>
                             <div className="flex flex-col items-end gap-1">

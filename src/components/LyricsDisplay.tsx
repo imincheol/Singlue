@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
-import { Type, Languages, Zap, Sparkles, Loader2 } from 'lucide-react';
+import { Type, Languages, Zap, Sparkles, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { enrichLyrics } from '../services/gemini';
@@ -33,6 +33,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
     const [activeLineIndex, setActiveLineIndex] = useState<number>(-1);
     const [enriching, setEnriching] = useState(false);
     const [enrichProgress, setEnrichProgress] = useState(0);
+    const [isExpanded, setIsExpanded] = useState(true);
 
     // AI Enriching Progress Timer
     useEffect(() => {
@@ -41,14 +42,16 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
         if (enriching) {
             setEnrichProgress(0);
             const startTime = Date.now();
-            const duration = 120000; // 2 minutes in ms
+            // 3 minutes estimated duration used in calculation below
 
             interval = setInterval(() => {
                 const elapsed = Date.now() - startTime;
-                const rawProgress = (elapsed / duration) * 95; // Go up to 95%
-                // Add some randomness to make it feel more "real"
-                const easing = 1 - Math.pow(1 - rawProgress / 95, 2); // Slow down as it reaches 95%
-                setEnrichProgress(Math.min(easing * 95, 95));
+                // Use an asymptotic function to ensure it never exceeds 99% and never decreases.
+                // Progress = 99 * (1 - e^(-t/tau)), where tau is a time constant.
+                // After 180s (3 min), let's aim for ~90%. 1 - e^(-180/tau) = 0.9 => e^(-180/tau) = 0.1 => -180/tau = ln(0.1) ~ -2.3 => tau ~ 78
+                const tau = 78000;
+                const progress = 99 * (1 - Math.exp(-elapsed / tau));
+                setEnrichProgress(Math.max(0.1, progress));
             }, 500);
         } else {
             // Quick finish animation
@@ -116,10 +119,21 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
     }, [syncedTime, currentSong]);
 
     useEffect(() => {
-        if (activeLineIndex !== -1 && activeLineRef.current) {
-            activeLineRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
+        if (activeLineIndex !== -1 && containerRef.current && activeLineRef.current) {
+            // Use scrollTo instead of scrollIntoView to prevent whole page scrolling on mobile
+            const container = containerRef.current;
+            const element = activeLineRef.current;
+
+            // Calculate position to center the element
+            const elementTop = element.offsetTop;
+            const elementHeight = element.offsetHeight;
+            const containerHeight = container.clientHeight;
+
+            const scrollTo = elementTop - (containerHeight / 2) + (elementHeight / 2);
+
+            container.scrollTo({
+                top: scrollTo,
+                behavior: 'smooth'
             });
         }
     }, [activeLineIndex]);
@@ -134,7 +148,11 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
     if (!currentSong) return null;
 
     return (
-        <div className="flex flex-col h-full bg-zinc-100 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-sm overflow-hidden">
+        <div className={clsx(
+            "flex flex-col bg-zinc-100 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-sm overflow-hidden transition-all duration-300",
+            "lg:h-full", // Desktop always full height of parent
+            isExpanded ? "h-[60vh]" : "h-auto" // Mobile height control
+        )}>
             {/* Controls Header */}
             <div className="flex flex-col border-b border-zinc-300 dark:border-white/5">
                 <div className="flex items-center justify-between p-4 bg-zinc-200 dark:bg-black/20">
@@ -164,7 +182,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
                         <button
                             onClick={togglePronunciation}
                             className={clsx(
-                                "p-2 rounded-lg transition-colors",
+                                "p-2 rounded-lg transition-colors hidden sm:block",
                                 showPronunciation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-400"
                             )}
                             title={t('lyrics.toggle_pron')}
@@ -174,12 +192,20 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
                         <button
                             onClick={toggleTranslation}
                             className={clsx(
-                                "p-2 rounded-lg transition-colors",
+                                "p-2 rounded-lg transition-colors hidden sm:block",
                                 showTranslation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-400"
                             )}
                             title={t('lyrics.toggle_trans')}
                         >
                             <Languages size={18} />
+                        </button>
+
+                        {/* Mobile Toggle Button */}
+                        <button
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="p-2 rounded-lg transition-colors bg-zinc-200 dark:bg-white/10 lg:hidden"
+                        >
+                            {isExpanded ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
                         </button>
                     </div>
                 </div>
@@ -196,9 +222,19 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
             </div>
 
             {/* Lyrics Scroll Area */}
-            <div ref={containerRef} className="flex-1 overflow-y-auto px-6 py-12 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700">
+            <div
+                ref={containerRef}
+                className={clsx(
+                    "flex-1 overflow-y-auto px-6 py-12 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 transition-all duration-300",
+                    !isExpanded && "hidden lg:block lg:flex-1"
+                )}
+                style={{ maxHeight: !isExpanded ? '0px' : undefined }}
+            >
                 {currentSong.lyrics.length > 0 ? (
                     <div className="space-y-8">
+                        {/* Empty space at top for scrolling centering */}
+                        <div className="h-[20vh] lg:hidden" />
+
                         {currentSong.lyrics.map((line, idx) => {
                             const isActive = idx === activeLineIndex;
 
@@ -266,6 +302,6 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
                     </div>
                 )}
             </div>
-        </div >
+        </div>
     );
 };

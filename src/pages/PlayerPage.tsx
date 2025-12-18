@@ -6,12 +6,13 @@ import { getSongsForVideo, saveSong } from '../services/supabase';
 import { YouTubePlayer } from '../components/YouTubePlayer';
 import { LyricsDisplay } from '../components/LyricsDisplay';
 import LyricsSearchModal from '../components/LyricsSearchModal';
-import { Music, Plus, Lock } from 'lucide-react';
+import { Music, Plus, Lock, RefreshCw } from 'lucide-react';
 import { PlayerControls } from '../components/PlayerControls';
 import { ThreeLineLyrics } from '../components/ThreeLineLyrics';
 import { useAuth } from '../contexts/AuthContext';
 import { SongCreationWizard } from '../components/SongCreationWizard';
-import type { Song } from '../types';
+import type { Song, HistoryItem } from '../types';
+import { getFlagEmoji } from '../utils/country';
 
 export default function PlayerPage() {
     const { id } = useParams<{ id: string }>();
@@ -72,7 +73,7 @@ export default function PlayerPage() {
     const canCreate = user && isApproved && !loading && !songs.find(s => s.created_by === user.id);
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-8rem)] animate-in fade-in duration-500 pt-24 px-6 max-w-7xl mx-auto overflow-hidden relative">
+        <div className="min-h-screen bg-white dark:bg-black grid grid-cols-1 lg:grid-cols-12 gap-6 lg:h-[calc(100vh-8rem)] animate-in fade-in duration-500 pt-20 lg:pt-24 px-4 sm:px-6 max-w-7xl mx-auto lg:overflow-hidden relative">
             <div className="lg:col-span-7 flex flex-col space-y-4 h-full relative">
                 {/* Video Player */}
                 <div className="w-full shrink-0">
@@ -108,34 +109,164 @@ export default function PlayerPage() {
                 </div>
 
                 {/* Quick Info & Controls */}
-                <div className="bg-zinc-100 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-white/5 flex justify-between items-center mb-0 shrink-0">
-                    <div>
-                        <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-1 flex items-center gap-2">
-                            {currentSong?.title || t('player.unknown_track')}
-                            {isMySong && <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">
-                                내 버전 ({currentSong?.stage === 3 ? '완료' : currentSong?.stage === 2 ? '가사 매칭' : '영상 등록'})
-                            </span>}
-                        </h2>
-                        <p className="text-zinc-600 dark:text-zinc-400 text-sm">
-                            {currentSong?.artist}
-                        </p>
+                <div className="bg-zinc-100 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-white/5 mb-0 shrink-0 flex flex-col gap-2">
+                    {/* Row 1: YouTube Info */}
+                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-500 overflow-hidden">
+                        <span className="truncate max-w-[150px] font-medium">{songs.find(s => s.video_id === id)?.artist || 'Unknown Channel'}</span>
+                        <span className="shrink-0 text-zinc-300 dark:text-zinc-700">|</span>
+                        <span className="truncate flex-1">{songs.find(s => s.video_id === id)?.title || 'Video Title'}</span>
+                        <a
+                            href={`https://youtu.be/${id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="shrink-0 p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded transition-colors"
+                            title="Open in YouTube"
+                        >
+                            <svg className="w-3 h-3 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m-6-6L10 14" />
+                            </svg>
+                        </a>
                     </div>
-                    {isMySong && (
-                        <div className="flex gap-2">
-                            {/* TODO: Add Edit Controls here */}
+
+                    {/* Row 2: Metadata & Controls */}
+                    <div className="flex items-center gap-3">
+                        {/* Country Flag */}
+                        {isMySong && currentSong?.country_code && (
+                            <span className="text-2xl shrink-0" title={currentSong.country_code}>
+                                {getFlagEmoji(currentSong.country_code)}
+                            </span>
+                        )}
+
+                        {/* Song Info Inputs */}
+                        <div className="flex-1 flex gap-2 items-center min-w-0">
+                            {isMySong ? (
+                                <>
+                                    <input
+                                        type="text"
+                                        className="bg-transparent text-sm font-semibold text-zinc-900 dark:text-zinc-300 border-b border-transparent focus:border-indigo-500 outline-none w-1/3 min-w-[80px] transition-colors placeholder-zinc-400"
+                                        value={currentSong?.artist || ''}
+                                        placeholder="Artist"
+                                        onChange={(e) => {
+                                            if (currentSong) setCurrentSong({ ...currentSong, artist: e.target.value });
+                                        }}
+                                        onBlur={async (e) => {
+                                            if (!currentSong) return;
+                                            try {
+                                                const { updateSongMetadata } = await import('../services/supabase');
+                                                await updateSongMetadata(currentSong.id, currentSong.title, e.target.value, currentSong.country_code);
+                                            } catch (err) {
+                                                console.error('Failed to update artist:', err);
+                                            }
+                                        }}
+                                    />
+                                    <span className="text-zinc-300 dark:text-zinc-600">-</span>
+                                    <input
+                                        type="text"
+                                        className="bg-transparent text-lg font-bold text-zinc-900 dark:text-white border-b border-transparent focus:border-indigo-500 outline-none flex-1 min-w-[100px] transition-colors placeholder-zinc-400"
+                                        value={currentSong?.title || ''}
+                                        placeholder="Song Title"
+                                        onChange={(e) => {
+                                            if (currentSong) setCurrentSong({ ...currentSong, title: e.target.value });
+                                        }}
+                                        onBlur={async (e) => {
+                                            if (!currentSong) return;
+                                            try {
+                                                const { updateSongMetadata } = await import('../services/supabase');
+                                                await updateSongMetadata(currentSong.id, e.target.value, currentSong.artist, currentSong.country_code);
+                                            } catch (err) {
+                                                console.error('Failed to update title:', err);
+                                            }
+                                        }}
+                                    />
+                                </>
+                            ) : (
+                                <div className="flex items-baseline gap-2 truncate">
+                                    <span className="text-lg font-bold text-zinc-900 dark:text-white truncate">
+                                        {currentSong?.title || t('player.unknown_track')}
+                                    </span>
+                                    <span className="text-sm text-zinc-600 dark:text-zinc-400 truncate">
+                                        {currentSong?.artist}
+                                    </span>
+                                </div>
+                            )}
                         </div>
-                    )}
+
+                        {/* Controls */}
+                        {isMySong && (
+                            <div className="flex gap-2 shrink-0">
+                                {isMySong && (
+                                    <span className="hidden sm:inline-flex text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 px-2 py-1 rounded items-center">
+                                        {currentSong?.stage === 3 ? '완료' : currentSong?.stage === 2 ? '가사 매칭' : '영상 등록'}
+                                    </span>
+                                )}
+
+                                {currentSong && currentSong.stage < 3 && (
+                                    <button
+                                        onClick={async (e) => {
+                                            if (!currentSong) return;
+                                            const btn = e.currentTarget;
+                                            if (btn.disabled) return;
+                                            btn.disabled = true;
+                                            const originalContent = btn.innerHTML;
+                                            // Show spinner
+                                            btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+
+                                            const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+                                            if (!apiKey) {
+                                                alert('Gemini API Key missing');
+                                                btn.disabled = false;
+                                                btn.innerHTML = originalContent;
+                                                return;
+                                            }
+
+                                            try {
+                                                const historyItems = useAppStore.getState().history;
+                                                const videoInfo = historyItems.find((h: HistoryItem) => h.videoId === id);
+                                                const titleToParse = videoInfo?.title || currentSong.title;
+
+                                                const { parseVideoMetadata } = await import('../services/gemini');
+                                                const { updateSongMetadata } = await import('../services/supabase');
+
+                                                const { title: newTitle, artist: newArtist, country_code: newCountry } = await parseVideoMetadata(apiKey, titleToParse);
+
+                                                // Update DB directly without confirmation but with notification via UI change
+                                                await updateSongMetadata(currentSong.id, newTitle, newArtist, newCountry);
+
+                                                // Update local state
+                                                setCurrentSong({
+                                                    ...currentSong,
+                                                    title: newTitle,
+                                                    artist: newArtist,
+                                                    country_code: newCountry || currentSong.country_code
+                                                });
+                                            } catch (err: any) {
+                                                console.error(err);
+                                                alert('업데이트 실패: ' + err.message);
+                                            } finally {
+                                                btn.disabled = false;
+                                                btn.innerHTML = originalContent;
+                                            }
+                                        }}
+                                        className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg text-zinc-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="AI 정보 업데이트"
+                                    >
+                                        <RefreshCw className="w-5 h-5" />
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                <div className="flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto pb-4 scrollbar-hide">
+                <div className="flex-1 min-h-0 flex flex-col gap-4 lg:overflow-y-auto pb-4 scrollbar-hide">
                     <PlayerControls />
                     <ThreeLineLyrics />
                 </div>
             </div>
 
-            <div className="lg:col-span-5 h-full relative overflow-hidden">
+            <div className="lg:col-span-5 relative lg:h-full lg:overflow-hidden">
                 {loading ? (
-                    <div className="flex h-full items-center justify-center">
+                    <div className="flex min-h-[300px] lg:h-full items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500" />
                     </div>
                 ) : hasSelectedSong ? (
@@ -151,7 +282,7 @@ export default function PlayerPage() {
                         onCancel={() => setIsCreating(false)}
                     />
                 ) : (
-                    <div className="w-full h-full bg-zinc-100 dark:bg-zinc-900/30 rounded-2xl border border-zinc-200 dark:border-white/5 flex flex-col items-center justify-center p-8 text-center space-y-4">
+                    <div className="w-full h-full min-h-[400px] bg-zinc-100 dark:bg-zinc-900/30 rounded-2xl border border-zinc-200 dark:border-white/5 flex flex-col items-center justify-center p-8 text-center space-y-4">
                         <div className="w-16 h-16 bg-zinc-200 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-4">
                             <Music className="w-8 h-8 text-zinc-400 dark:text-zinc-500" />
                         </div>
