@@ -13,6 +13,8 @@ export interface Profile {
     nickname: string;
     role: UserRole;
     status: UserStatus;
+    gemini_api_key?: string;
+    usage_count: number;
     created_at: string;
 }
 

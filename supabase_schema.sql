@@ -7,6 +7,8 @@ create table if not exists public.profiles (
   nickname text,
   role text default 'user' check (role in ('admin', 'user')),
   status text default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  gemini_api_key text,
+  usage_count integer default 0,
   created_at timestamptz default now()
 );
 
@@ -38,17 +40,23 @@ create policy "Admins can update profiles"
       where id = auth.uid() and role = 'admin'
     )
   );
+  
+-- 4. Users can update their own profile (for API Key)
+create policy "Users can update own profile" 
+  on public.profiles for update
+  using (auth.uid() = id);
 
 -- Function to handle new user signup
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, nickname, role, status)
+  insert into public.profiles (id, nickname, role, status, usage_count)
   values (
     new.id, 
     coalesce(new.raw_user_meta_data->>'nickname', 'User'),
     'user',
-    'pending' -- Default status is pending approval
+    'pending', -- Default status is pending, but login will be allowed
+    0
   );
   return new;
 end;

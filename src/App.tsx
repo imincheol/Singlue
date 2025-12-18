@@ -7,30 +7,87 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 
 import AdminDashboard from './pages/admin/AdminDashboard';
-import { Headphones, Loader2 } from 'lucide-react';
+import SettingsPage from './pages/SettingsPage';
+import { Headphones, Loader2, Settings as SettingsIcon, LogOut, ChevronDown } from 'lucide-react';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { ThemeToggle } from './components/ThemeToggle';
+import { useState, useRef, useEffect } from 'react';
 import pkg from '../package.json';
 import { useAuth } from './contexts/AuthContext';
 
 // Simple Protected Route Component
 const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.ReactNode, requireAdmin?: boolean }) => {
-  const { user, isLoading, isAdmin, isApproved } = useAuth();
+  const { user, isLoading, isAdmin } = useAuth(); // removed isApproved which is unused
 
   if (isLoading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>;
 
   if (!user) return <Navigate to="/login" replace />;
-
-  if (!isApproved && !isAdmin) return <Navigate to="/" replace />;
 
   if (requireAdmin && !isAdmin) return <Navigate to="/" replace />;
 
   return children;
 };
 
+const UserDropdown = ({ user, profile, signOut }: { user: any, profile: any, signOut: () => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors"
+      >
+        <span>{profile?.nickname || user.email?.split('@')[0] || 'User'}</span>
+        <ChevronDown className="w-4 h-4" />
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-lg py-1 z-50">
+          <div className="px-4 py-2 border-b border-zinc-100 dark:border-zinc-800">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</p>
+          </div>
+
+          <Link
+            to="/settings"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          >
+            <SettingsIcon className="w-4 h-4" />
+            Settings
+          </Link>
+
+          <div className="border-t border-zinc-100 dark:border-zinc-800 mt-1">
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                signOut();
+              }}
+              className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 function App() {
   const location = useLocation();
-  const { user, profile, isAdmin, isApproved, isLoading } = useAuth();
+  const { user, profile, isAdmin, isLoading } = useAuth();
 
 
   return (
@@ -69,14 +126,12 @@ function App() {
 
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
-            ) : (!user || (!isApproved && !isAdmin)) ? (
+            ) : (!user) ? (
               <Link to="/login" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors">
                 Sign In
               </Link>
             ) : (
-              <div className="hidden md:block text-sm text-zinc-500 font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px]">
-                {profile?.nickname || user.email?.split('@')[0] || 'User'}
-              </div>
+              <UserDropdown user={user} profile={profile} signOut={useAuth().signOut} />
             )}
 
             <LanguageSwitcher />
@@ -91,6 +146,11 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
 
         <Route path="/library" element={<LibraryPage />} />
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        } />
 
         <Route path="/admin" element={
           <ProtectedRoute requireAdmin>

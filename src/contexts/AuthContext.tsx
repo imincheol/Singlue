@@ -83,8 +83,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } else {
                 console.log('[AuthContext] Profile fetched successfully');
 
-                // Strict Access Control: Force logout if pending or rejected
-                if (data.status === 'pending' || data.status === 'rejected') {
+                // Strict Access Control: Force logout ONLY if rejected. 'pending' status is now allowed for Free Quota.
+                if (data.status === 'rejected') {
                     console.warn('[AuthContext] User status is', data.status, '- forcing logout.');
                     await supabase.auth.signOut();
                     setProfile(null);

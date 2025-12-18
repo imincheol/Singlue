@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplete, onCancel }: Props) {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     // State for Wizard
     const [currentSong, setCurrentSong] = useState<Song | null>(null);
     const [step, setStep] = useState(1);
@@ -80,39 +80,66 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
 
     // Step 3: AI Enrich
     const handleEnrich = async () => {
-        if (!currentSong) return;
-        setLoading(true);
-        try {
-            // Import dynamically to avoid loading if not used? Or just import at top. 
-            // We need API Key. For now assuming env var or user input?
-            // User didn't specify where API key comes from for users. 
-            // Assuming we use the system's key (proxy) or browser env?
-            // "gemini.ts" uses simple fetch.
-            // Let's assume VITE_GEMINI_API_KEY is available or we ask user?
-            // Given "User" is the admin/developer for now, we likely use the env var.
-            const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-            if (!apiKey) {
-                alert('Gemini API Key missing');
+        if (!currentSong || !user) return;
+
+        // Quota / BYOK Check
+        const userKey = profile?.gemini_api_key;
+        const currentUsage = profile?.usage_count || 0;
+        const platformKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+        // Logic:
+        // 1. If User has Key -> Use User Key (Unlimited)
+        // 2. If User has No Key -> Check Quota (< 10)
+        //    - If Quota OK -> Use Platform Key
+        //    - If Quota Exceeded -> Block
+
+        let activeKey = '';
+        // let isUsingPlatformKey = false; // Not used yet, maybe for logging later
+
+        if (userKey) {
+            activeKey = userKey;
+        } else {
+            if (currentUsage >= 10) {
+                alert("Free quota exceeded (10 songs). Please add your own Gemini API Key in Settings to continue.");
                 return;
             }
+            if (!platformKey) {
+                alert("Platform configuration error: No Platform API Key available. Please contact support.");
+                return;
+            }
+            activeKey = platformKey;
+            // isUsingPlatformKey = true;
+        }
 
+        setLoading(true);
+        try {
             const { enrichLyrics } = await import('../services/gemini');
 
-            // Language: Hardcoded to 'vi' based on previous context or 'ko'?
-            // User context: "Vietnam Lyrics Pronunciation Spec".
-            // Let's assume 'vi' is the target user language, or maybe 'ko' if the user is Korean learning Vietnamese?
-            // "Vietnam Lyrics Pronunciation Spec" implies we want to show VI pronunciation.
-            // Actually, usually it's Source (often VI) -> Pron (KO) + Trans (KO).
-            // Let's default to 'ko' as user language (for Pron/Trans).
-            const enrichedSong = await enrichLyrics(apiKey, currentSong, 'ko');
+            // Default to 'ko' target for now, or infer from user settings if we had them.
+            const enrichedSong = await enrichLyrics(activeKey, currentSong, 'ko');
 
             const finalSong = {
                 ...enrichedSong,
                 stage: 3,
-                is_public: true // User said "Stage 3 (Public)"
+                is_public: true
             };
 
             await saveSong(finalSong);
+
+            // Increment Usage Count
+            // We do this client-side for now since RLS allows it.
+            // Ideally should be a Database Trigger or RPC.
+            const { error: profileError } = await import('../services/supabase').then(m => m.supabase
+                .from('profiles')
+                .update({ usage_count: currentUsage + 1 })
+                .eq('id', user.id)
+            );
+
+            if (profileError) {
+                console.error("Failed to update usage count", profileError);
+                // Don't fail the song creation for this, just log it.
+            }
+
             onComplete(finalSong);
         } catch (error: any) {
             console.error(error);

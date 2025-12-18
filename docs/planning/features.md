@@ -109,7 +109,23 @@
 
 
 
-## 4. 배포 및 SEO 설정 (Deployment & SEO)
+## 5. 수익 및 비즈니스 모델 (Monetization)
+### 💰 Phase 1: Traffic & Ads (Current)
+- **Google AdSense**:
+  - `ads.txt` 설정을 통해 구글 애드센스 승인을 준비합니다.
+  - 배너 광고 및 보상형 광고(Reward Ads) 도입을 검토합니다.
+
+### 💳 Phase 2: Subscription (Planned)
+- **Singlue Plus (구독 모델)**:
+  - **Zero Config**: 복잡한 설정 없이 바로 이용 가능 (API 비용 플랫폼 대납).
+  - **Premium Features**: 오프라인 저장, 심화 학습 기능(Dictation, Shadowing) 제공 예정.
+
+### 🤝 Phase 3: B2B & Data (Future)
+- **데이터 API**: 정제된 가사/발음/싱크 데이터를 타 플랫폼에 제공.
+- **교육 기관용**: 어학원 및 학교를 위한 선생님용 대시보드 제공.
+
+
+## 6. 배포 및 SEO 설정 (Deployment & SEO)
 - **메타데이터 설정**: 검색 엔진 최적화(SEO)를 위한 Title, Description, Keywords 메타 태그 설정.
 - **Open Graph (OG) 태그**: SNS(Facebook, Twitter, KakaoTalk 등) 공유 시 링크 미리보기를 위한 제목, 설명, 썸네일 이미지 설정.
 - **파비콘 (Favicon)**: 브라우저 탭 및 홈 화면 바로가기에 표시될 애플리케이션 아이콘 설정.
