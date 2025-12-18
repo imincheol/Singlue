@@ -5,7 +5,8 @@ import { Search, Music, Headphones, Archive, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const getVideoId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    // Enhanced regex to support shorts and handle query params (like ?list=) correctly
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
 };
@@ -13,7 +14,7 @@ const getVideoId = (url: string) => {
 export default function HomePage() {
     const [urlInput, setUrlInput] = useState('');
     const navigate = useNavigate();
-    const { user, isApproved, isAdmin } = useAuth();
+    const { user } = useAuth();
     const { t } = useTranslation();
 
     const handleSearch = (e: React.FormEvent) => {
