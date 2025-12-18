@@ -27,7 +27,9 @@
         "search_lyrics": "Tìm lời bài hát",
         "no_lyrics_title": "Chưa tải lời bài hát",
         "no_lyrics_desc": "Tìm kiếm lời bài hát để bắt đầu luyện tập.",
-        "refetch_info": "Làm mới thông tin video"
+        "refetch_info": "Làm mới thông tin video",
+        "api_key_missing": "Thiếu Khóa API Gemini",
+        "update_failed": "Cập nhật thất bại"
     },
     "search": {
         "title": "Tìm lời bài hát",
@@ -76,14 +78,29 @@
         "ai_desc": "Sử dụng AI để tự động tạo phát âm và ý nghĩa cho lời bài hát của bạn.",
         "generate_btn": "Tự động tạo bằng AI",
         "generating": "Đang tạo...",
-        "wait_msg": "Quá trình này có thể mất tới 30 giây."
+        "wait_msg": "Quá trình này có thể mất tới 30 giây.",
+        "save_failed": "Không thể lưu bài hát",
+        "lyrics_failed": "Không thể lưu lời bài hát",
+        "quota_exceeded": "Đã vượt quá hạn ngạch miễn phí (10 bài hát). Vui lòng thêm Khóa API Gemini của riêng bạn trong Cài đặt để tiếp tục.",
+        "config_error": "Lỗi cấu hình nền tảng: Không có Khóa API Nền tảng. Vui lòng liên hệ hỗ trợ.",
+        "enrich_failed": "Bổ sung AI không thành công"
     },
     "auth": {
         "login_title": "Đăng nhập vào Singlue",
         "register_title": "Tạo tài khoản",
         "email": "Địa chỉ Email",
         "password": "Mật khẩu",
-        "nickname": "Biệt danh"
+        "nickname": "Biệt danh",
+        "reg_success_title": "Vui lòng kiểm tra email của bạn!",
+        "reg_success_desc": "Chúng tôi đã gửi liên kết xác nhận đến email của bạn. Vui lòng nhấp vào liên kết để hoàn tất đăng ký.",
+        "reg_success_action": "Đi đến Đăng nhập",
+        "already_registered": "Email này đã được đăng ký. Vui lòng đăng nhập.",
+        "already_have_account": "Bạn đã có tài khoản? Đăng nhập",
+        "pending_approval": "Email chưa được xác nhận hoặc đang chờ phê duyệt.",
+        "rejected_approval": "Đăng ký tài khoản của bạn đã bị từ chối.",
+        "invalid_credentials": "Email hoặc mật khẩu không hợp lệ",
+        "email_not_confirmed": "Email chưa được xác nhận. Vui lòng kiểm tra hộp thư của bạn.",
+        "no_account": "Bạn chưa có tài khoản? Đăng ký"
     },
     "settings": {
         "title": "Cài đặt",

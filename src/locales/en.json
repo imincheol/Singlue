@@ -27,7 +27,9 @@
         "search_lyrics": "Search Lyrics",
         "no_lyrics_title": "No Lyrics Loaded",
         "no_lyrics_desc": "Search for the song lyrics to start your practice session.",
-        "refetch_info": "Refetch Video Info"
+        "refetch_info": "Refetch Video Info",
+        "api_key_missing": "Gemini API Key missing",
+        "update_failed": "Update failed"
     },
     "search": {
         "title": "Search Lyrics",
@@ -76,14 +78,29 @@
         "ai_desc": "Use AI to automatically generate Pronunciation and Meaning for your lyrics.",
         "generate_btn": "Auto-Generate with AI",
         "generating": "Generating...",
-        "wait_msg": "This process may take up to 30 seconds."
+        "wait_msg": "This process may take up to 30 seconds.",
+        "save_failed": "Failed to save song",
+        "lyrics_failed": "Failed to save lyrics",
+        "quota_exceeded": "Free quota exceeded (10 songs). Please add your own Gemini API Key in Settings to continue.",
+        "config_error": "Platform configuration error: No Platform API Key available. Please contact support.",
+        "enrich_failed": "AI Enrichment Failed"
     },
     "auth": {
         "login_title": "Sign in to Singlue",
         "register_title": "Create an account",
         "email": "Email Address",
         "password": "Password",
-        "nickname": "Nickname"
+        "nickname": "Nickname",
+        "reg_success_title": "Please check your email!",
+        "reg_success_desc": "We've sent a confirmation link to your email. Please click the link to complete your registration.",
+        "reg_success_action": "Go to Login",
+        "already_registered": "This email is already registered. Please sign in.",
+        "already_have_account": "Already have an account? Sign in",
+        "pending_approval": "Email not confirmed or pending approval.",
+        "rejected_approval": "Your account registration has been rejected.",
+        "invalid_credentials": "Invalid email or password",
+        "email_not_confirmed": "Email not confirmed. Please check your inbox.",
+        "no_account": "Don't have an account? Sign up"
     },
     "settings": {
         "title": "Settings",
