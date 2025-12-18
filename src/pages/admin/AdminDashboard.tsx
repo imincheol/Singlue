@@ -54,6 +54,7 @@ export default function AdminDashboard() {
                     <thead className="bg-zinc-50 dark:bg-zinc-800/50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Nickname</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Email</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Role</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Status</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Created At</th>
@@ -65,6 +66,9 @@ export default function AdminDashboard() {
                             <tr key={profile.id}>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-zinc-900 dark:text-white">
                                     {profile.nickname}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
+                                    {profile.email || '-'}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
                                     {profile.role}

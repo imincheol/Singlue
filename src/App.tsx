@@ -8,6 +8,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 
 import AdminDashboard from './pages/admin/AdminDashboard';
 import SettingsPage from './pages/SettingsPage';
+import NotFoundPage from './pages/NotFoundPage';
 import { Headphones, Loader2, Settings as SettingsIcon, LogOut, ChevronDown } from 'lucide-react';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -159,6 +160,7 @@ function App() {
         } />
 
         <Route path="/watch/:id" element={<PlayerPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
   );

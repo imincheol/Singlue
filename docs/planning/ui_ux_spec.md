@@ -23,15 +23,24 @@
   - **Approved**: 메인 화면으로 이동.
   - **Pending**: 보안 및 정책에 따라 즉시 **로그아웃 처리** 및 안내 메시지 제공.
 
+### 2.3. Not Found Page (404)
+- **Role**: 존재하지 않는 경로로 접근 시 사용자에게 안내 메시지 표시.
+- **Layout**:
+  - 화면 정중앙에 배치 (Flexbox 활용).
+  - **Icon**: 느낌표 아이콘(AlertCircle) 등을 사용하여 오류 상황 인지.
+  - **Message**: "Page Not Found" 등의 명확한 헤드라인과 설명 텍스트.
+  - **Action**: 홈으로 돌아가는 "Go Home" 버튼 제공.
+- **Header/Footer**: 전역 헤더를 유지하여 사용자가 다른 메뉴로 이동할 수 있도록 함.
+
 ## 3. Global Navigation Bar (Header)
 
 ### 3.1. Layout
 - **Left**: 로고 및 서비스 명 (홈으로 이동)
 - **Right**: 
-  - Library 링크 (승인된 회원일 경우만 표시)
+  - Library 링크 (회원일 경우 표시)
   - Admin 링크 (관리자일 경우만 표시)
-  - **User Info**: 승인된 회원(`approved`) 또는 관리자(`admin`)인 경우에만 닉네임 표시.
-  - **Sign In**: 비로그인 상태이거나, **승인 대기(`pending`) 상태인 경우** 표시 (사용자 혼동 방지).
+  - **User Info**: 닉네임 표시. 클릭 시 드롭다운 메뉴 (`Settings`, `Sign Out`) 제공.
+  - **Sign In**: 비로그인 상태일 경우 표시.
   - 언어 변경 (LanguageSwitcher)
   - 테마 토글
 
@@ -88,7 +97,7 @@
 - **AI Action**: 원클릭으로 AI 생성을 수행하는 강조된 버튼 제공. 로딩 시 스피너 표시.
 
 ## 7. Admin Dashboard UI
-- **Table Layout**: 사용자 목록, 역할, 상태, 가입일 등을 테이블 형태로 표시.
+- **Table Layout**: 사용자 목록, 이메일, 역할, 상태, 가입일 등을 테이블 형태로 표시.
 - **Action Buttons**: 승인(Check), 거절(X) 버튼을 아이콘으로 단순화하여 공간 효율성 확보.
 - **Status Badges**: 승인(Green), 대기(Yellow), 거절(Red) 상태를 색상으로 구분.
 
@@ -97,4 +106,14 @@
   - **Stage 1 (영상 등록), Stage 2 (가사 매칭)**: 카드의 우측 상단에 해당 단계의 명칭을 배지로 표시합니다.
   - **Stage 3 (공개된 노래)**: 최종 완료 및 공개된 상태이므로 별도의 상태 배지를 노출하지 않아 UI를 간결하게 유지합니다.
 - **내 노래 표시**: 본인이 등록한 곡인 경우 좌측 하단에 '내 노래' 레이블을 표시하여 구분합니다.
+
+## 9. Settings UI
+- **Quota Banner**: 
+  - 현재 쿼터 상태(사용량/최대)를 시각적으로 표시. 
+  - 10회 도달 시 경고 메시지 표시.
+  - API Key 등록 시 "Unlimited (Infinite)" 표시.
+- **API Key Input**: 
+  - Gemini API Key를 입력하는 보안 필드 (password type).
+  - 저장 버튼 및 성공/실패 피드백 토스트 메시지.
+
 

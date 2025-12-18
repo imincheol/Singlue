@@ -9,6 +9,7 @@ create table if not exists public.profiles (
   status text default 'pending' check (status in ('pending', 'approved', 'rejected')),
   gemini_api_key text,
   usage_count integer default 0,
+  email text,
   created_at timestamptz default now()
 );
 
@@ -50,13 +51,14 @@ create policy "Users can update own profile"
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, nickname, role, status, usage_count)
+  insert into public.profiles (id, nickname, role, status, usage_count, email)
   values (
     new.id, 
     coalesce(new.raw_user_meta_data->>'nickname', 'User'),
     'user',
     'pending', -- Default status is pending, but login will be allowed
-    0
+    0,
+    new.email
   );
   return new;
 end;

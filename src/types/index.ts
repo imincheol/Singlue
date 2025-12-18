@@ -15,6 +15,7 @@ export interface Profile {
     status: UserStatus;
     gemini_api_key?: string;
     usage_count: number;
+    email?: string;
     created_at: string;
 }
 
