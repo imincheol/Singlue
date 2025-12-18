@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { getRecentPublicSongs } from '../services/supabase';
 import type { Song } from '../types';
-import { getFlagEmoji } from '../utils/country';
+import { SongCard } from '../components/SongCard';
 
 const getVideoId = (url: string) => {
     // Enhanced regex to support shorts and handle query params (like ?list=) correctly
@@ -98,55 +98,16 @@ export default function HomePage() {
             {recentSongs.length > 0 && (
                 <div className="w-full max-w-7xl mt-16 px-4 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-200">
                     <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6 text-center">
-                        Recently Added
+                        {t('home.recently_added')}
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {recentSongs.map((song) => (
-                            <Link
+                        {recentSongs.slice(0, 8).map((song) => (
+                            <SongCard
                                 key={song.id}
-                                to={`/watch/${song.video_id}`}
-                                className="group bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 transform hover:-translate-y-1"
-                            >
-                                {/* Thumbnail */}
-                                <div className="aspect-video relative overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                                    <img
-                                        src={`https://img.youtube.com/vi/${song.video_id}/mqdefault.jpg`}
-                                        alt={song.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        loading="lazy"
-                                    />
-                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-
-                                    {/* Country Flag Badge */}
-                                    {song.country_code && (
-                                        <div className="absolute top-2 right-2  bg-black/50 backdrop-blur-md px-2 py-1 rounded text-lg shadow-sm">
-                                            {getFlagEmoji(song.country_code)}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Content */}
-                                <div className="p-4">
-                                    <h3 className="font-semibold text-zinc-900 dark:text-white truncate mb-1 group-hover:text-indigo-500 transition-colors">
-                                        {song.title}
-                                    </h3>
-                                    <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
-                                        {song.artist}
-                                    </p>
-                                    <div className="flex items-center gap-2 mt-3 text-xs text-zinc-400 dark:text-zinc-500">
-                                        <span className="flex items-center gap-1">
-                                            <Music className="w-3 h-3" />
-                                            Synced
-                                        </span>
-                                        {song.created_at && (
-                                            <>
-                                                <span>•</span>
-                                                <span>{new Date(song.created_at).toLocaleDateString()}</span>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            </Link>
+                                song={song}
+                                showStatus={false}
+                                showMySongBadge={false}
+                            />
                         ))}
                     </div>
                 </div>
