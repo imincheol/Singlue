@@ -26,9 +26,8 @@
 ### 2.2. Authentication Pages (Login/Register)
 - **Central Card Layout**: 화면 중앙에 폼을 배치하여 집중도를 높입니다.
 - **Error Feedback**: 입력 오류 발생 시 필드 하단에 붉은색 텍스트로 명확히 표시합니다.
-- **Login Flow**: 로그인 성공 직후 즉시 계정 상태(`status`)를 확인합니다.
-  - **Approved**: 메인 화면으로 이동.
-  - **Pending**: 보안 및 정책에 따라 즉시 **로그아웃 처리** 및 안내 메시지 제공.
+- **Login Flow**: 로그인 성공 시 메인 화면으로 이동합니다. 이메일 인증이 완료되지 않은 경우 로그인 과정에서 인증 오류 메시지가 표시됩니다.
+- **Registration Success**: 회원가입 성공 시, 즉시 로그인 페이지로 보내는 대신 "이메일 인증 안내" 메시지를 화면에 표시하여 사용자가 메일을 확인하도록 유도합니다.
 
 ### 2.3. Not Found Page (404)
 - **Role**: 존재하지 않는 경로로 접근 시 사용자에게 안내 메시지 표시.
@@ -131,5 +130,17 @@
 - **API Key Input**: 
   - Gemini API Key를 입력하는 보안 필드 (password type).
   - 저장 버튼 및 성공/실패 피드백 토스트 메시지.
+
+## 10. Message & Feedback System (No Alert Policy)
+
+### 10.1. Zero Browser Alerts
+- 사용자 경험(UX)의 연속성을 해치는 브라우저 기본 `alert()` 창 사용을 **금지**합니다.
+- 모든 피드백은 앱 내 UI 요소(인라인 메시지, 배너, 토스트 등)로 처리합니다.
+
+### 10.2. Feedback Types
+- **Inline Message**: 폼 입력 필드 하단이나 특정 영역 내부에 표시되는 에러/성공 메시지.
+- **Top Banner**: 페이지 상단에 고정되거나 플로팅 형태로 나타나는 알림 (예: 회원가입 성공, 라이브러리 접근 제한).
+- **Auto-Dismiss**: 일시적인 상태 안내 메시지는 3~5초 후 자동으로 사라지도록 설정하여 불필요한 클릭을 방지합니다.
+- **Loading States**: 비동기 작업 시 스피너(Spinner)나 스켈레톤(Skeleton UI)을 사용하여 진행 상황을 시각화합니다.
 
 
