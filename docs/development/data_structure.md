@@ -39,17 +39,24 @@ Supabase (PostgreSQL)에 저장되는 테이블 구조입니다.
 - **id** (`uuid`, PK): 노래 고유 ID.
 - **title** (`text`): 노래 제목.
 - **artist** (`text`): 아티스트 이름.
+- **video_id** (`text`): YouTube Video ID.
+- **created_by** (`uuid`, FK): 생성한 사용자 ID (`profiles.id` 참조).
+- **stage** (`int`): 생성 단계 (1: 기본 정보, 2: 가사, 3: 완료/공개).
+- **is_public** (`boolean`): 공개 여부.
+- **global_offset** (`float8`): 싱크 오프셋.
 - **lyrics** (`jsonb`): `LyricsLine[]` 구조의 JSON 데이터.
   - 구조: `Array<{ time: number, source: string, pron?: Record<string, string>, trans?: Record<string, string> }>`
-  - **중요**: `pron` (발음) 및 `trans` (번역) 필드가 반드시 포함되어야 함.
 - **created_at** (`timestamptz`): 생성 시각.
 
-### 4.2. Video Mappings Table (`video_mappings`)
-YouTube 비디오와 노래를 연결하는 매핑 테이블입니다.
-- **video_id** (`text`, PK): YouTube Video ID.
-- **song_id** (`uuid`, FK): `songs.id` 참조.
-- **global_offset** (`float8`): 싱크 오프셋 (초 단위).
-- **created_at** (`timestamptz`): 생성 시각.
+### 4.2. Profiles Table (`profiles`)
+사용자 정보를 저장하는 테이블입니다. `auth.users`와 1:1 매핑됩니다.
+- **id** (`uuid`, PK): 사용자 ID (`auth.users.id` 참조).
+- **nickname** (`text`): 닉네임.
+- **role** (`text`): 역할 (`'admin' | 'user'`).
+- **status** (`text`): 상태 (`'pending' | 'approved' | 'rejected'`).
+- **created_at** (`timestamptz`): 가입 시각.
+
+
 
 ## 5. 히스토리 (History)
 ### `HistoryItem`
