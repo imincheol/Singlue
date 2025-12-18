@@ -5,7 +5,10 @@ import { useAppStore } from '../store/useAppStore';
 interface PlayerControlsProps {
 }
 
+import { useTranslation } from 'react-i18next';
+
 export const PlayerControls: React.FC<PlayerControlsProps> = () => {
+    const { t } = useTranslation();
     const {
         isPlaying,
         setIsPlaying,
@@ -66,7 +69,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = () => {
 
                 {/* 4. Speed Control */}
                 <div className="flex items-center space-x-1 flex-shrink-0 bg-zinc-200 dark:bg-zinc-800 rounded-lg px-2 py-1.5 border border-zinc-300 dark:border-white/5">
-                    <span className="text-[10px] uppercase font-bold text-zinc-500 dark:text-zinc-400">Rate</span>
+                    <span className="text-[10px] uppercase font-bold text-zinc-500 dark:text-zinc-400">{t('lyrics.rate')}</span>
                     <select
                         value={playbackRate}
                         onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}

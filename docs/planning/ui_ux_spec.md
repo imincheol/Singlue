@@ -15,6 +15,13 @@
 - **Hero Section**: 
   - 타이틀은 사용자 시선을 가장 먼저 끄는 요소이므로 가독성을 해치지 않아야 합니다.
   - 모바일에서도 타이틀이 과도하게 줄바꿈되거나 잘리지 않도록 반응형 폰트 사이즈(`text-5xl md:text-7xl`)를 유지하되, 필요 시 미세 조정합니다.
+- **Recently Added Section**: 
+  - **Layout**: 반응형 그리드 (Mobile: 1열, Tablet: 2열, Desktop: 3-4열)
+  - **Card Content**:
+    - **Thumbnail**: 16:9 비율 유지, 호버 시 약간의 스케일 업 애니메이션 적용.
+    - **Info**: 제목(Truncate 1줄), 가수(Truncate 1줄), 등록일, Synced 배지.
+    - **Flag**: 썸네일 우측 상단 또는 메타데이터 영역에 해당 곡의 국가 국기 표시.
+  - **Animation**: 스크롤 시 아래에서 위로 부드럽게 나타나는 등장 애니메이션 적용.
 
 ### 2.2. Authentication Pages (Login/Register)
 - **Central Card Layout**: 화면 중앙에 폼을 배치하여 집중도를 높입니다.
@@ -95,6 +102,7 @@
 - **Input Fields**: 제목, 가수 등 기본 정보 입력 필드.
 - **Lyrics Area**: 대량의 텍스트(LRC)를 붙여넣기 쉽도록 충분한 높이 확보.
 - **AI Action**: 원클릭으로 AI 생성을 수행하는 강조된 버튼 제공. 로딩 시 스피너 표시.
+- **다국어 지원**: 단계별 제목, 입력 필드 레이블, 안내 문구, 버튼 텍스트 등 모든 요소가 사용자의 언어 설정에 따라 번역되어야 합니다.
 
 ## 7. Admin Dashboard UI
 - **Table Layout**: 사용자 목록, 이메일, 역할, 상태, 가입일 등을 테이블 형태로 표시.

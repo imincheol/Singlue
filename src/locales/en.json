@@ -5,6 +5,7 @@
         "subtitle": "AI-powered language learning through your favorite music videos.",
         "placeholder": "Paste YouTube URL...",
         "start": "Start",
+        "browse_public": "Browse Public Library",
         "synced_lyrics": "Synchronized Lyrics",
         "ai_curator": "AI Curator",
         "go_to_library": "Go to Library",
@@ -53,5 +54,20 @@
         "toggle_pron": "Toggle Pronunciation",
         "toggle_trans": "Toggle Translation",
         "rate": "RATE"
+    },
+    "wizard": {
+        "title": "Register New Song",
+        "step": "Step",
+        "label_title": "Title",
+        "label_artist": "Artist",
+        "next_lyrics": "Next: Lyrics",
+        "cancel": "Cancel",
+        "paste_lyrics": "Paste Lyrics (LRC format supported)",
+        "lyrics_placeholder": "[00:12.00] Line 1...",
+        "next_enrichment": "Next: Enrichment",
+        "ai_desc": "Use AI to automatically generate Pronunciation and Meaning for your lyrics.",
+        "generate_btn": "Auto-Generate with AI",
+        "generating": "Generating...",
+        "wait_msg": "This process may take up to 30 seconds."
     }
 }

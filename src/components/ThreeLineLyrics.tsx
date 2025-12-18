@@ -70,7 +70,7 @@ export const ThreeLineLyrics: React.FC = () => {
                 <div className="flex items-center gap-2">
                     <div className="flex items-center space-x-1 bg-zinc-50 dark:bg-black/20 rounded-md px-2 py-1 border border-zinc-200 dark:border-white/5">
                         <Clock size={12} className="text-zinc-400" />
-                        <span className="text-[10px] text-zinc-500 mr-1 hidden sm:inline">Sync</span>
+                        <span className="text-[10px] text-zinc-500 mr-1 hidden sm:inline">{t('lyrics.sync')}</span>
 
                         <div className="flex items-center gap-px">
                             <button onClick={() => adjustSync(-0.1)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors font-mono hover:bg-zinc-200 dark:hover:bg-white/10 rounded" title="-0.1s">-.1</button>
@@ -93,10 +93,10 @@ export const ThreeLineLyrics: React.FC = () => {
                             onClick={handleSave}
                             disabled={isSaving}
                             className="px-2 py-1 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-500 dark:text-indigo-400 rounded text-[10px] font-medium transition-colors flex items-center gap-1.5 border border-indigo-500/20 animate-in fade-in slide-in-from-left-2 duration-300"
-                            title="Save Sync"
+                            title={t('curator.save')}
                         >
                             {isSaving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
-                            <span className="hidden sm:inline">Save</span>
+                            <span className="hidden sm:inline">{t('curator.save')}</span>
                         </button>
                     )}
                 </div>

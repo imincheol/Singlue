@@ -5,6 +5,7 @@
         "subtitle": "Học ngoại ngữ thông qua video âm nhạc yêu thích của bạn với AI.",
         "placeholder": "Dán URL YouTube...",
         "start": "Bắt đầu",
+        "browse_public": "Duyệt thư viện công cộng",
         "synced_lyrics": "Lời bài hát đồng bộ",
         "ai_curator": "Trợ lý AI",
         "go_to_library": "Đến thư viện",
@@ -53,5 +54,20 @@
         "toggle_pron": "Chuyển đổi phát âm",
         "toggle_trans": "Chuyển đổi dịch thuật",
         "rate": "TỐC ĐỘ"
+    },
+    "wizard": {
+        "title": "Đăng ký bài hát mới",
+        "step": "Bước",
+        "label_title": "Tiêu đề",
+        "label_artist": "Nghệ sĩ",
+        "next_lyrics": "Tiếp theo: Lời bài hát",
+        "cancel": "Hủy",
+        "paste_lyrics": "Dán lời bài hát (Hỗ trợ định dạng LRC)",
+        "lyrics_placeholder": "[00:12.00] Dòng 1...",
+        "next_enrichment": "Tiếp theo: Bổ sung AI",
+        "ai_desc": "Sử dụng AI để tự động tạo phát âm và ý nghĩa cho lời bài hát của bạn.",
+        "generate_btn": "Tự động tạo bằng AI",
+        "generating": "Đang tạo...",
+        "wait_msg": "Quá trình này có thể mất tới 30 giây."
     }
 }

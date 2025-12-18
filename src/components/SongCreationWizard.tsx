@@ -12,8 +12,11 @@ interface Props {
     onCancel: () => void;
 }
 
+import { useTranslation } from 'react-i18next';
+
 export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplete, onCancel }: Props) {
     const { user, profile } = useAuth();
+    const { t } = useTranslation();
     // State for Wizard
     const [currentSong, setCurrentSong] = useState<Song | null>(null);
     const [step, setStep] = useState(1);
@@ -179,14 +182,14 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
     return (
         <div className="bg-zinc-100 dark:bg-zinc-900 rounded-xl p-6 border border-zinc-200 dark:border-white/5 space-y-6">
             <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                Register New Song
-                <span className="text-sm font-normal text-zinc-500 bg-zinc-200 dark:bg-zinc-800 px-2 py-0.5 rounded">Step {step}/3</span>
+                {t('wizard.title')}
+                <span className="text-sm font-normal text-zinc-500 bg-zinc-200 dark:bg-zinc-800 px-2 py-0.5 rounded">{t('wizard.step')} {step}/3</span>
             </h2>
 
             {step === 1 && (
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Title</label>
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('wizard.label_title')}</label>
                         <input
                             type="text"
                             className="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white dark:bg-black text-zinc-900 dark:text-white px-3 py-2"
@@ -195,7 +198,7 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Artist</label>
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('wizard.label_artist')}</label>
                         <input
                             type="text"
                             className="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white dark:bg-black text-zinc-900 dark:text-white px-3 py-2"
@@ -205,9 +208,9 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
                     </div>
                     <div className="flex gap-2">
                         <button onClick={handleSaveStep1} disabled={loading} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500 disabled:opacity-50 flex items-center gap-2">
-                            {loading && <Loader2 className="animate-spin w-4 h-4" />} Next: Lyrics
+                            {loading && <Loader2 className="animate-spin w-4 h-4" />} {t('wizard.next_lyrics')}
                         </button>
-                        <button onClick={onCancel} className="px-4 py-2 text-zinc-500">Cancel</button>
+                        <button onClick={onCancel} className="px-4 py-2 text-zinc-500">{t('wizard.cancel')}</button>
                     </div>
                 </div>
             )}
@@ -215,17 +218,17 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
             {step === 2 && (
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Paste Lyrics (LRC format supported)</label>
+                        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">{t('wizard.paste_lyrics')}</label>
                         <textarea
                             className="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-700 bg-white dark:bg-black text-zinc-900 dark:text-white h-48 px-3 py-2 font-mono text-sm"
                             value={lyricsText}
                             onChange={e => setLyricsText(e.target.value)}
-                            placeholder="[00:12.00] Line 1..."
+                            placeholder={t('wizard.lyrics_placeholder')}
                         />
                     </div>
                     <div className="flex gap-2">
                         <button onClick={handleSaveStep2} disabled={loading} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500 disabled:opacity-50 flex items-center gap-2">
-                            {loading && <Loader2 className="animate-spin w-4 h-4" />} Next: Enrichment
+                            {loading && <Loader2 className="animate-spin w-4 h-4" />} {t('wizard.next_enrichment')}
                         </button>
                     </div>
                 </div>
@@ -234,16 +237,16 @@ export function SongCreationWizard({ videoId, videoTitle, videoAuthor, onComplet
             {step === 3 && (
                 <div className="space-y-4">
                     <p className="text-zinc-600 dark:text-zinc-400">
-                        Use AI to automatically generate Pronunciation and Meaning for your lyrics.
+                        {t('wizard.ai_desc')}
                     </p>
                     <div className="flex gap-2">
                         <button onClick={handleEnrich} disabled={loading} className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-500 disabled:opacity-50 flex items-center gap-2 w-full justify-center">
                             {loading && <Loader2 className="animate-spin w-4 h-4" />}
-                            {loading ? 'Generating...' : 'Auto-Generate with AI'}
+                            {loading ? t('wizard.generating') : t('wizard.generate_btn')}
                         </button>
                     </div>
                     <div className="text-xs text-zinc-500 text-center">
-                        This process may take up to 30 seconds.
+                        {t('wizard.wait_msg')}
                     </div>
                 </div>
             )}

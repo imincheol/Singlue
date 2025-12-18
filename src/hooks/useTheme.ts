@@ -13,8 +13,8 @@ export const useTheme = () => {
             return 'dark';
         }
 
-        // 3. 기본값은 dark
-        return 'dark';
+        // 3. 기본값은 light (기기 설정이 dark가 아닐 경우)
+        return 'light';
     });
 
     useEffect(() => {
