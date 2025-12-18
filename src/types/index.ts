@@ -30,6 +30,7 @@ export interface Song {
     global_offset: number;
     created_at?: string;
     published_at?: string;
+    country_code?: string; // ISO 3166-1 alpha-2 (e.g. KR, VN, US)
 }
 
 

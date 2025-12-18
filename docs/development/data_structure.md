@@ -23,6 +23,7 @@
 - **title** (`string`): 곡 제목.
 - **artist** (`string`): 아티스트 이름.
 - **lyrics** (`LyricsLine[]`): 시간순으로 정렬된 가사 라인 배열.
+- **country_code** (`string?`): 국가 코드 (ISO 3166-1 alpha-2, 예: KR, VN).
 
 ## 3. 비디오 매핑 (Video Mapping)
 유튜브 비디오와 Singlue의 Song 데이터는 `Song` 객체 내부의 `video_id`를 통해 연결됩니다. 별도의 매핑 테이블 없이 `songs` 테이블에서 직접 통합 관리됩니다.
@@ -43,6 +44,7 @@ Supabase (PostgreSQL)에 저장되는 테이블 구조입니다.
 - **lyrics** (`jsonb`): `LyricsLine[]` 구조의 JSON 데이터.
   - 구조: `Array<{ time: number, source: string, pron?: Record<string, string>, trans?: Record<string, string> }>`
 - **created_at** (`timestamptz`): 생성 시각.
+- **country_code** (`text`): 국가 코드.
 
 ### 4.2. Profiles Table (`profiles`)
 사용자 정보를 저장하는 테이블입니다. `auth.users`와 1:1 매핑됩니다.

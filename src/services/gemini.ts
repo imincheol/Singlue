@@ -24,6 +24,7 @@ export const generateLyrics = async (apiKey: string, videoTitle: string, userLan
     Requirements:
        - pron: Object with 'ko', 'en', and '${userLanguage}' keys (if different).
        - trans: Object with 'ko', 'en', and '${userLanguage}' keys (if different).
+       - country_code: ISO 3166-1 alpha-2 code indicating the country of origin/main language of the song (e.g. "KR" for Korean, "VN" for Vietnamese, "US" for English, "JP" for Japanese).
     
     Structure Example:
     {
@@ -58,6 +59,7 @@ export const generateLyrics = async (apiKey: string, videoTitle: string, userLan
     {
       "title": "Song Title",
       "artist": "Artist Name",
+      "country_code": "ISO Code",
       "lyrics": [
         { "time": 0, "source": "...", "pron": "...", "trans": "..." },
         ...
@@ -112,6 +114,11 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song, userLangua
     Title: "${currentSong.title}"
     Artist: "${currentSong.artist}"
 
+    Goal:
+    1. Fill in "pron" object: { "ko": "...", "en": "...", "${userLanguage}": "..." }
+    2. Fill in "trans" object: { "ko": "...", "en": "...", "${userLanguage}": "..." }
+    3. Determine the song's country of origin as "country_code" (e.g. "KR", "VN").
+
     Input Lyrics (JSON):
     ${JSON.stringify(lyricsToEnrich)}
 
@@ -149,6 +156,7 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song, userLangua
     
     Return ONLY a JSON object with this structure (no markdown code blocks):
     {
+      "country_code": "ISO Code",
       "lyrics": [
          { "time": 0, "source": "...", "pron": "...", "trans": "..." },
          ...
@@ -196,6 +204,7 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song, userLangua
 
       return {
         ...currentSong,
+        country_code: data.country_code || currentSong.country_code,
         lyrics: mergedLyrics
       };
     } catch (error: any) {
@@ -207,4 +216,45 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song, userLangua
 
   console.error('All Gemini models failed enrichment:', lastError);
   throw new Error('Failed to enrich lyrics. Please check your API Key and try again.');
+};
+
+export const parseVideoMetadata = async (apiKey: string, videoTitle: string): Promise<{ title: string; artist: string; country_code?: string }> => {
+  if (!apiKey) throw new Error('API Key is required');
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+
+  const prompt = `
+    You are an expert music metadata curator.
+    Task: Extract the clean "title", "artist", and "country_code" from the following YouTube video title.
+    Video Title: "${videoTitle}"
+
+    Rules:
+    - Remove unnecessary tags like [MV], (Official Video), [Lyrics], etc.
+    - Separate artist and song title accurately.
+    - Determine the "country_code" (ISO 3166-1 alpha-2, e.g., KR, US, VN, JP) based on the language of the title/artist or known origin.
+    - Return ONLY a JSON object: { "title": "...", "artist": "...", "country_code": "..." }
+  `;
+
+  for (const modelName of MODELS) {
+    try {
+      const model = genAI.getGenerativeModel({ model: modelName });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+      const data = JSON.parse(jsonStr);
+
+      return {
+        title: data.title || videoTitle,
+        artist: data.artist || 'Unknown Artist',
+        country_code: data.country_code
+      };
+    } catch (error: any) {
+      console.warn(`Metadata parse failed with model ${modelName}:`, error.message);
+    }
+  }
+
+  // Final fallback
+  return { title: videoTitle, artist: 'Unknown Artist' };
 };

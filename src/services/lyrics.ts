@@ -6,7 +6,7 @@ export interface LRCSearchResult {
     duration: number;
     instrumental: boolean;
     plainLyrics: string;
-    syncedLyrics: string; // This is the LRC content
+    syncedLyrics?: string | null; // This is the LRC content, can be null
 }
 
 export const searchLyrics = async (query: string): Promise<LRCSearchResult[]> => {
@@ -16,6 +16,5 @@ export const searchLyrics = async (query: string): Promise<LRCSearchResult[]> =>
     }
     const data = await response.json();
 
-    // Filter out results that don't have synced lyrics
-    return data.filter((item: LRCSearchResult) => item.syncedLyrics);
+    return data;
 };

@@ -59,6 +59,7 @@ export const saveSong = async (song: Song) => {
             stage: song.stage,
             is_public: song.is_public,
             global_offset: song.global_offset,
+            country_code: song.country_code,
         });
 
     if (error) {
@@ -157,4 +158,18 @@ export const toggleFavorite = async (userId: string, songId: string): Promise<bo
             .insert({ user_id: userId, song_id: songId });
         return true; // Added
     }
+};
+
+export const updateSongMetadata = async (songId: string, title: string, artist: string, country_code?: string) => {
+    const updates: any = { title, artist };
+    if (country_code) {
+        updates.country_code = country_code;
+    }
+
+    const { error } = await supabase
+        .from('songs')
+        .update(updates)
+        .eq('id', songId);
+
+    if (error) throw error;
 };
