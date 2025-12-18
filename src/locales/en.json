@@ -5,7 +5,8 @@
         "admin": "Admin",
         "signin": "Sign In",
         "signout": "Sign Out",
-        "settings": "Settings"
+        "settings": "Settings",
+        "signup": "Sign Up"
     },
     "home": {
         "title": "Stick the Rhythm,\nMaster the Fluency.",
@@ -96,8 +97,6 @@
         "reg_success_action": "Go to Login",
         "already_registered": "This email is already registered. Please sign in.",
         "already_have_account": "Already have an account? Sign in",
-        "pending_approval": "Email not confirmed or pending approval.",
-        "rejected_approval": "Your account registration has been rejected.",
         "invalid_credentials": "Invalid email or password",
         "email_not_confirmed": "Email not confirmed. Please check your inbox.",
         "no_account": "Don't have an account? Sign up"
@@ -112,7 +111,6 @@
         "nickname": "Nickname",
         "email": "Email",
         "role": "Role",
-        "status": "Status",
         "created_at": "Created At",
         "actions": "Actions"
     },

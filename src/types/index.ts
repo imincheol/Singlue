@@ -6,13 +6,11 @@ export interface LyricsLine {
 }
 
 export type UserRole = 'admin' | 'user';
-export type UserStatus = 'pending' | 'approved' | 'rejected';
 
 export interface Profile {
     id: string; // UUID
     nickname: string;
     role: UserRole;
-    status: UserStatus;
     gemini_api_key?: string;
     usage_count: number;
     email?: string;

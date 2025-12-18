@@ -5,7 +5,8 @@
         "admin": "관리자",
         "signin": "로그인",
         "signout": "로그아웃",
-        "settings": "설정"
+        "settings": "설정",
+        "signup": "가입"
     },
     "home": {
         "title": "리듬을 타며,\n언어를 마스터하세요.",
@@ -96,8 +97,6 @@
         "reg_success_action": "로그인 페이지로 가기",
         "already_registered": "이미 등록된 이메일입니다. 로그인해 주세요.",
         "already_have_account": "이미 계정이 있으신가요? 로그인",
-        "pending_approval": "이메일 인증이 완료되지 않았거나 승인 대기 중입니다.",
-        "rejected_approval": "계정 가입이 거절되었습니다.",
         "invalid_credentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
         "email_not_confirmed": "이메일 인증이 완료되지 않았습니다. 메일함을 확인해 주세요.",
         "no_account": "계정이 없으신가요? 회원가입"
@@ -112,7 +111,6 @@
         "nickname": "닉네임",
         "email": "이메일",
         "role": "권한",
-        "status": "상태",
         "created_at": "가입일",
         "actions": "작업"
     },

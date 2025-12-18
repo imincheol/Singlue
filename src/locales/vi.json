@@ -5,7 +5,8 @@
         "admin": "Quản trị",
         "signin": "Đăng nhập",
         "signout": "Đăng xuất",
-        "settings": "Cài đặt"
+        "settings": "Cài đặt",
+        "signup": "Đăng ký"
     },
     "home": {
         "title": "Bắt nhịp điệu, Thành thạo ngoại ngữ.",
@@ -96,8 +97,6 @@
         "reg_success_action": "Đi đến Đăng nhập",
         "already_registered": "Email này đã được đăng ký. Vui lòng đăng nhập.",
         "already_have_account": "Bạn đã có tài khoản? Đăng nhập",
-        "pending_approval": "Email chưa được xác nhận hoặc đang chờ phê duyệt.",
-        "rejected_approval": "Đăng ký tài khoản của bạn đã bị từ chối.",
         "invalid_credentials": "Email hoặc mật khẩu không hợp lệ",
         "email_not_confirmed": "Email chưa được xác nhận. Vui lòng kiểm tra hộp thư của bạn.",
         "no_account": "Bạn chưa có tài khoản? Đăng ký"
@@ -112,7 +111,6 @@
         "nickname": "Biệt danh",
         "email": "Email",
         "role": "Vai trò",
-        "status": "Trạng thái",
         "created_at": "Ngày tạo",
         "actions": "Hành động"
     },

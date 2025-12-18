@@ -9,7 +9,6 @@ interface AuthContextType {
     session: Session | null;
     isLoading: boolean;
     isAdmin: boolean;
-    isApproved: boolean;
     signOut: () => Promise<void>;
 }
 
@@ -83,19 +82,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } else {
                 console.log('[AuthContext] Profile fetched successfully');
 
-                // Strict Access Control: Force logout ONLY if rejected. 'pending' status is now allowed for Free Quota.
-                if (data.status === 'rejected') {
-                    console.warn('[AuthContext] User status is', data.status, '- forcing logout.');
-                    await supabase.auth.signOut();
-                    setProfile(null);
-                    setUser(null);
-                    setSession(null);
-                    return;
-                }
-
                 setProfile(data);
-                // Also log the role/status
-                console.log('[AuthContext] Role:', data.role, 'Status:', data.status);
+                // Also log the role
+                console.log('[AuthContext] Role:', data.role);
             }
         } catch (error) {
             console.error('[AuthContext] Error in fetchProfile:', error);
@@ -118,7 +107,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         session,
         isLoading,
         isAdmin: profile?.role === 'admin',
-        isApproved: profile?.status === 'approved',
         signOut,
     };
 

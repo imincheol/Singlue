@@ -43,27 +43,7 @@ export default function LoginPage() {
             }
 
             if (data.user) {
-                console.log('User found, fetching profile status...');
-                // Fetch profile status
-                const { data: profile, error: profileError } = await supabase
-                    .from('profiles')
-                    .select('status')
-                    .eq('id', data.user.id)
-                    .single();
-
-                console.log('Profile fetch result:', { profile, profileError });
-
-                if (profile?.status === 'pending') {
-                    console.log('Status pending, signing out...');
-                    await supabase.auth.signOut();
-                    throw new Error(t('auth.pending_approval'));
-                }
-
-                if (profile?.status === 'rejected') {
-                    console.log('Status rejected, signing out...');
-                    await supabase.auth.signOut();
-                    throw new Error(t('auth.rejected_approval'));
-                }
+                console.log('User login successful');
             }
 
             console.log('Navigating to root...');

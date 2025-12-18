@@ -24,6 +24,7 @@ export default function RegisterPage() {
                 email,
                 password,
                 options: {
+                    emailRedirectTo: `${window.location.origin}/login`,
                     data: {
                         nickname,
                     },
@@ -40,7 +41,6 @@ export default function RegisterPage() {
                         id: authData.user.id,
                         nickname,
                         role: 'user', // Default
-                        status: 'approved', // Default to approved as per new spec
                         email // Set email for display in admin
                     });
 
