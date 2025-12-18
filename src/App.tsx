@@ -128,6 +128,8 @@ function App() {
               </Link>
             )}
 
+            <LanguageSwitcher />
+
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
             ) : (!user) ? (
@@ -138,7 +140,6 @@ function App() {
               <UserDropdown user={user} profile={profile} signOut={useAuth().signOut} />
             )}
 
-            <LanguageSwitcher />
             <ThemeToggle />
           </div>
         </div>
