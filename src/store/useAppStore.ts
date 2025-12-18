@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { updateVideoMappingOffset } from '../services/supabase';
-import type { Song, VideoMapping, HistoryItem } from '../types';
+import { saveSong } from '../services/supabase';
+import type { Song, HistoryItem } from '../types';
 
 interface AppState {
     apiKey: string | null;
@@ -9,9 +9,6 @@ interface AppState {
 
     currentSong: Song | null;
     setCurrentSong: (song: Song | null) => void;
-
-    videoMapping: VideoMapping | null;
-    setVideoMapping: (mapping: VideoMapping | null) => void;
 
     // Player State
     isPlaying: boolean;
@@ -58,9 +55,6 @@ export const useAppStore = create<AppState>()(
 
             currentSong: null,
             setCurrentSong: (song) => set({ currentSong: song }),
-
-            videoMapping: null,
-            setVideoMapping: (mapping) => set({ videoMapping: mapping }),
 
             isPlaying: false,
             setIsPlaying: (isPlaying) => set({ isPlaying }),
@@ -118,21 +112,23 @@ export const useAppStore = create<AppState>()(
 
             saveCurrentOffset: async () => {
                 const state = get();
-                const { videoMapping, userOffset } = state;
+                const { currentSong, userOffset } = state;
 
-                if (!videoMapping) return;
+                if (!currentSong) return;
 
-                const newGlobalOffset = (videoMapping.globalOffset || 0) + userOffset;
+                const newGlobalOffset = (currentSong.global_offset || 0) + userOffset;
 
                 try {
-                    await updateVideoMappingOffset(videoMapping.videoId, newGlobalOffset);
+                    const updatedSong: Song = {
+                        ...currentSong,
+                        global_offset: newGlobalOffset
+                    };
+
+                    await saveSong(updatedSong);
 
                     // Update local state
                     set({
-                        videoMapping: {
-                            ...videoMapping,
-                            globalOffset: newGlobalOffset
-                        },
+                        currentSong: updatedSong,
                         userOffset: 0 // Reset user offset as it's now merged
                     });
                 } catch (error) {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { generateLyrics } from '../services/gemini';
-import { saveSongAndMapping } from '../services/supabase';
-import type { Song, VideoMapping } from '../types';
+import { saveSong } from '../services/supabase';
+import type { Song } from '../types';
 import { Loader2, Sparkles, Save, Key } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,8 +13,7 @@ interface Props {
 export const Curator: React.FC<Props> = ({ videoId }) => {
     const {
         apiKey, setApiKey,
-        setCurrentSong,
-        setVideoMapping
+        setCurrentSong
     } = useAppStore();
     const { t } = useTranslation();
 
@@ -42,7 +41,7 @@ export const Curator: React.FC<Props> = ({ videoId }) => {
             // We'll ask user for "Song Title / Artist" in the hint or separate field if needed.
             // For this MVP, let's assume the user Hint contains "Artist - Title".
 
-            const song = await generateLyrics(apiKey, `Video ID: ${videoId}`, hint);
+            const song = await generateLyrics(apiKey, `Video ID: ${videoId}`, t('language_code', { defaultValue: 'en' }), hint);
             setPreviewSong(song);
         } catch (err: any) {
             setError(err.message || 'Failed to generate lyrics');
@@ -56,17 +55,18 @@ export const Curator: React.FC<Props> = ({ videoId }) => {
             setIsLoading(true);
             try {
                 // Save to Supabase first
-                const mapping: VideoMapping = {
-                    videoId,
-                    songId: previewSong.id,
-                    globalOffset: 0 // Default 0
-                };
+                // Ensure song structure is correct
+                // VideoMapping logic merged into Song
+                // For Curator, we assume offset is 0 initially or managed differently?
+                // The generated song should have stage: 1 or 3? 
+                // "Generate" implies creating new content.
+                // Assuming it follows the new Song structure.
 
-                await saveSongAndMapping(previewSong, mapping);
+                await saveSong(previewSong);
 
                 // Update Local State
                 setCurrentSong(previewSong);
-                setVideoMapping(mapping);
+                // setVideoMapping(mapping); // Deprecated
 
                 // Optional: success feedback or close mode?
                 // For now, just update state which might trigger UI changes if parent re-renders or assumes curator mode ends?

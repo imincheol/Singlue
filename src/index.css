@@ -1,9 +1,36 @@
 @import "tailwindcss";
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
-  background-color: black;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+
+  html,
+  body {
+    background-color: black;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+
+  html,
+  body {
+    background-color: white;
+  }
+}
+
+html.dark,
+html.dark body {
+  background-color: black;
+}
+
+html:not(.dark),
+html:not(.dark) body {
+  background-color: white;
 }

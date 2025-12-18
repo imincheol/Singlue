@@ -3,10 +3,10 @@ import { useAppStore } from '../store/useAppStore';
 import { clsx } from 'clsx';
 
 export const ThreeLineLyrics: React.FC = () => {
-    const { currentSong, currentTime, userOffset, videoMapping } = useAppStore();
+    const { currentSong, currentTime, userOffset } = useAppStore();
     const [activeLineIndex, setActiveLineIndex] = useState<number>(-1);
 
-    const globalOffset = videoMapping?.globalOffset || 0;
+    const globalOffset = currentSong?.global_offset || 0;
     const totalOffset = globalOffset + userOffset;
     const syncedTime = currentTime - totalOffset;
 
@@ -34,7 +34,7 @@ export const ThreeLineLyrics: React.FC = () => {
     if (!currentSong) return null;
 
     return (
-        <div className="w-full bg-black/40 border border-white/5 rounded-xl p-6 flex flex-col items-center justify-center space-y-4 min-h-[180px] backdrop-blur-sm">
+        <div className="w-full bg-zinc-100 dark:bg-black/40 border border-zinc-200 dark:border-white/5 rounded-xl p-8 flex flex-col items-center justify-center space-y-6 backdrop-blur-sm">
             {lines.map((item, idx) => {
                 if (!item.line) {
                     // Placeholder for empty lines (start/end of song)
@@ -53,15 +53,23 @@ export const ThreeLineLyrics: React.FC = () => {
                     >
                         <p className={clsx(
                             "font-bold leading-tight",
-                            isCurrent ? "text-2xl text-white md:text-3xl" : "text-lg text-zinc-300"
+                            isCurrent ? "text-2xl text-zinc-900 dark:text-white md:text-3xl" : "text-lg text-zinc-600 dark:text-zinc-300"
                         )}>
                             {item.line.source}
                         </p>
                         {isCurrent && item.line.pron && (
-                            <p className="text-sm text-indigo-300/80 font-mono mt-1 tracking-wide">{item.line.pron}</p>
+                            <p className="text-sm text-indigo-600 dark:text-indigo-300/80 font-mono mt-1 tracking-wide">
+                                {typeof item.line.pron === 'string'
+                                    ? item.line.pron
+                                    : (item.line.pron['ko'] || item.line.pron['en'] || Object.values(item.line.pron)[0] || '')}
+                            </p>
                         )}
                         {isCurrent && item.line.trans && (
-                            <p className="text-sm text-zinc-400 mt-1 font-medium">{item.line.trans}</p>
+                            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 font-medium">
+                                {typeof item.line.trans === 'string'
+                                    ? item.line.trans
+                                    : (item.line.trans['ko'] || item.line.trans['en'] || Object.values(item.line.trans)[0] || '')}
+                            </p>
                         )}
                     </div>
                 );

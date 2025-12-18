@@ -4,6 +4,7 @@ import { Type, Languages, Zap, Sparkles, Loader2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { enrichLyrics } from '../services/gemini';
+import { saveSong } from '../services/supabase';
 
 export const LyricsDisplay: React.FC = () => {
     const {
@@ -15,7 +16,6 @@ export const LyricsDisplay: React.FC = () => {
         togglePronunciation,
         showTranslation,
         toggleTranslation,
-        videoMapping,
         apiKey,
         linkSongToHistory
     } = useAppStore();
@@ -40,12 +40,17 @@ export const LyricsDisplay: React.FC = () => {
 
         setEnriching(true);
         try {
-            const enrichedSong = await enrichLyrics(apiKey, currentSong);
+            const enrichedSong = await enrichLyrics(apiKey, currentSong, t('language_code', { defaultValue: 'en' }));
+
+            // Save to Supabase
+            // Persist the changes (enriched lyrics)
+            await saveSong(enrichedSong);
+
             setCurrentSong(enrichedSong);
 
             // Also update history
-            if (videoMapping?.videoId) {
-                linkSongToHistory(videoMapping.videoId, enrichedSong);
+            if (currentSong?.video_id) {
+                linkSongToHistory(currentSong.video_id, enrichedSong);
             }
         } catch (error) {
             console.error(error);
@@ -61,7 +66,7 @@ export const LyricsDisplay: React.FC = () => {
     // Let's stick to standard: adjustedTime = currentTime - offset.
     // If offset is 3s, and current time is 10s, we look for lyrics at 7s.
     // This effectively "delays" the lyrics (lyrics at 10s will show when video is at 13s).
-    const globalOffset = videoMapping?.globalOffset || 0;
+    const globalOffset = currentSong?.global_offset || 0;
     const totalOffset = globalOffset + userOffset;
     const syncedTime = currentTime - totalOffset;
 
@@ -85,7 +90,7 @@ export const LyricsDisplay: React.FC = () => {
 
     if (!currentSong) {
         return (
-            <div className="flex flex-col items-center justify-center h-full text-zinc-500 space-y-4">
+            <div className="flex flex-col items-center justify-center h-full text-zinc-500 dark:text-zinc-500 space-y-4">
                 <Zap className="w-12 h-12 opacity-20" />
                 <p>{t('lyrics.no_song')}</p>
             </div>
@@ -93,9 +98,9 @@ export const LyricsDisplay: React.FC = () => {
     }
 
     return (
-        <div className="flex flex-col h-full bg-zinc-900/50 rounded-xl border border-white/5 backdrop-blur-sm overflow-hidden">
+        <div className="flex flex-col h-full bg-zinc-100 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-sm overflow-hidden">
             {/* Controls Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/5 bg-black/20">
+            <div className="flex items-center justify-between p-4 border-b border-zinc-300 dark:border-white/5 bg-zinc-200 dark:bg-black/20">
                 <div className="flex items-center">
                     {isIncomplete && (
                         <button
@@ -113,7 +118,7 @@ export const LyricsDisplay: React.FC = () => {
                         onClick={togglePronunciation}
                         className={clsx(
                             "p-2 rounded-lg transition-colors",
-                            showPronunciation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 hover:text-zinc-400"
+                            showPronunciation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-400"
                         )}
                         title={t('lyrics.toggle_pron')}
                     >
@@ -123,7 +128,7 @@ export const LyricsDisplay: React.FC = () => {
                         onClick={toggleTranslation}
                         className={clsx(
                             "p-2 rounded-lg transition-colors",
-                            showTranslation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 hover:text-zinc-400"
+                            showTranslation ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-600 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-400"
                         )}
                         title={t('lyrics.toggle_trans')}
                     >
@@ -133,7 +138,7 @@ export const LyricsDisplay: React.FC = () => {
             </div>
 
             {/* Lyrics Scroll Area */}
-            <div ref={containerRef} className="flex-1 overflow-y-auto px-6 py-12 space-y-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-700">
+            <div ref={containerRef} className="flex-1 overflow-y-auto px-6 py-12 space-y-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700">
                 {currentSong.lyrics.map((line, idx) => {
                     const isActive = idx === activeLineIndex;
 
@@ -154,7 +159,7 @@ export const LyricsDisplay: React.FC = () => {
                             {/* Timestamp */}
                             <div className={clsx(
                                 "flex-shrink-0 w-12 text-sm font-mono pt-2 text-right",
-                                isActive ? "text-indigo-400" : "text-zinc-600"
+                                isActive ? "text-indigo-600 dark:text-indigo-400" : "text-zinc-500 dark:text-zinc-600"
                             )}>
                                 {timeStr}
                             </div>
@@ -163,22 +168,24 @@ export const LyricsDisplay: React.FC = () => {
                                 {/* Source (Original) - Bold */}
                                 <p className={clsx(
                                     "text-2xl font-bold tracking-tight leading-normal",
-                                    isActive ? "text-white" : "text-zinc-300"
+                                    isActive ? "text-zinc-900 dark:text-white" : "text-zinc-500 dark:text-zinc-300"
                                 )}>
                                     {line.source}
                                 </p>
 
-                                {/* Pronunciation - Faint/Blurry unless active */}
+                                {/* Pronunciation */}
                                 {showPronunciation && line.pron && (
-                                    <p className="text-sm font-mono text-indigo-300/80 tracking-wide">
-                                        {line.pron}
+                                    <p className="text-sm font-mono text-indigo-600 dark:text-indigo-300/80 tracking-wide">
+                                        {/* @ts-ignore: Handle migration where pron might be string temporarily */}
+                                        {typeof line.pron === 'string' ? line.pron : (line.pron[t('language_code', { defaultValue: 'en' })] || line.pron['en'] || Object.values(line.pron)[0])}
                                     </p>
                                 )}
 
-                                {/* Translation - Small */}
+                                {/* Translation */}
                                 {showTranslation && line.trans && (
-                                    <p className="text-base font-medium text-zinc-400 mt-1">
-                                        {line.trans}
+                                    <p className="text-base font-medium text-zinc-600 dark:text-zinc-400 mt-1">
+                                        {/* @ts-ignore: Handle migration */}
+                                        {typeof line.trans === 'string' ? line.trans : (line.trans[t('language_code', { defaultValue: 'en' })] || line.trans['en'] || Object.values(line.trans)[0])}
                                     </p>
                                 )}
                             </div>

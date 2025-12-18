@@ -15,3 +15,81 @@
 - **Hero Section**: 
   - 타이틀은 사용자 시선을 가장 먼저 끄는 요소이므로 가독성을 해치지 않아야 합니다.
   - 모바일에서도 타이틀이 과도하게 줄바꿈되거나 잘리지 않도록 반응형 폰트 사이즈(`text-5xl md:text-7xl`)를 유지하되, 필요 시 미세 조정합니다.
+
+### 2.2. Authentication Pages (Login/Register)
+- **Central Card Layout**: 화면 중앙에 폼을 배치하여 집중도를 높입니다.
+- **Error Feedback**: 입력 오류 발생 시 필드 하단에 붉은색 텍스트로 명확히 표시합니다.
+- **Login Flow**: 로그인 성공 직후 즉시 계정 상태(`status`)를 확인합니다.
+  - **Approved**: 메인 화면으로 이동.
+  - **Pending**: 승인 대기 페이지(`/pending`)로 강제 이동.
+- **Pending Page**: 승인 대기 화면은 안내 문구와 함께 '로그아웃' 버튼을 제공하여 다른 계정으로 로그인할 수 있도록 함.
+
+## 3. Global Navigation Bar (Header)
+
+### 3.1. Layout
+- **Left**: 로고 및 서비스 명 (홈으로 이동)
+- **Right**: 
+  - Library 링크 (승인된 회원일 경우만 표시)
+  - Admin 링크 (관리자일 경우만 표시)
+  - **User Info**: 승인된 회원(`approved`) 또는 관리자(`admin`)인 경우에만 닉네임 표시.
+  - **Sign In**: 비로그인 상태이거나, **승인 대기(`pending`) 상태인 경우** 표시 (사용자 혼동 방지).
+  - 언어 변경 (LanguageSwitcher)
+  - 테마 토글
+
+### 3.2. Theme Toggle
+- **Default**: 시스템 설정(prefers-color-scheme)을 따르거나 Dark Mode를 기본으로 설정.
+- **Interaction**: 토글 클릭 시 즉시 테마 변경 적용.
+- **Persistence**: `localStorage`에 사용자 테마 설정 저장 (`theme`: 'dark' | 'light').
+
+## 4. Theme System
+
+### 4.1. Dark/Light Mode Support
+- **Color Palette**: `index.css`의 `:root` 및 `.dark` 클래스를 활용하여 시멘틱 컬러 변수 정의.
+- **Components**: 모든 페이지(홈, 플레이어, 라이브러리) 및 팝업(가사 검색 등)은 현재 테마에 맞춰 배경색, 텍스트 색상이 변경되어야 함.
+
+## 5. Player Page - Mini Lyrics Display (ThreeLineLyrics)
+
+### 5.1. 레이아웃 요구사항
+- **목적**: 플레이어 페이지에서 이전 가사, 현재 가사, 다음 가사를 3줄로 표시하여 사용자가 현재 진행 상황을 한눈에 파악할 수 있도록 합니다.
+- **구성**: 
+  - 이전 가사 (Previous Line)
+  - 현재 가사 (Current Line) - 강조 표시
+  - 다음 가사 (Next Line)
+
+### 5.2. 콘텐츠 표시 규칙
+- **현재 가사 (Current Line)**:
+  - 원문 (Source): 크게 강조 표시
+  - 발음 (Pronunciation): 있을 경우 표시
+  - 번역 (Translation): 있을 경우 표시
+- **이전/다음 가사 (Previous/Next Lines)**:
+  - 원문 (Source)만 표시
+  - 발음 및 번역은 표시하지 않음
+  - 투명도를 낮춰 현재 가사와 시각적으로 구분
+
+### 5.3. 동적 높이 처리
+- **문제**: 고정 높이(`min-h-[180px]`)로 인해 현재 가사에 발음과 번역이 추가되면 이전/다음 가사가 잘리는 현상 발생
+- **해결 방안**:
+  - 고정 높이 제거 또는 충분한 최소 높이 설정
+  - 각 가사 라인에 적절한 여백(`space-y-4` 등) 적용
+  - 컨테이너가 내용에 따라 자동으로 높이를 조정하도록 `flex` 레이아웃 활용
+  - 필요시 `max-h` 및 `overflow-y-auto`를 사용하여 스크롤 가능하도록 설정
+
+### 5.4. 반응형 디자인
+- **모바일**: 텍스트 크기를 적절히 조정하여 가독성 유지
+- **데스크톱**: 더 큰 텍스트 크기로 표시하여 시각적 임팩트 강화
+
+## 6. Song Registration Wizard UI
+
+### 6.1. Stepper Navigation
+- 현재 단계와 전체 단계를 시각적으로 표시 (Step 1/3)하여 사용자가 진행 상황을 인지하도록 합니다.
+
+### 6.2. Forms
+- **Input Fields**: 제목, 가수 등 기본 정보 입력 필드.
+- **Lyrics Area**: 대량의 텍스트(LRC)를 붙여넣기 쉽도록 충분한 높이 확보.
+- **AI Action**: 원클릭으로 AI 생성을 수행하는 강조된 버튼 제공. 로딩 시 스피너 표시.
+
+## 7. Admin Dashboard UI
+- **Table Layout**: 사용자 목록, 역할, 상태, 가입일 등을 테이블 형태로 표시.
+- **Action Buttons**: 승인(Check), 거절(X) 버튼을 아이콘으로 단순화하여 공간 효율성 확보.
+- **Status Badges**: 승인(Green), 대기(Yellow), 거절(Red) 상태를 색상으로 구분.
+

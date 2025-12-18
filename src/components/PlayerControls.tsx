@@ -60,9 +60,9 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
     };
 
     return (
-        <div className="w-full bg-zinc-900/80 border border-white/10 rounded-xl p-6 flex flex-col gap-6 backdrop-blur-sm shadow-lg">
+        <div className="w-full bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-300 dark:border-white/10 rounded-xl p-6 flex flex-col gap-6 backdrop-blur-sm shadow-lg">
             {/* Row 1: Progress Bar */}
-            <div className="flex items-center gap-3 text-xs font-mono text-zinc-400 w-full">
+            <div className="flex items-center gap-3 text-xs font-mono text-zinc-600 dark:text-zinc-400 w-full">
                 <span className="w-10 text-right">{formatTime(currentTime)}</span>
                 <div className="relative flex-1 h-8 flex items-center group">
                     {/* Custom Range Input */}
@@ -72,7 +72,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
                         max={videoDuration || 100}
                         value={currentTime}
                         onChange={handleSeek}
-                        className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-500 group-hover:h-2 transition-all"
+                        className="w-full h-1 bg-zinc-300 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-500 group-hover:h-2 transition-all"
                     />
                 </div>
                 <span className="w-10">{formatTime(videoDuration)}</span>
@@ -82,7 +82,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
             <div className="flex items-center justify-center gap-8">
                 <button
                     onClick={() => seekBy(-10)}
-                    className="p-3 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-colors relative group"
+                    className="p-3 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-white/10 rounded-full transition-colors relative group"
                     title="-10s"
                 >
                     <SkipBack size={24} />
@@ -98,7 +98,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
 
                 <button
                     onClick={() => seekBy(10)}
-                    className="p-3 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-colors relative group"
+                    className="p-3 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-white/10 rounded-full transition-colors relative group"
                     title="+10s"
                 >
                     <SkipForward size={24} />
@@ -107,15 +107,15 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
             </div>
 
             {/* Row 3: Subtitle Controls (Speed, Sync, Change Lyrics) */}
-            <div className="grid grid-cols-3 items-center pt-2 border-t border-white/5">
+            <div className="grid grid-cols-3 items-center pt-2 border-t border-zinc-300 dark:border-white/5">
                 {/* Left: Speed */}
                 <div className="flex justify-start">
-                    <div className="flex items-center space-x-2 bg-black/20 rounded-lg px-2 py-1.5 border border-white/5">
+                    <div className="flex items-center space-x-2 bg-zinc-200 dark:bg-black/20 rounded-lg px-2 py-1.5 border border-zinc-300 dark:border-white/5">
                         <Gauge size={14} className="text-zinc-500" />
                         <select
                             value={playbackRate}
                             onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-                            className="bg-transparent text-xs text-zinc-400 border-none outline-none appearance-none text-center min-w-[3rem] cursor-pointer hover:text-white transition-colors"
+                            className="bg-transparent text-xs text-zinc-600 dark:text-zinc-400 border-none outline-none appearance-none text-center min-w-[3rem] cursor-pointer hover:text-zinc-900 dark:hover:text-white transition-colors"
                         >
                             {[0.5, 0.75, 1, 1.25, 1.5, 2.0].map(r => (
                                 <option key={r} value={r}>{r}x</option>
@@ -126,22 +126,22 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
 
                 {/* Center: Sync */}
                 <div className="flex justify-center">
-                    <div className="flex items-center space-x-2 bg-black/20 rounded-lg px-2 py-1.5 border border-white/5">
+                    <div className="flex items-center space-x-2 bg-zinc-200 dark:bg-black/20 rounded-lg px-2 py-1.5 border border-zinc-300 dark:border-white/5">
                         <Clock size={14} className="text-zinc-500" />
                         <div className="flex items-center gap-0.5">
-                            <button onClick={() => adjustSync(-1.0)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-white rounded transition-colors font-mono" title="-1.0s">-1</button>
-                            <button onClick={() => adjustSync(-0.1)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-white rounded transition-colors font-mono" title="-0.1s">-.1</button>
+                            <button onClick={() => adjustSync(-1.0)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded transition-colors font-mono" title="-1.0s">-1</button>
+                            <button onClick={() => adjustSync(-0.1)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded transition-colors font-mono" title="-0.1s">-.1</button>
 
                             <input
                                 type="number"
                                 step="0.1"
                                 value={userOffset.toFixed(1)}
                                 onChange={(e) => setUserOffset(parseFloat(e.target.value) || 0)}
-                                className="w-10 bg-transparent text-center text-xs text-indigo-400 outline-none appearance-none font-mono font-bold"
+                                className="w-10 bg-transparent text-center text-xs text-indigo-600 dark:text-indigo-400 outline-none appearance-none font-mono font-bold"
                             />
 
-                            <button onClick={() => adjustSync(0.1)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-white rounded transition-colors font-mono" title="+0.1s">+.1</button>
-                            <button onClick={() => adjustSync(1.0)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-white rounded transition-colors font-mono" title="+1.0s">+1</button>
+                            <button onClick={() => adjustSync(0.1)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded transition-colors font-mono" title="+0.1s">+.1</button>
+                            <button onClick={() => adjustSync(1.0)} className="px-1.5 py-0.5 text-[10px] text-zinc-500 hover:text-zinc-900 dark:hover:text-white rounded transition-colors font-mono" title="+1.0s">+1</button>
                         </div>
 
                         {/* Save Button - Only show if offset is modified */}
@@ -163,7 +163,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({ onSearchClick })
                 <div className="flex justify-end">
                     <button
                         onClick={onSearchClick}
-                        className="flex items-center gap-2 bg-black/20 hover:bg-indigo-500/10 text-zinc-400 hover:text-indigo-400 text-xs font-medium px-3 py-1.5 rounded-lg border border-white/5 hover:border-indigo-500/30 transition-all"
+                        className="flex items-center gap-2 bg-zinc-200 dark:bg-black/20 hover:bg-indigo-100 dark:hover:bg-indigo-500/10 text-zinc-600 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-xs font-medium px-3 py-1.5 rounded-lg border border-zinc-300 dark:border-white/5 hover:border-indigo-500/30 transition-all"
                     >
                         <SearchCode size={14} />
                         <span>Lyrics</span>
