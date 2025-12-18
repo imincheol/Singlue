@@ -74,45 +74,14 @@ export default function PlayerPage() {
     const canCreate = !!(user && !loading && !songs.find(s => s.created_by === user.id));
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black grid grid-cols-1 lg:grid-cols-12 gap-6 lg:h-[calc(100vh-8rem)] animate-in fade-in duration-500 pt-20 lg:pt-24 px-4 sm:px-6 max-w-7xl mx-auto lg:overflow-hidden relative pb-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 min-h-[calc(100vh-4rem)] lg:h-[calc(100vh-4rem)] bg-white dark:bg-black animate-in fade-in duration-500 pt-6 lg:pt-10 px-4 sm:px-6 max-w-7xl mx-auto lg:overflow-hidden relative pb-8 lg:pb-25 items-start">
             {error && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-2 rounded-full shadow-lg animate-in fade-in slide-in-from-top-4 duration-300 text-sm font-medium">
                     {error}
                 </div>
             )}
             <div className="lg:col-span-7 flex flex-col space-y-4 h-full relative">
-                {/* Video Player */}
-                <div className="w-full shrink-0">
-                    <YouTubePlayer
-                        videoId={id}
-                        onVideoData={async (data) => {
-                            // Auto-Register Song (Stage 1)
-                            if (user && !loading && !hasSelectedSong && !songs.find(s => s.created_by === user.id)) {
-                                console.log("Auto-registering new song (Stage 1)...");
-                                const newSong: Song = {
-                                    id: crypto.randomUUID(),
-                                    video_id: id,
-                                    title: data.title,
-                                    artist: data.author,
-                                    lyrics: [],
-                                    created_by: user.id,
-                                    stage: 1,
-                                    is_public: false,
-                                    global_offset: 0,
-                                    created_at: new Date().toISOString()
-                                };
 
-                                try {
-                                    await saveSong(newSong);
-                                    // Refresh songs to reflect the new entry
-                                    loadSongs(id);
-                                } catch (err) {
-                                    console.error("Failed to auto-register song:", err);
-                                }
-                            }
-                        }}
-                    />
-                </div>
 
                 {/* Quick Info & Controls */}
                 <div className="bg-zinc-100 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-white/5 mb-0 shrink-0 flex flex-col gap-2">
@@ -270,6 +239,39 @@ export default function PlayerPage() {
                             </div>
                         )}
                     </div>
+                </div>
+
+                {/* Video Player */}
+                <div className="w-full shrink-0">
+                    <YouTubePlayer
+                        videoId={id}
+                        onVideoData={async (data) => {
+                            // Auto-Register Song (Stage 1)
+                            if (user && !loading && !hasSelectedSong && !songs.find(s => s.created_by === user.id)) {
+                                console.log("Auto-registering new song (Stage 1)...");
+                                const newSong: Song = {
+                                    id: crypto.randomUUID(),
+                                    video_id: id,
+                                    title: data.title,
+                                    artist: data.author,
+                                    lyrics: [],
+                                    created_by: user.id,
+                                    stage: 1,
+                                    is_public: false,
+                                    global_offset: 0,
+                                    created_at: new Date().toISOString()
+                                };
+
+                                try {
+                                    await saveSong(newSong);
+                                    // Refresh songs to reflect the new entry
+                                    loadSongs(id);
+                                } catch (err) {
+                                    console.error("Failed to auto-register song:", err);
+                                }
+                            }
+                        }}
+                    />
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col gap-4 lg:overflow-y-auto pb-4 scrollbar-hide">
