@@ -11,6 +11,7 @@ import SettingsPage from './pages/SettingsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { Headphones, Loader2, Settings as SettingsIcon, LogOut, ChevronDown } from 'lucide-react';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
+import { MobileMenu } from './components/MobileMenu';
 import { ThemeToggle } from './components/ThemeToggle';
 import { useTranslation } from 'react-i18next';
 import { useState, useRef, useEffect } from 'react';
@@ -112,35 +113,47 @@ function App() {
           </Link>
 
           <div className="flex items-center gap-3 sm:gap-6">
-            <Link
-              to="/library"
-              className={`text-sm font-medium transition-colors ${location.pathname === '/library'
-                ? 'text-indigo-600 dark:text-indigo-400'
-                : 'text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-                }`}
-            >
-              {t('nav.library')}
-            </Link>
-
-            {isAdmin && (
-              <Link to="/admin" className="text-sm font-medium text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
-                {t('nav.admin')}
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center gap-6">
+              <Link
+                to="/library"
+                className={`text-sm font-medium transition-colors ${location.pathname === '/library'
+                  ? 'text-indigo-600 dark:text-indigo-400'
+                  : 'text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                  }`}
+              >
+                {t('nav.library')}
               </Link>
-            )}
 
-            <LanguageSwitcher />
+              {isAdmin && (
+                <Link to="/admin" className="text-sm font-medium text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                  {t('nav.admin')}
+                </Link>
+              )}
 
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
-            ) : (!user) ? (
-              <Link to="/login" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors">
-                {t('nav.signin')}
-              </Link>
-            ) : (
-              <UserDropdown user={user} profile={profile} signOut={useAuth().signOut} />
-            )}
+              <LanguageSwitcher />
 
-            <ThemeToggle />
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
+              ) : (!user) ? (
+                <Link to="/login" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors">
+                  {t('nav.signin')}
+                </Link>
+              ) : (
+                <UserDropdown user={user} profile={profile} signOut={useAuth().signOut} />
+              )}
+
+              <ThemeToggle />
+            </div>
+
+            {/* Mobile Menu */}
+            <MobileMenu
+              user={user}
+              profile={profile}
+              isAdmin={isAdmin}
+              isLoading={isLoading}
+              signOut={useAuth().signOut}
+            />
           </div>
         </div>
       </header>
