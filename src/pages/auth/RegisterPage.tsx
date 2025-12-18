@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '../../services/supabase';
 import { useNavigate, Link } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ export default function RegisterPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -71,7 +73,7 @@ export default function RegisterPage() {
         <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black p-6">
             <div className="w-full max-w-md space-y-8">
                 <div className="text-center">
-                    <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Create an account</h2>
+                    <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">{t('auth.register_title')}</h2>
                 </div>
                 <form className="mt-8 space-y-6" onSubmit={handleRegister}>
                     <div className="space-y-4 rounded-md shadow-sm">
@@ -79,7 +81,7 @@ export default function RegisterPage() {
                             type="text"
                             required
                             className="relative block w-full rounded-md border-0 py-2 px-3 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-zinc-900 dark:text-white dark:ring-zinc-700"
-                            placeholder="Nickname"
+                            placeholder={t('auth.nickname')}
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
                         />
@@ -87,7 +89,7 @@ export default function RegisterPage() {
                             type="email"
                             required
                             className="relative block w-full rounded-md border-0 py-2 px-3 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-zinc-900 dark:text-white dark:ring-zinc-700"
-                            placeholder="Email address"
+                            placeholder={t('auth.email')}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
@@ -95,7 +97,7 @@ export default function RegisterPage() {
                             type="password"
                             required
                             className="relative block w-full rounded-md border-0 py-2 px-3 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-zinc-900 dark:text-white dark:ring-zinc-700"
-                            placeholder="Password"
+                            placeholder={t('auth.password')}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
@@ -112,7 +114,7 @@ export default function RegisterPage() {
                             className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
                         >
                             {loading && <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />}
-                            Sign up
+                            {t('nav.signin')}
                         </button>
                     </div>
                 </form>

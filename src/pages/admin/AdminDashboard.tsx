@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase';
 import type { Profile } from '../../types';
 import { Check, X, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function AdminDashboard() {
+    const { t } = useTranslation();
     const [profiles, setProfiles] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -47,18 +49,18 @@ export default function AdminDashboard() {
 
     return (
         <div className="min-h-screen pt-24 px-6 max-w-7xl mx-auto">
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-8">Member Management</h1>
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-8">{t('admin.title')}</h1>
 
             <div className="bg-white dark:bg-zinc-900 rounded-xl shadow overflow-hidden border border-zinc-200 dark:border-zinc-800">
                 <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800">
                     <thead className="bg-zinc-50 dark:bg-zinc-800/50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Nickname</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Email</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Role</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Created At</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Actions</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">{t('admin.nickname')}</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">{t('admin.email')}</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">{t('admin.role')}</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">{t('admin.status')}</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">{t('admin.created_at')}</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">{t('admin.actions')}</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-zinc-900 divide-y divide-zinc-200 dark:divide-zinc-800">

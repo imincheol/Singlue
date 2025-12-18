@@ -1,5 +1,12 @@
 {
     "language_code": "ko",
+    "nav": {
+        "library": "보관함",
+        "admin": "관리자",
+        "signin": "로그인",
+        "signout": "로그아웃",
+        "settings": "설정"
+    },
     "home": {
         "title": "리듬을 타며,\n언어를 마스터하세요.",
         "subtitle": "좋아하는 뮤직비디오로 배우는 AI 기반 언어 학습.",
@@ -9,7 +16,8 @@
         "synced_lyrics": "싱크 가사",
         "ai_curator": "AI 큐레이터",
         "go_to_library": "보관함으로 이동",
-        "invalid_url": "유효하지 않은 YouTube URL입니다"
+        "invalid_url": "유효하지 않은 YouTube URL입니다",
+        "recently_added": "최근 추가된 노래"
     },
     "player": {
         "video_not_found": "동영상 ID를 찾을 수 없습니다.",
@@ -69,5 +77,44 @@
         "generate_btn": "AI로 자동 생성",
         "generating": "생성 중...",
         "wait_msg": "이 과정은 최대 30초 정도 소요될 수 있습니다."
+    },
+    "auth": {
+        "login_title": "Singlue 로그인",
+        "register_title": "계정 생성",
+        "email": "이메일 주소",
+        "password": "비밀번호",
+        "nickname": "닉네임"
+    },
+    "settings": {
+        "title": "설정",
+        "quota_title": "무료 곡 생성 한도",
+        "access_denied": "접근 거부됨"
+    },
+    "admin": {
+        "title": "회원 관리",
+        "nickname": "닉네임",
+        "email": "이메일",
+        "role": "권한",
+        "status": "상태",
+        "created_at": "가입일",
+        "actions": "작업"
+    },
+    "library": {
+        "title": "보관함",
+        "subtitle_my": "내 노래와 즐겨찾기를 관리하세요",
+        "subtitle_public": "커뮤니티의 노래를 탐색해보세요",
+        "tab_my": "내 보관함",
+        "tab_public": "공개 보관함",
+        "stage_1": "영상 등록",
+        "stage_2": "가사 매칭",
+        "stage_3": "공개됨",
+        "my_song": "내 노래",
+        "public_song": "공개",
+        "favorites": "즐겨찾기",
+        "registered": "등록",
+        "published": "공개",
+        "empty_my": "보관함이 비어있습니다. 노래를 만들거나 공개 보관함에서 즐겨찾기를 추가해보세요.",
+        "empty_public": "공개 보관함이 비어있습니다. 첫 번째로 노래를 공유해보세요!",
+        "empty_fav": "즐겨찾기가 없습니다. 공개 보관함에서 추가해보세요!"
     }
 }

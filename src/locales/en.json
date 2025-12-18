@@ -1,5 +1,12 @@
 {
     "language_code": "en",
+    "nav": {
+        "library": "Library",
+        "admin": "Admin",
+        "signin": "Sign In",
+        "signout": "Sign Out",
+        "settings": "Settings"
+    },
     "home": {
         "title": "Stick the Rhythm,\nMaster the Fluency.",
         "subtitle": "AI-powered language learning through your favorite music videos.",
@@ -9,7 +16,8 @@
         "synced_lyrics": "Synchronized Lyrics",
         "ai_curator": "AI Curator",
         "go_to_library": "Go to Library",
-        "invalid_url": "Invalid YouTube URL"
+        "invalid_url": "Invalid YouTube URL",
+        "recently_added": "Recently Added"
     },
     "player": {
         "video_not_found": "Video ID not found.",
@@ -69,5 +77,44 @@
         "generate_btn": "Auto-Generate with AI",
         "generating": "Generating...",
         "wait_msg": "This process may take up to 30 seconds."
+    },
+    "auth": {
+        "login_title": "Sign in to Singlue",
+        "register_title": "Create an account",
+        "email": "Email Address",
+        "password": "Password",
+        "nickname": "Nickname"
+    },
+    "settings": {
+        "title": "Settings",
+        "quota_title": "Free Song Generations",
+        "access_denied": "Access Denied"
+    },
+    "admin": {
+        "title": "Member Management",
+        "nickname": "Nickname",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "created_at": "Created At",
+        "actions": "Actions"
+    },
+    "library": {
+        "title": "Library",
+        "subtitle_my": "Manage your songs and favorites",
+        "subtitle_public": "Explore songs from the community",
+        "tab_my": "My Library",
+        "tab_public": "Public Library",
+        "stage_1": "Video Registered",
+        "stage_2": "Lyrics Matched",
+        "stage_3": "Completed",
+        "my_song": "My Song",
+        "public_song": "Public",
+        "favorites": "Favorites",
+        "registered": "Registered",
+        "published": "Published",
+        "empty_my": "Your library is empty. Try creating a song or adding favorites from the public library!",
+        "empty_public": "Public Library is Empty. Be the first to share a completed song!",
+        "empty_fav": "No favorites yet. Go explore the public library!"
     }
 }

@@ -3,8 +3,10 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabase';
 import { Loader2, Key, Save, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function SettingsPage() {
+    const { t } = useTranslation();
     const { user, profile, isLoading: authLoading } = useAuth();
     const [nickname, setNickname] = useState('');
     const [apiKey, setApiKey] = useState('');
@@ -61,10 +63,10 @@ export default function SettingsPage() {
         return (
             <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 max-w-7xl mx-auto">
                 <div className="text-center">
-                    <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">Access Denied</h2>
+                    <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{t('settings.access_denied')}</h2>
                     <p className="mt-2 text-zinc-600 dark:text-zinc-400">Please sign in to access settings.</p>
                     <Link to="/login" className="mt-4 inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                        Sign In
+                        {t('nav.signin')}
                     </Link>
                 </div>
             </div>
@@ -77,7 +79,7 @@ export default function SettingsPage() {
 
     return (
         <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 max-w-3xl mx-auto">
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-8">Settings</h1>
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-8">{t('settings.title')}</h1>
 
             <form onSubmit={handleSave} className="space-y-8">
                 {/* Profile Section */}
@@ -88,7 +90,7 @@ export default function SettingsPage() {
                     <div className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                                Email
+                                {t('auth.email')}
                             </label>
                             <input
                                 type="text"
@@ -99,7 +101,7 @@ export default function SettingsPage() {
                         </div>
                         <div>
                             <label htmlFor="nickname" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                                Nickname
+                                {t('auth.nickname')}
                             </label>
                             <input
                                 type="text"
@@ -122,7 +124,7 @@ export default function SettingsPage() {
                     <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">
                             <div>
-                                <p className="text-sm font-medium text-zinc-900 dark:text-white">Free Song Generations</p>
+                                <p className="text-sm font-medium text-zinc-900 dark:text-white">{t('settings.quota_title')}</p>
                                 <p className="text-xs text-zinc-500 mt-1">
                                     {profile?.gemini_api_key
                                         ? "Unlimited (Using your own API Key)"

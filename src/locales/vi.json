@@ -1,5 +1,12 @@
 {
     "language_code": "vi",
+    "nav": {
+        "library": "Thư viện",
+        "admin": "Quản trị",
+        "signin": "Đăng nhập",
+        "signout": "Đăng xuất",
+        "settings": "Cài đặt"
+    },
     "home": {
         "title": "Bắt nhịp điệu, Thành thạo ngoại ngữ.",
         "subtitle": "Học ngoại ngữ thông qua video âm nhạc yêu thích của bạn với AI.",
@@ -9,7 +16,8 @@
         "synced_lyrics": "Lời bài hát đồng bộ",
         "ai_curator": "Trợ lý AI",
         "go_to_library": "Đến thư viện",
-        "invalid_url": "URL YouTube không hợp lệ"
+        "invalid_url": "URL YouTube không hợp lệ",
+        "recently_added": "Mới thêm gần đây"
     },
     "player": {
         "video_not_found": "Không tìm thấy ID video.",
@@ -69,5 +77,44 @@
         "generate_btn": "Tự động tạo bằng AI",
         "generating": "Đang tạo...",
         "wait_msg": "Quá trình này có thể mất tới 30 giây."
+    },
+    "auth": {
+        "login_title": "Đăng nhập vào Singlue",
+        "register_title": "Tạo tài khoản",
+        "email": "Địa chỉ Email",
+        "password": "Mật khẩu",
+        "nickname": "Biệt danh"
+    },
+    "settings": {
+        "title": "Cài đặt",
+        "quota_title": "Lượt tạo bài hát miễn phí",
+        "access_denied": "Truy cập bị từ chối"
+    },
+    "admin": {
+        "title": "Quản lý thành viên",
+        "nickname": "Biệt danh",
+        "email": "Email",
+        "role": "Vai trò",
+        "status": "Trạng thái",
+        "created_at": "Ngày tạo",
+        "actions": "Hành động"
+    },
+    "library": {
+        "title": "Thư viện",
+        "subtitle_my": "Quản lý bài hát và mục yêu thích của bạn",
+        "subtitle_public": "Khám phá các bài hát từ cộng đồng",
+        "tab_my": "Thư viện của tôi",
+        "tab_public": "Thư viện công cộng",
+        "stage_1": "Đã đăng ký video",
+        "stage_2": "Đã khớp lời",
+        "stage_3": "Hoàn tất",
+        "my_song": "Bài hát của tôi",
+        "public_song": "Công khai",
+        "favorites": "Yêu thích",
+        "registered": "Đăng ký",
+        "published": "Công khai",
+        "empty_my": "Thư viện của bạn đang trống. Hãy thử tạo một bài hát hoặc thêm vào mục yêu thích từ thư viện công cộng!",
+        "empty_public": "Thư viện công cộng đang trống. Hãy là người đầu tiên chia sẻ bài hát hoàn chỉnh!",
+        "empty_fav": "Chưa có mục yêu thích nào. Hãy khám phá thư viện công cộng!"
     }
 }

@@ -12,6 +12,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import { Headphones, Loader2, Settings as SettingsIcon, LogOut, ChevronDown } from 'lucide-react';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { ThemeToggle } from './components/ThemeToggle';
+import { useTranslation } from 'react-i18next';
 import { useState, useRef, useEffect } from 'react';
 import pkg from '../package.json';
 import { useAuth } from './contexts/AuthContext';
@@ -30,6 +31,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.Re
 };
 
 const UserDropdown = ({ user, profile, signOut }: { user: any, profile: any, signOut: () => void }) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -65,7 +67,7 @@ const UserDropdown = ({ user, profile, signOut }: { user: any, profile: any, sig
             className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
           >
             <SettingsIcon className="w-4 h-4" />
-            Settings
+            {t('nav.settings')}
           </Link>
 
           <div className="border-t border-zinc-100 dark:border-zinc-800 mt-1">
@@ -77,7 +79,7 @@ const UserDropdown = ({ user, profile, signOut }: { user: any, profile: any, sig
               className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left"
             >
               <LogOut className="w-4 h-4" />
-              Sign Out
+              {t('nav.signout')}
             </button>
           </div>
         </div>
@@ -87,6 +89,7 @@ const UserDropdown = ({ user, profile, signOut }: { user: any, profile: any, sig
 };
 
 function App() {
+  const { t } = useTranslation();
   const location = useLocation();
   const { user, profile, isAdmin, isLoading } = useAuth();
 
@@ -116,12 +119,12 @@ function App() {
                 : 'text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
                 }`}
             >
-              Library
+              {t('nav.library')}
             </Link>
 
             {isAdmin && (
               <Link to="/admin" className="text-sm font-medium text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
-                Admin
+                {t('nav.admin')}
               </Link>
             )}
 
@@ -129,7 +132,7 @@ function App() {
               <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
             ) : (!user) ? (
               <Link to="/login" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors">
-                Sign In
+                {t('nav.signin')}
               </Link>
             ) : (
               <UserDropdown user={user} profile={profile} signOut={useAuth().signOut} />
