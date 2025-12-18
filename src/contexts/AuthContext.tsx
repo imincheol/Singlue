@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(session?.user ?? null);
 
             if (session?.user) {
-                await fetchProfile(session.user.id);
+                fetchProfile(session.user.id);
             } else {
                 setProfile(null);
                 setIsLoading(false);
@@ -73,7 +73,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 .from('profiles')
                 .select('*')
                 .eq('id', userId)
+                .eq('id', userId)
                 .single();
+
+            console.log('[AuthContext] Supabase profile query finished. Data:', data, 'Error:', error);
 
             if (error) {
                 console.error('[AuthContext] Error fetching profile:', error);

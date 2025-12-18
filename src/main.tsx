@@ -6,6 +6,16 @@ import './i18n';
 import App from './App.tsx'
 import { AuthProvider } from './contexts/AuthContext';
 
+// Cleanup any stale service workers
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    for (const registration of registrations) {
+      console.log('Unregistering Service Worker:', registration);
+      registration.unregister();
+    }
+  });
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>

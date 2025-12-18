@@ -29,15 +29,6 @@ export interface Song {
     is_public: boolean;
     global_offset: number;
     created_at?: string;
-}
-
-export interface HistoryItem {
-    videoId: string;
-    title?: string;
-    author?: string;
-    thumbnail: string;
-    lastPlayedAt: number;
-    songId?: string; // ID from LRCLIB or Supabase
-    linkedSong?: Song; // Persisted lyrics data
+    published_at?: string;
 }
 

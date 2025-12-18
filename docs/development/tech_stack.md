@@ -44,7 +44,7 @@ src/
 ## 6. 데이터베이스 및 백엔드 (Backend & DB)
 - **Database**: **Supabase** (PostgreSQL)
   - `songs`: 가사 데이터 저장
-  - `video_mappings`: 유튜브 비디오-가사 매핑 정보
+  - `songs`: 가사 데이터 및 비디오-가사 매핑 정보 통합 저장
 - **Persistence**: 
   - 공용 데이터 (가사, 매핑): Supabase
   - 개인 데이터 (설정, 히스토리, API Key): 브라우저 `localStorage` (Zustand Persist)

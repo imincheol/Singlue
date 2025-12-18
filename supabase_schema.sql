@@ -68,11 +68,12 @@ create table if not exists public.songs (
   title text,
   artist text,
   lyrics jsonb default '[]'::jsonb,
-  created_by uuid references public.profiles(id),
-  stage int default 1,
+  created_by uuid references auth.users(id) on delete cascade not null,
+  stage integer default 1 check (stage in (1, 2, 3)),
   is_public boolean default false,
-  global_offset float8 default 0,
-  created_at timestamptz default now()
+  global_offset real default 0,
+  created_at timestamp with time zone default now(),
+  published_at timestamp with time zone -- Set when stage becomes 3
 );
 
 -- Enable RLS

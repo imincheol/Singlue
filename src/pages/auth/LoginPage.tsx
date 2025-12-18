@@ -16,41 +16,51 @@ export default function LoginPage() {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log('Login started');
         setLoading(true);
         setError(null);
 
         try {
+            console.log('Calling signInWithPassword...');
             const { data, error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
             });
+            console.log('signInWithPassword result:', { data, error });
 
             if (error) throw error;
 
             if (data.user) {
+                console.log('User found, fetching profile status...');
                 // Fetch profile status
-                const { data: profile } = await supabase
+                const { data: profile, error: profileError } = await supabase
                     .from('profiles')
                     .select('status')
                     .eq('id', data.user.id)
                     .single();
 
+                console.log('Profile fetch result:', { profile, profileError });
+
                 if (profile?.status === 'pending') {
+                    console.log('Status pending, signing out...');
                     await supabase.auth.signOut();
                     throw new Error('Your account is pending approval by an administrator.');
                 }
 
                 if (profile?.status === 'rejected') {
+                    console.log('Status rejected, signing out...');
                     await supabase.auth.signOut();
                     throw new Error('Your account registration has been rejected.');
                 }
             }
 
+            console.log('Navigating to root...');
             navigate('/');
         } catch (err: any) {
             console.error('Login error:', err);
             setError(err.message === 'Invalid login credentials' ? 'Invalid email or password' : err.message);
         } finally {
+            console.log('Setting loading false');
             setLoading(false);
         }
     };

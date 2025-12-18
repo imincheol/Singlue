@@ -25,11 +25,7 @@
 - **lyrics** (`LyricsLine[]`): 시간순으로 정렬된 가사 라인 배열.
 
 ## 3. 비디오 매핑 (Video Mapping)
-### `VideoMapping`
-유튜브 비디오와 Singlue의 Song 데이터를 연결하고 싱크를 조절합니다.
-- **videoId** (`string`): YouTube Video ID.
-- **songId** (`string`): 매핑된 `Song` 객체의 ID.
-- **globalOffset** (`number`): 전체 가사 싱크 조절을 위한 오프셋 값 (초 단위, +/-).
+유튜브 비디오와 Singlue의 Song 데이터는 `Song` 객체 내부의 `video_id`를 통해 연결됩니다. 별도의 매핑 테이블 없이 `songs` 테이블에서 직접 통합 관리됩니다.
 
 ## 4. 데이터베이스 스키마 (Database Schema)
 Supabase (PostgreSQL)에 저장되는 테이블 구조입니다.

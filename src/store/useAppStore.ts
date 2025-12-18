@@ -33,7 +33,7 @@ interface AppState {
     // History
     history: HistoryItem[];
     addToHistory: (item: HistoryItem) => void;
-    linkSongToHistory: (videoId: string, song: Song) => void;
+
 
     // Metadata
     metadataRefreshTrigger: number;
@@ -75,33 +75,8 @@ export const useAppStore = create<AppState>()(
 
             history: [],
             addToHistory: (item) => set((state) => {
-                // Check if exists
-                const existingIndex = state.history.findIndex(h => h.videoId === item.videoId);
-                let newItem = item;
-
-                if (existingIndex !== -1) {
-                    // Merge: Keep existing linkedSong if new item doesn't have it
-                    // Actually, usually addToHistory is called on video load (without song).
-                    // So we must preserve the existing song.
-                    const existing = state.history[existingIndex];
-                    newItem = {
-                        ...item,
-                        linkedSong: existing.linkedSong || item.linkedSong
-                    };
-                }
-
                 const filtered = state.history.filter(h => h.videoId !== item.videoId);
-                return { history: [newItem, ...filtered].slice(0, 50) };
-            }),
-
-            linkSongToHistory: (videoId, song) => set((state) => {
-                const history = state.history.map(item => {
-                    if (item.videoId === videoId) {
-                        return { ...item, linkedSong: song };
-                    }
-                    return item;
-                });
-                return { history };
+                return { history: [item, ...filtered].slice(0, 50) };
             }),
 
             metadataRefreshTrigger: 0,
