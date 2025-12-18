@@ -16,6 +16,7 @@ export const ThreeLineLyrics: React.FC = () => {
         togglePronunciation,
         toggleTranslation
     } = useAppStore();
+    const [error, setError] = useState<string | null>(null);
 
     const adjustSync = (delta: number) => {
         setUserOffset(parseFloat((userOffset + delta).toFixed(1)));
@@ -27,7 +28,8 @@ export const ThreeLineLyrics: React.FC = () => {
             await saveCurrentOffset();
         } catch (err) {
             console.error(err);
-            alert("Failed to save sync offset");
+            setError(t('lyrics.save_failed'));
+            setTimeout(() => setError(null), 3000);
         } finally {
             setIsSaving(false);
         }
@@ -63,7 +65,12 @@ export const ThreeLineLyrics: React.FC = () => {
     const lang = t('language_code', { defaultValue: 'en' });
 
     return (
-        <div className="w-full bg-zinc-100 dark:bg-black/40 border border-zinc-200 dark:border-white/5 rounded-xl flex flex-col items-center justify-center backdrop-blur-sm overflow-hidden">
+        <div className="w-full bg-zinc-100 dark:bg-black/40 border border-zinc-200 dark:border-white/5 rounded-xl flex flex-col items-center justify-center backdrop-blur-sm overflow-hidden relative">
+            {error && (
+                <div className="absolute top-12 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-4 py-1.5 rounded-full text-xs shadow-lg animate-in fade-in slide-in-from-top-2 duration-300">
+                    {error}
+                </div>
+            )}
             {/* Header: Sync & TA Controls */}
             <div className="w-full flex items-center justify-between px-4 py-2 bg-zinc-200/50 dark:bg-white/5 border-b border-zinc-200 dark:border-white/5">
                 {/* Left: Sync Control */}

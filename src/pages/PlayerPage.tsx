@@ -24,6 +24,7 @@ export default function PlayerPage() {
     const [loading, setLoading] = useState(true);
     const [isCreating, setIsCreating] = useState(false);
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const { currentSong, setCurrentSong } = useAppStore();
 
@@ -74,6 +75,11 @@ export default function PlayerPage() {
 
     return (
         <div className="min-h-screen bg-white dark:bg-black grid grid-cols-1 lg:grid-cols-12 gap-6 lg:h-[calc(100vh-8rem)] animate-in fade-in duration-500 pt-20 lg:pt-24 px-4 sm:px-6 max-w-7xl mx-auto lg:overflow-hidden relative">
+            {error && (
+                <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-2 rounded-full shadow-lg animate-in fade-in slide-in-from-top-4 duration-300 text-sm font-medium">
+                    {error}
+                </div>
+            )}
             <div className="lg:col-span-7 flex flex-col space-y-4 h-full relative">
                 {/* Video Player */}
                 <div className="w-full shrink-0">
@@ -213,7 +219,8 @@ export default function PlayerPage() {
 
                                             const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
                                             if (!apiKey) {
-                                                alert('Gemini API Key missing');
+                                                setError(t('player.api_key_missing'));
+                                                setTimeout(() => setError(null), 3000);
                                                 btn.disabled = false;
                                                 btn.innerHTML = originalContent;
                                                 return;
@@ -241,7 +248,8 @@ export default function PlayerPage() {
                                                 });
                                             } catch (err: any) {
                                                 console.error(err);
-                                                alert('업데이트 실패: ' + err.message);
+                                                setError(t('player.update_failed') + ': ' + err.message);
+                                                setTimeout(() => setError(null), 5000);
                                             } finally {
                                                 btn.disabled = false;
                                                 btn.innerHTML = originalContent;

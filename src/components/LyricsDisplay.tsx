@@ -34,6 +34,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
     const [enriching, setEnriching] = useState(false);
     const [enrichProgress, setEnrichProgress] = useState(0);
     const [isExpanded, setIsExpanded] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     // AI Enriching Progress Timer
     useEffect(() => {
@@ -76,7 +77,10 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
 
     const handleEnrich = async () => {
         if (!currentSong || !apiKey) {
-            if (!apiKey) alert(t('curator.enter_api_key'));
+            if (!apiKey) {
+                setError(t('curator.enter_api_key'));
+                setTimeout(() => setError(null), 3000);
+            }
             return;
         }
 
@@ -98,7 +102,8 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
             setCurrentSong(finalSong);
         } catch (error) {
             console.error(error);
-            alert(t('search.error'));
+            setError(t('search.error'));
+            setTimeout(() => setError(null), 3000);
             setEnrichProgress(0); // Reset progress on error
         } finally {
             setEnriching(false);
@@ -153,6 +158,12 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick }) =
             "lg:h-full", // Desktop always full height of parent
             isExpanded ? "h-[60vh]" : "h-auto" // Mobile height control
         )}>
+            {/* error message overlay */}
+            {error && (
+                <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-2 rounded-full shadow-lg animate-in fade-in slide-in-from-top-4 duration-300 text-sm font-medium">
+                    {error}
+                </div>
+            )}
             {/* Controls Header */}
             <div className="flex flex-col border-b border-zinc-300 dark:border-white/5">
                 <div className="flex items-center justify-between p-4 bg-zinc-200 dark:bg-black/20">
