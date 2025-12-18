@@ -32,3 +32,13 @@ export interface Song {
     published_at?: string;
 }
 
+
+export interface HistoryItem {
+    videoId: string;
+    title?: string;
+    author?: string;
+    thumbnail: string;
+    lastPlayedAt: number;
+    songId?: string;
+    linkedSong?: Song;
+}

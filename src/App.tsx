@@ -15,7 +15,7 @@ import { useAuth } from './contexts/AuthContext';
 
 // Simple Protected Route Component
 const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.ReactNode, requireAdmin?: boolean }) => {
-  const { user, profile, isLoading, isAdmin, isApproved } = useAuth();
+  const { user, isLoading, isAdmin, isApproved } = useAuth();
 
   if (isLoading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>;
 

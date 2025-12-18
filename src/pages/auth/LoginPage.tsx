@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../../services/supabase';
 import { useNavigate, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -11,7 +9,6 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
-    const { profile } = useAuth();
     // const { t } = useTranslation(); // TODO: Add translation keys later
 
     const handleLogin = async (e: React.FormEvent) => {

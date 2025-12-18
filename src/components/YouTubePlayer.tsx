@@ -18,7 +18,6 @@ export const YouTubePlayer: React.FC<Props> = ({ videoId, onVideoData }) => {
         requestedSeekTime,
         requestSeek,
         metadataRefreshTrigger,
-        setCurrentSong,
     } = useAppStore();
 
     const playerRef = useRef<any>(null);
