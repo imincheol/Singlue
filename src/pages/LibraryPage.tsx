@@ -52,12 +52,17 @@ export default function LibraryPage() {
                     favIdsPromise = getFavoriteIds(user.id);
                 }
 
-                const [pub, my, favs, favIds] = await Promise.all([
-                    pubPromise,
-                    myPromise,
-                    favsPromise,
-                    favIdsPromise
-                ]);
+                const [pub, my, favs, favIds] = await Promise.race([
+                    Promise.all([
+                        pubPromise,
+                        myPromise,
+                        favsPromise,
+                        favIdsPromise
+                    ]),
+                    new Promise<never>((_, reject) =>
+                        setTimeout(() => reject(new Error('Request timed out')), 5000)
+                    )
+                ]) as [Song[], Song[], Song[], Set<string>];
 
                 setPublicSongs(pub || []);
                 setMySongs(my || []);
@@ -101,9 +106,11 @@ export default function LibraryPage() {
         }
     };
 
-    // Filter my songs
-    const draftSongs = mySongs.filter(s => s.stage < 3);
-    const completedSongs = mySongs.filter(s => s.stage === 3);
+    // Filter my songs by stage
+    // Each song should appear in only ONE section based on its stage
+    const stage1Songs = mySongs.filter(s => s.stage === 1); // Video Registered
+    const stage2Songs = mySongs.filter(s => s.stage === 2); // Lyrics Matched
+    const stage3Songs = mySongs.filter(s => s.stage === 3); // Completed
 
     const SongCard = ({ song }: { song: Song }) => (
         <Link to={`/watch/${song.video_id}`} className="group relative block bg-zinc-100 dark:bg-zinc-900 rounded-xl overflow-hidden border border-zinc-200 dark:border-white/5 hover:border-indigo-500/50 transition-all hover:scale-[1.02]">
@@ -119,12 +126,13 @@ export default function LibraryPage() {
 
                 {/* Stage / Status Badges */}
                 <div className="absolute top-2 right-2 flex gap-1">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${song.stage === 3 ? 'bg-green-500/80 text-white' :
-                        song.stage === 2 ? 'bg-blue-500/80 text-white' :
+                    {song.stage !== 3 && (
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${song.stage === 2 ? 'bg-blue-500/80 text-white' :
                             'bg-yellow-500/80 text-white'
-                        }`}>
-                        Stage {song.stage}
-                    </span>
+                            }`}>
+                            {song.stage === 2 ? '가사 매칭' : '영상 등록'}
+                        </span>
+                    )}
                 </div>
 
                 {/* Favorite Button */}
@@ -140,15 +148,21 @@ export default function LibraryPage() {
             <div className="p-4">
                 <h3 className="font-semibold text-zinc-900 dark:text-white line-clamp-1 text-lg mb-1">{song.title || 'Unknown Title'}</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-1">{song.artist || 'Unknown Artist'}</p>
-                <div className="flex justify-between items-center mt-3">
-                    <p className="text-xs text-zinc-500 dark:text-zinc-600">
-                        {song.created_at ? new Date(song.created_at).toLocaleDateString() : 'Recently'}
-                    </p>
-                    {/* Access Level Badge */}
-                    {song.created_by === user?.id ? (
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-medium">Mine</span>
-                    ) : (
-                        <span className="text-xs text-zinc-400">Public</span>
+                <div className="flex flex-col gap-2 mt-3">
+                    <div className="flex justify-between items-center">
+                        <p className="text-xs text-zinc-500 dark:text-zinc-600">
+                            등록: {song.created_at ? new Date(song.created_at).toLocaleDateString('ko-KR') : '최근'}
+                        </p>
+                        {song.created_by === user?.id ? (
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-medium">내 노래</span>
+                        ) : (
+                            <span className="text-xs text-zinc-400">공개</span>
+                        )}
+                    </div>
+                    {song.published_at && (
+                        <p className="text-xs text-zinc-400 dark:text-zinc-600">
+                            공개: {new Date(song.published_at).toLocaleDateString('ko-KR')}
+                        </p>
                     )}
                 </div>
             </div>
@@ -213,40 +227,14 @@ export default function LibraryPage() {
                     <>
                         {activeTab === 'my' && (
                             <div className="space-y-12">
-                                {/* Section: Drafts */}
-                                {draftSongs.length > 0 && (
-                                    <section>
-                                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                                            <span className="w-2 h-8 bg-yellow-500 rounded-full"></span>
-                                            In Progress
-                                        </h2>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                            {draftSongs.map(song => <SongCard key={song.id} song={song} />)}
-                                        </div>
-                                    </section>
-                                )}
-
-                                {/* Section: Completed */}
-                                {completedSongs.length > 0 && (
-                                    <section>
-                                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                                            <span className="w-2 h-8 bg-green-500 rounded-full"></span>
-                                            My Completed Songs
-                                        </h2>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                            {completedSongs.map(song => <SongCard key={song.id} song={song} />)}
-                                        </div>
-                                    </section>
-                                )}
-
                                 {/* Section: Favorites */}
                                 <section>
                                     <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                                         <span className="w-2 h-8 bg-pink-500 rounded-full"></span>
-                                        Favorites
+                                        즐겨찾기
                                     </h2>
                                     {myFavorites.length === 0 ? (
-                                        <div className="text-zinc-500 text-sm italic py-4">No favorites yet. Add some from the Public Library!</div>
+                                        <div className="text-zinc-500 text-sm italic py-4">아직 즐겨찾기가 없습니다. 공개 보관함에서 추가해보세요!</div>
                                     ) : (
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                             {myFavorites.map(song => <SongCard key={song.id} song={song} />)}
@@ -254,11 +242,50 @@ export default function LibraryPage() {
                                     )}
                                 </section>
 
-                                {draftSongs.length === 0 && completedSongs.length === 0 && myFavorites.length === 0 && (
+                                {/* Section: Completed (Stage 3) */}
+                                {stage3Songs.length > 0 && (
+                                    <section>
+                                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                            <span className="w-2 h-8 bg-green-500 rounded-full"></span>
+                                            공개된 노래
+                                        </h2>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                            {stage3Songs.map(song => <SongCard key={song.id} song={song} />)}
+                                        </div>
+                                    </section>
+                                )}
+
+                                {/* Section: Stage 2 (Lyrics Matched) */}
+                                {stage2Songs.length > 0 && (
+                                    <section>
+                                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                            <span className="w-2 h-8 bg-blue-500 rounded-full"></span>
+                                            가사 매칭
+                                        </h2>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                            {stage2Songs.map(song => <SongCard key={song.id} song={song} />)}
+                                        </div>
+                                    </section>
+                                )}
+
+                                {/* Section: Stage 1 (Video Registered) */}
+                                {stage1Songs.length > 0 && (
+                                    <section>
+                                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                            <span className="w-2 h-8 bg-yellow-500 rounded-full"></span>
+                                            영상 등록
+                                        </h2>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                            {stage1Songs.map(song => <SongCard key={song.id} song={song} />)}
+                                        </div>
+                                    </section>
+                                )}
+
+                                {mySongs.length === 0 && myFavorites.length === 0 && (
                                     <div className="text-center py-20 bg-zinc-100 dark:bg-zinc-900/30 rounded-2xl border border-zinc-200 dark:border-white/5">
                                         <Mic2 className="w-16 h-16 text-zinc-400 dark:text-zinc-600 mx-auto mb-4" />
-                                        <h2 className="text-xl font-semibold text-zinc-700 dark:text-zinc-300">Your library is empty</h2>
-                                        <p className="text-zinc-500 dark:text-zinc-500 mt-2">Create songs or add favorites from the Public Library.</p>
+                                        <h2 className="text-xl font-semibold text-zinc-700 dark:text-zinc-300">보관함이 비어있습니다</h2>
+                                        <p className="text-zinc-500 dark:text-zinc-500 mt-2">노래를 만들거나 공개 보관함에서 즐겨찾기를 추가해보세요.</p>
                                     </div>
                                 )}
                             </div>
