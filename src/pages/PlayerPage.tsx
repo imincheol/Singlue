@@ -6,7 +6,7 @@ import { getSongsForVideo, saveSong } from '../services/supabase';
 import { YouTubePlayer } from '../components/YouTubePlayer';
 import { LyricsDisplay } from '../components/LyricsDisplay';
 import LyricsSearchModal from '../components/LyricsSearchModal';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Heart } from 'lucide-react';
 import { PlayerControls } from '../components/PlayerControls';
 import { ThreeLineLyrics } from '../components/ThreeLineLyrics';
 import { useAuth } from '../contexts/AuthContext';
@@ -118,20 +118,26 @@ export default function PlayerPage() {
                 <div className="bg-zinc-100 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-white/5 mb-0 shrink-0 flex flex-col gap-2">
                     {/* Row 1: YouTube Info */}
                     <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-500 overflow-hidden">
-                        <span className="truncate max-w-[150px] font-medium">{songs.find(s => s.video_id === id)?.artist || 'Unknown Channel'}</span>
-                        <span className="shrink-0 text-zinc-300 dark:text-zinc-700">|</span>
-                        <span className="truncate flex-1">{songs.find(s => s.video_id === id)?.title || 'Video Title'}</span>
-                        <a
-                            href={`https://youtu.be/${id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="shrink-0 p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded transition-colors"
-                            title="Open in YouTube"
-                        >
-                            <svg className="w-3 h-3 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m-6-6L10 14" />
-                            </svg>
-                        </a>
+                        <span className="truncate flex-1 font-medium">{songs.find(s => s.video_id === id)?.title || 'Video Title'}</span>
+                        <div className="flex items-center gap-1 shrink-0">
+                            <button
+                                className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded transition-colors"
+                                title="Favorite"
+                            >
+                                <Heart className="w-3 h-3 text-zinc-400 hover:text-red-500" />
+                            </button>
+                            <a
+                                href={`https://youtu.be/${id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded transition-colors"
+                                title="Open in YouTube"
+                            >
+                                <svg className="w-3 h-3 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m-6-6L10 14" />
+                                </svg>
+                            </a>
+                        </div>
                     </div>
 
                     {/* Row 2: Metadata & Controls */}
@@ -149,26 +155,7 @@ export default function PlayerPage() {
                                 <>
                                     <input
                                         type="text"
-                                        className="bg-transparent text-sm font-semibold text-zinc-900 dark:text-zinc-300 border-b border-transparent focus:border-indigo-500 outline-none w-1/3 min-w-[80px] transition-colors placeholder-zinc-400"
-                                        value={currentSong?.artist || ''}
-                                        placeholder="Artist"
-                                        onChange={(e) => {
-                                            if (currentSong) setCurrentSong({ ...currentSong, artist: e.target.value });
-                                        }}
-                                        onBlur={async (e) => {
-                                            if (!currentSong) return;
-                                            try {
-                                                const { updateSongMetadata } = await import('../services/supabase');
-                                                await updateSongMetadata(currentSong.id, currentSong.title, e.target.value, currentSong.country_code);
-                                            } catch (err) {
-                                                console.error('Failed to update artist:', err);
-                                            }
-                                        }}
-                                    />
-                                    <span className="text-zinc-300 dark:text-zinc-600">-</span>
-                                    <input
-                                        type="text"
-                                        className="bg-transparent text-lg font-bold text-zinc-900 dark:text-white border-b border-transparent focus:border-indigo-500 outline-none flex-1 min-w-[100px] transition-colors placeholder-zinc-400"
+                                        className="bg-transparent text-lg font-bold text-zinc-900 dark:text-white border-b border-transparent focus:border-indigo-500 outline-none w-1/2 min-w-[100px] transition-colors placeholder-zinc-400"
                                         value={currentSong?.title || ''}
                                         placeholder="Song Title"
                                         onChange={(e) => {
@@ -181,6 +168,25 @@ export default function PlayerPage() {
                                                 await updateSongMetadata(currentSong.id, e.target.value, currentSong.artist, currentSong.country_code);
                                             } catch (err) {
                                                 console.error('Failed to update title:', err);
+                                            }
+                                        }}
+                                    />
+                                    <span className="text-zinc-300 dark:text-zinc-600">-</span>
+                                    <input
+                                        type="text"
+                                        className="bg-transparent text-sm font-semibold text-zinc-900 dark:text-zinc-300 border-b border-transparent focus:border-indigo-500 outline-none flex-1 min-w-[80px] transition-colors placeholder-zinc-400"
+                                        value={currentSong?.artist || ''}
+                                        placeholder="Artist"
+                                        onChange={(e) => {
+                                            if (currentSong) setCurrentSong({ ...currentSong, artist: e.target.value });
+                                        }}
+                                        onBlur={async (e) => {
+                                            if (!currentSong) return;
+                                            try {
+                                                const { updateSongMetadata } = await import('../services/supabase');
+                                                await updateSongMetadata(currentSong.id, currentSong.title, e.target.value, currentSong.country_code);
+                                            } catch (err) {
+                                                console.error('Failed to update artist:', err);
                                             }
                                         }}
                                     />
@@ -199,13 +205,7 @@ export default function PlayerPage() {
 
                         {/* Controls */}
                         {isMySong && (
-                            <div className="flex gap-2 shrink-0">
-                                {isMySong && (
-                                    <span className="hidden sm:inline-flex text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 px-2 py-1 rounded items-center">
-                                        {currentSong?.stage === 3 ? '완료' : currentSong?.stage === 2 ? '가사 매칭' : '영상 등록'}
-                                    </span>
-                                )}
-
+                            <div className="flex gap-2 items-center shrink-0">
                                 {currentSong && currentSong.stage < 3 && (
                                     <button
                                         onClick={async (e) => {
@@ -260,6 +260,12 @@ export default function PlayerPage() {
                                     >
                                         <RefreshCw className="w-5 h-5" />
                                     </button>
+                                )}
+
+                                {isMySong && (
+                                    <span className="hidden sm:inline-flex text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 px-2 py-1 rounded items-center h-8">
+                                        {currentSong?.stage === 3 ? '완료' : currentSong?.stage === 2 ? '가사 매칭' : '영상 등록'}
+                                    </span>
                                 )}
                             </div>
                         )}
