@@ -37,7 +37,7 @@ function App() {
     <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-white font-sans selection:bg-indigo-500/30">
       {/* Header */}
       <header className="fixed top-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-white/5">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2 cursor-pointer">
             <div className="bg-indigo-600 p-2 rounded-lg">
               <Headphones className="w-5 h-5 text-white" />
@@ -46,16 +46,20 @@ function App() {
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-400">
                 Singlue
               </span>
-              <span className="text-xs text-zinc-600 dark:text-zinc-600 font-mono">v{pkg.version}</span>
+              <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-600 font-mono">v{pkg.version}</span>
             </div>
           </Link>
 
-          <div className="flex items-center gap-6">
-            {location.pathname !== '/library' && user && isApproved && (
-              <Link to="/library" className="text-sm font-medium text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
-                Library
-              </Link>
-            )}
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link
+              to="/library"
+              className={`text-sm font-medium transition-colors ${location.pathname === '/library'
+                ? 'text-indigo-600 dark:text-indigo-400'
+                : 'text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                }`}
+            >
+              Library
+            </Link>
 
             {isAdmin && (
               <Link to="/admin" className="text-sm font-medium text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
@@ -70,7 +74,7 @@ function App() {
                 Sign In
               </Link>
             ) : (
-              <div className="text-sm text-zinc-500 font-medium">
+              <div className="hidden md:block text-sm text-zinc-500 font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px]">
                 {profile?.nickname || user.email?.split('@')[0] || 'User'}
               </div>
             )}

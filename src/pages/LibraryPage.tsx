@@ -6,6 +6,7 @@ import type { Song } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 
 type Tab = 'my' | 'public';
+import { getFlagEmoji } from '../utils/country';
 
 export default function LibraryPage() {
     const { user } = useAuth();
@@ -125,7 +126,12 @@ export default function LibraryPage() {
                 </div>
 
                 {/* Stage / Status Badges */}
-                <div className="absolute top-2 right-2 flex gap-1">
+                <div className="absolute top-2 right-2 flex flex-col items-end gap-1">
+                    {song.country_code && (
+                        <span className="text-2xl drop-shadow-md mb-1" title={song.country_code}>
+                            {getFlagEmoji(song.country_code)}
+                        </span>
+                    )}
                     {song.stage !== 3 && (
                         <span className={`px-2 py-1 rounded text-xs font-medium ${song.stage === 2 ? 'bg-blue-500/80 text-white' :
                             'bg-yellow-500/80 text-white'
