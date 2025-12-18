@@ -14,9 +14,12 @@
 ### 2.1. Home Page
 - **Hero Section**: 
   - 타이틀은 사용자 시선을 가장 먼저 끄는 요소이므로 가독성을 해치지 않아야 합니다.
+  - **Layout**: 상단 키비주얼 영역은 뷰포트 높이의 약 75%(`75vh`)를 차지하도록 설정하여, 하단 콘텐츠(Recently Added)가 자연스럽게 보이도록 유도합니다.
+  - 상단 영역과 하단 목록 영역을 물리적으로 분리하여, 목록 로딩 시 상단 콘텐츠의 레이아웃(중앙 정렬)이 침범받거나 밀리지 않도록 고정합니다.
   - 모바일에서도 타이틀이 과도하게 줄바꿈되거나 잘리지 않도록 반응형 폰트 사이즈(`text-5xl md:text-7xl`)를 유지하되, 필요 시 미세 조정합니다.
 - **Recently Added Section**: 
   - **Layout**: 반응형 그리드 (Mobile: 1열, Tablet: 2열, Desktop: 3-4열)
+  - Hero Section 바로 하단에 이어서 배치합니다.
   - **Card Content**:
     - **Thumbnail**: 16:9 비율 유지, 호버 시 약간의 스케일 업 애니메이션 적용.
     - **Info**: 제목(Truncate 1줄), 가수(Truncate 1줄), 등록일, Synced 배지.
@@ -48,6 +51,7 @@
 ## 3. Global Navigation Bar (Header)
 
 ### 3.1. Layout
+- **Positioning**: `fixed`(플로팅) 방식을 사용하지 않고, 페이지 스크롤에 따라 자연스럽게 올라가는 정적(Static/Relative) 배치를 기본으로 합니다. 이는 콘텐츠 영역 확보 및 모바일 브라우저 주소창과의 간섭을 줄이기 위함입니다.
 - **Left**: 로고 및 서비스 명 (홈으로 이동)
 - **Right**: 
   - Library 링크 (회원일 경우 표시)
@@ -139,6 +143,10 @@
   - 현재 쿼터 상태(사용량/최대)를 시각적으로 표시. 
   - 10회 도달 시 경고 메시지 표시.
   - API Key 등록 시 "Unlimited (Infinite)" 표시.
+  - API Key 등록 시 "Unlimited (Infinite)" 표시.
+- **Interaction Design**:
+  - **Click over Hover**: 모바일 환경 호환성을 위해 드롭다운 메뉴 등 중요 UI 요소는 호버(hover) 대신 클릭(click) 이벤트를 사용해야 합니다.
+  - **Click-Outside**: 드롭다운이 열려있는 상태에서 외부 영역을 클릭하면 닫히도록 처리해야 합니다.
 - **API Key Input**: 
   - Gemini API Key를 입력하는 보안 필드 (password type).
   - 저장 버튼 및 성공/실패 피드백 토스트 메시지.
