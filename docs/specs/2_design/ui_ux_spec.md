@@ -19,6 +19,8 @@
   - 모바일에서도 타이틀이 과도하게 줄바꿈되거나 잘리지 않도록 반응형 폰트 사이즈(`text-5xl md:text-7xl`)를 유지하되, 필요 시 미세 조정합니다.
 - **Recently Added Section**: 
   - **Layout**: 반응형 그리드 (Mobile: 1열, Tablet: 2열, Desktop: 3-4열)
+  - **Typography (Mobile)**: Hero Title은 모바일에서 `text-4xl`~`text-5xl`, 데스크톱에서 `text-7xl`을 사용하여 과도한 줄바꿈을 방지합니다.
+  - **Spacing (Mobile)**: 섹션 상하 여백을 `py-8` (Mobile) ~ `py-12` (Desktop)으로 조정하여 모바일 공간을 확보합니다.
   - Hero Section 바로 하단에 이어서 배치합니다.
   - **Card Content**:
     - **Thumbnail**: 16:9 비율 유지, 호버 시 약간의 스케일 업 애니메이션 적용.
@@ -44,7 +46,10 @@
 
 ### 2.4. Player Page Layout
 - **Spacing**:
-  - **Vertical Margins**: 화면 상단(Top)과 하단(Bottom)에 충분한 여백을 두어 콘텐츠가 브라우저 엣지에 붙지 않도록 합니다. 데스크톱 기준 하단 여백은 `pb-25`(약 6.25rem)를 권장합니다.
+  - **Vertical Margins**: 화면 상단(Top)과 하단(Bottom)에 충분한 여백을 두어 콘텐츠가 브라우저 엣지에 붙지 않도록 합니다. 
+    - **Mobile**: `pt-4`, `px-4`, `pb-8`. (헤더 및 하단 여백 최소화)
+    - **Desktop**: `pt-10`, `px-6`, `pb-25`.
+  - **Layout Gaps**: 모바일에서는 컴포넌트 간 간격을 `gap-4`로 축소하여 밀도 있는 레이아웃을 제공합니다. (Desktop: `gap-6`)
   - **No Desktop Scroll**: 데스크톱(PC) 환경의 Player Page에서는 브라우저 자체의 스크롤바가 생기지 않도록 **페이지 스크롤을 방지**합니다. 콘텐츠가 뷰포트를 초과할 경우 내부 스크롤(Inner Scroll)로 처리합니다.
   - **Fluid Height**: 데스크톱 환경에서는 브라우저 높이에 맞춰 콘텐츠가 늘어나되, 하단에 최소 `2rem` (32px) 이상의 여백을 보장해야 합니다.
   - **Column Alignment**: 좌측 컬럼(영상 정보 + 플레이어 + 컨트롤)과 우측 컬럼(메인 가사창)의 상단 시작점은 반드시 **동일한 높이(Top Aligned)**를 유지해야 합니다.
@@ -135,6 +140,8 @@
     - [원어 싱크 조절 Slider]: DB 데이터 수정. "Global Sync" 라벨링.
     - [가사 변경 버튼]: 검색 모달 호출.
     - [AI 생성 관리]: "AI로 채우기" 또는 "언어별 생성" 버튼.
+  - **Mobile Layout**:
+    - 가사 표시 영역의 패딩을 `p-4` (Mobile) ~ `p-8` (Desktop)으로 반응형 적용하여 좌우 공간을 확보합니다.
 
     - [AI 생성 관리]: "AI로 채우기" 또는 "언어별 생성" 버튼.
 

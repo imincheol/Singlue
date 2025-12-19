@@ -1,5 +1,5 @@
 {
-    "__CONSTRAINT__": "🚨 작업 완료 시 status를 'REVIEW_REQUIRED'로 변경하고 멈추시오. (Report 생성 금지)",
+    "__CONSTRAINT__": "� 작업 완료 시 status를 'REVIEW_REQUIRED'로 변경하고 멈추시오. (Report 생성 금지)",
     "status": "IN_PROGRESS",
     "order_id": "YYYYMMDD_SEQ",
     "current_step": "Initializing",

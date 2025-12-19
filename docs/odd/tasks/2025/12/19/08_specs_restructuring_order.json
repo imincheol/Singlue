@@ -1,0 +1,51 @@
+{
+    "__CONSTRAINT__": "🚨 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
+    "order_id": "20251219_08",
+    "title": "Specs Directory Restructuring",
+    "type": "DOCS",
+    "status": "APPROVED",
+    "created_at": "2025-12-19 23:55:00",
+    "context": {
+        "request_summary": "docs/specs 폴더 내의 planning, development 폴더를 ODD 4-Layer 구조(1_planning ~ 4_development)에 맞게 재정렬하고 마이그레이션함.",
+        "related_docs": [
+            "docs/specs/planning/features.md",
+            "docs/specs/planning/ui_ux_spec.md",
+            "docs/specs/development/theme_spec.md"
+        ]
+    },
+    "reviews": {
+        "1_planning": {
+            "check": "docs/specs/1_planning",
+            "comment": "기존 planning/features.md, roadmap.md 이동 및 1_planning 구조 확립"
+        },
+        "2_design": {
+            "check": "docs/specs/2_design",
+            "comment": "기존 planning/ui_ux_spec.md 이동"
+        },
+        "3_markup": {
+            "check": "docs/specs/3_markup",
+            "comment": "기존 development/theme_spec.md 이동 및 스타일 가이드 통합"
+        },
+        "4_development": {
+            "check": "docs/specs/4_development",
+            "comment": "기존 development/*.md (tech_stack, data_structure 등) 이동"
+        }
+    },
+    "plan_specs": [
+        "docs/specs/1_planning/*",
+        "docs/specs/2_design/*",
+        "docs/specs/3_markup/*",
+        "docs/specs/4_development/*"
+    ],
+    "requirements": [
+        "docs/specs/planning/features.md -> docs/specs/1_planning/features.md 이동",
+        "docs/specs/planning/roadmap.md -> docs/specs/1_planning/roadmap.md 이동",
+        "docs/specs/planning/ui_ux_spec.md -> docs/specs/2_design/ui_ux_spec.md 이동",
+        "docs/specs/development/theme_spec.md -> docs/specs/3_markup/theme_spec.md 이동",
+        "docs/specs/development/conventions.md -> docs/specs/4_development/conventions.md 이동",
+        "docs/specs/development/data_structure.md -> docs/specs/4_development/data_structure.md 이동",
+        "docs/specs/development/getting_started.md -> docs/specs/4_development/getting_started.md 이동",
+        "docs/specs/development/tech_stack.md -> docs/specs/4_development/tech_stack.md 이동",
+        "이동 완료 후 빈 docs/specs/planning 및 docs/specs/development 폴더 삭제"
+    ]
+}

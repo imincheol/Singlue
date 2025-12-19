@@ -5,14 +5,14 @@ AI와의 협업 시 컨텍스트 유실을 방지하고, 명확한 요구사항 
 
 **모든 문서는 반드시 한국어로 작성합니다.**
 
-## 📂 Directory Structure
+## � Directory Structure
 
 ### 1. Task Archive (작업 공간)
 
-작업 상태는 `docs/order/tasks/YYYY/MM/DD/` 내의 **파일 확장자 조합**으로 식별합니다.
+작업 상태는 `docs/odd/tasks/YYYY/MM/DD/` 내의 **파일 확장자 조합**으로 식별합니다.
 
 ```text
-docs/order/tasks/YYYY/MM/DD/
+docs/odd/tasks/YYYY/MM/DD/
 ├── 01_login_order.json      # [필수] 요청서 (Start)
 ├── 01_login_progress.json   # [임시] 진행 중 (Working...)
 └── 01_login_report.json     # [완료] 결과물 (Done)
@@ -28,7 +28,7 @@ docs/order/tasks/YYYY/MM/DD/
 
 ---
 
-## 🚀 Workflow Rules
+## � Workflow Rules
 
 ### **The Golden Rule: "No Order, No Work."**
 
@@ -52,12 +52,13 @@ Order가 확정되지 않았다면, 스펙 문서 수정이나 코드 작성 등
 
 ### Phase 1. Planning & Order (분석 및 지시)
 
-**AI는 무작정 작성하기 전, 4단계 스펙 문서를 통해 '현재 상태'를 먼저 파악해야 합니다.**
+**AI는 무작정 작성하기 전, 5단계 스펙 아키텍처를 통해 '현재 상태'를 먼저 파악해야 합니다.**
 
 1. **Context Analysis (기존 스펙 파악)**:
 
-* **Rule**: Order 작성 전, 반드시 `docs/specs/` 하위의 4단계 문서를 교차 검토합니다.
+* **Rule**: Order 작성 전, 반드시 `docs/specs/` 하위의 문서를 교차 검토합니다.
 * **검토 가이드 (For Order Reviews)**:
+* `0_origin` (Read-Only): 프로젝트 기원, 불변의 규칙, 외부 API 문서 참조.
 * `1_planning`: 기획 의도, 비즈니스 로직, 기능 명세 확인.
 * `2_design`: UI 레이아웃, 디자인 에셋, 컴포넌트 재사용성 확인.
 * `3_markup`: HTML 시맨틱 구조, 테마 변수(CSS), 접근성 전략 확인.
@@ -69,7 +70,7 @@ Order가 확정되지 않았다면, 스펙 문서 수정이나 코드 작성 등
 
 * `_templates/order.json`을 복사하여 생성합니다.
 * `status`는 반드시 **"DRAFT"**로 설정합니다.
-* **🚨 STOP**: AI는 파일을 생성한 후 작업을 멈추고 **"오더를 작성했으니 확인해주세요"**라고 보고해야 합니다. (자동 진행 금지)
+* **� STOP**: AI는 파일을 생성한 후 작업을 멈추고 **"오더를 작성했으니 확인해주세요"**라고 보고해야 합니다. (자동 진행 금지)
 
 3. **User Approval (승인)**:
 
@@ -96,7 +97,7 @@ Order가 확정되지 않았다면, 스펙 문서 수정이나 코드 작성 등
 * 버그나 수정 사항 발생 시, `Progress` 파일의 `logs`에 기록하고 작업을 반복합니다.
 * 이 과정에서 `Order`는 수정하지 않으며, `Report`는 절대 생성하지 않습니다.
 
-> **💡 Tip: Log Management**
+> **� Tip: Log Management**
 > `progress.json`의 `logs`가 너무 길어지면(20항목 이상), AI는 스스로 지난 로그를 요약하거나 중요한 에러 메시지만 남기고 정리하여 컨텍스트 낭비를 막아야 합니다.
 
 ---
@@ -108,7 +109,7 @@ Order가 확정되지 않았다면, 스펙 문서 수정이나 코드 작성 등
 1. **Request Review (검토 요청)**:
 
 * 모든 작업이 완료되면, AI는 `progress.json`의 `status`를 **"REVIEW_REQUIRED"**로 변경합니다.
-* **🚨 STOP**: 리포트를 만들지 않고 **"작업을 마쳤으니 확인해주세요"**라고 보고해야 합니다.
+* **� STOP**: 리포트를 만들지 않고 **"작업을 마쳤으니 확인해주세요"**라고 보고해야 합니다.
 
 2. **User Confirmation (확인 및 승인)**:
 
@@ -123,7 +124,7 @@ Order가 확정되지 않았다면, 스펙 문서 수정이나 코드 작성 등
 
 ---
 
-## 📝 Usage Example
+## � Usage Example
 
 **상황**: 오늘(2025-12-19) '다크 모드 지원 로그인 폼' 구현 요청.
 

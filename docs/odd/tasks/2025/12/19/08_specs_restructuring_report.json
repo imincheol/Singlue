@@ -1,0 +1,19 @@
+{
+    "order_id": "20251219_08",
+    "status": "COMPLETED",
+    "completed_at": "2025-12-20 00:05:00",
+    "result_summary": "docs/specs 디렉토리 구조를 ODD 4-Layer Architecture에 맞춰 재구성 완료. planning, development 폴더 제거됨.",
+    "changes": [
+        "docs/specs/1_planning/features.md",
+        "docs/specs/1_planning/roadmap.md",
+        "docs/specs/2_design/ui_ux_spec.md",
+        "docs/specs/3_markup/theme_spec.md",
+        "docs/specs/4_development/conventions.md",
+        "docs/specs/4_development/data_structure.md",
+        "docs/specs/4_development/getting_started.md",
+        "docs/specs/4_development/tech_stack.md"
+    ],
+    "verification": {
+        "manual_check": "모든 파일 이동 및 이전 폴더 삭제 확인 완료"
+    }
+}
