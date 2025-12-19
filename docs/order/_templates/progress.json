@@ -1,0 +1,22 @@
+{
+    "status": "IN_PROGRESS",
+    "current_step": "Initializing",
+    "last_updated": "YYYY-MM-DD HH:mm:ss",
+    "todo_list": [
+        {
+            "task": "스펙 문서 업데이트",
+            "status": "DONE"
+        },
+        {
+            "task": "API 코드 작성",
+            "status": "IN_PROGRESS"
+        }
+    ],
+    "logs": [
+        {
+            "timestamp": "HH:mm:ss",
+            "type": "INFO",
+            "message": "Task started"
+        }
+    ]
+}
