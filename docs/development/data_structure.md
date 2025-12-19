@@ -11,10 +11,15 @@
 - **pron** (`object`): 발음 (Pronunciation) 정보.
   - `ko` (string?): 한국어 발음 (한글 표기).
   - `en` (string?): 영어 발음 (로마자 표기).
+  - `ja` (string?): 일본어 발음 (가타카나 표기).
+  - `zh` (string?): 중국어 발음 (Pinyin/현지 표기).
   - `vi` (string?): 베트남어 발음 (원문 유지, 다른 언어로 표기 시 북부 발음 기준).
 - **trans** (`object`): 해석 (Translation) 정보.
   - `ko` (string?): 한국어 해석.
   - `en` (string?): 영어 해석.
+  - `ja` (string?): 일본어 해석.
+  - `zh` (string?): 중국어 해석.
+  - `vi` (string?): 베트남어 해석.
 
 ## 2. 노래 데이터 (Song)
 ### `Song`
