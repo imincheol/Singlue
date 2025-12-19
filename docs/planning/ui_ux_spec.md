@@ -139,19 +139,19 @@
     - [AI 생성 관리]: "AI로 채우기" 또는 "언어별 생성" 버튼.
 
 ### 5.4. Karaoke Mode & Overlay UI
-- **진입점**: Player Page 상단 정보 영역 아이콘 (Toggle).
+- **진입점**: Player Page 상단 정보 영역 **최우측** 아이콘 (Toggle).
 - **레이아웃 구조**:
   - **Container**: Video Player 영역(`relative`) 내부의 하단(`absolute bottom-0`).
-  - **Size Limit**: 높이는 영상 전체 높이는 **Max 50%**로 제한합니다.
-  - **배경**: 영상 위의 텍스트 가독성을 위해 **반투명 검정 배경(rgba)**을 사용하며, 이는 다크/라이트 테마와 무관하게 **항상 흰색 텍스트**를 유지합니다 (Theme Exception).
-- **영역 분할 (Vertical Split)**:
-  1. **Lyrics Area (Top)**:
-     - `flex-grow`, 유동적 높이.
-     - 텍스트 크기는 화면 크기에 비례(`vmin`)하여, 전체화면 시 시원하게 커져야 합니다.
-  2. **Controls Area (Bottom)**:
-     - **Fixed Height** (높이 고정).
-     - 재생 바(Timeline slider)가 포함되어 전체화면 시 좌우로 길어집니다.
-     - 재생/일시정지, 가사 폰트/싱크 조절 버튼 포함.
+  - **Visual Style**: 가독성을 위해 **반투명 검정 배경**을 사용하며, 상단 모서리에 **Rounded(둥근)** 효과를 적용하여 부드러운 느낌을 줍니다.
+- **콘텐츠 표시 (Lyrics Area)**:
+  - **3-Line Display**: 원문(Source), 발음(Pronunciation), 해석(Translation)을 세로로 적층하여 표시합니다.
+  - **View Options**: 오버레이 내부에 각 라인(원문/발음/해석)을 On/Off 할 수 있는 **토글 버튼(Chip)**을 제공합니다.
+  - **Font Control**:
+    - 기본적으로 `vmin` 단위 반응형 폰트를 사용하되, 전체화면 시 시원하게 큰 사이즈를 기본값으로 함.
+    - 사용자가 크기를 조절할 수 있는 **[가사 크기 + / -]** 버튼을 제공합니다.
+- **제어 영역 (Controls Area)**:
+  - **Exit 버튼 제거**: 오버레이 내부에서는 모드 종료 버튼을 제거하고, 상단 진입점 버튼으로 통일합니다.
+  - **Timeline**: 재생 바는 전체화면 시 가로로 확장됩니다.
 - **전체화면 (Fullscreen)**:
   - 브라우저 Fullscreen API를 Video Container 요소에 적용하여 오버레이가 영상과 함께 커지도록 합니다.
 

@@ -120,17 +120,7 @@ export default function PlayerPage() {
                             </span>
                         )}
 
-                        {/* Karaoke Switch */}
-                        <button
-                            onClick={toggleKaraokeMode}
-                            className={`p-2 rounded-lg transition-colors flex items-center gap-1.5 ${isKaraokeMode
-                                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                                : 'hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-500'
-                                }`}
-                            title="Karaoke Mode"
-                        >
-                            {isKaraokeMode ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5 opacity-50" />}
-                        </button>
+
 
                         {/* Song Info Inputs */}
                         <div className="flex-1 flex gap-2 items-center min-w-0">
@@ -252,6 +242,18 @@ export default function PlayerPage() {
                                 )}
                             </div>
                         )}
+
+                        {/* Karaoke Switch (Moved to Right End) */}
+                        <button
+                            onClick={toggleKaraokeMode}
+                            className={`p-2 rounded-lg transition-colors flex items-center gap-1.5 ${isKaraokeMode
+                                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
+                                : 'hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-500'
+                                }`}
+                            title="Karaoke Mode"
+                        >
+                            {isKaraokeMode ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5 opacity-50" />}
+                        </button>
                     </div>
                 </div>
 

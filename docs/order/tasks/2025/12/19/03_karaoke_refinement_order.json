@@ -1,0 +1,48 @@
+{
+    "order_id": "20251219_03",
+    "title": "노래방 모드 고도화 (UI 개선 및 기능 추가)",
+    "type": "FEATURE",
+    "status": "OPEN",
+    "created_at": "2025-12-19 15:40:00",
+    "context": {
+        "request_summary": "노래방 모드 UI 위치 조정, 가사 표시 옵션(3단) 추가, 스타일 개선 및 글자 크기 조절 기능 추가",
+        "related_docs": [
+            "docs/order/tasks/2025/12/19/01_karaoke_mode_report.json",
+            "docs/planning/ui_ux_spec.md"
+        ]
+    },
+    "reviews": {
+        "planning": [
+            "버튼 위치 변경: PlayerPage 상단 정보 영역의 가장 오른쪽(Right End)으로 이동.",
+            "가사 표시 내용: 기존 '현재 가사' 단독 표시에서 '원문/발음/해석' 3단 표시로 변경.",
+            "사용자 경험(UX): 각 라인(원문/발음/해석)을 개별적으로 켜고 끌 수 있는 토글 버튼 제공.",
+            "가독성: 전체화면 시 텍스트가 훨씬 커야 함. 사용자 조절 가능한 폰트 크기 옵션 추가."
+        ],
+        "design": [
+            "스타일 수정: 오버레이 배경/컨테이너가 각진 네모(Angled)로 나오는 현상을 수정하여 'Rounded' 스타일 적용.",
+            "제어바 간소화: 제어바, 또는 오버레이 내부의 '로그아웃(Exit)' 버튼 삭제 (상단 토글로 통일).",
+            "가사 폰트: 전체화면 기본 크기 상향 조정."
+        ],
+        "development": [
+            "State: `KaraokeOverlay` 내부 로컬 상태로 '표시 옵션(showSource, showPron, showTrans)' 및 'fontSizeLevel' 관리 필요.",
+            "Layout: Flex-direction Column으로 3단 가사 적층. 발음/해석은 원문보다 작은 폰트 적용.",
+            "CSS: `rounded-xl` 등을 적용하여 오버레이 외곽선 부드럽게 처리."
+        ]
+    },
+    "plan_specs": [
+        "docs/planning/features.md",
+        "docs/planning/ui_ux_spec.md"
+    ],
+    "requirements": [
+        "진입 버튼 위치: 상단 정보바 우측 끝으로 이동",
+        "오버레이 콘텐츠: 원문(Source), 발음(Pronunciation), 해석(Translation) 모두 표시 지원",
+        "콘텐츠 제어: 각 항목(원문/발음/해석) On/Off 토글 버튼 추가",
+        "스타일 개선: 오버레이 배경을 'Rounded Rectangle' 형태로 시각적 개선",
+        "제어바 수정: 오버레이 내 '노래방 종료(Exit)' 버튼 제거",
+        "폰트 제어: 전체화면 기본 폰트 크기 증대 및 '글자 크기 조절' 버튼 추가"
+    ],
+    "expected_files": [
+        "src/pages/PlayerPage.tsx",
+        "src/components/KaraokeOverlay.tsx"
+    ]
+}
