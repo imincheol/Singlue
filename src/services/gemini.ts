@@ -37,26 +37,23 @@ export const generateLyrics = async (apiKey: string, videoTitle: string, userLan
     Detailed Rules:
     - Always provide "ko" (Korean) and "en" (English) for both "pron" and "trans".
     - If User Language ("${userLanguage}") is not "ko" or "en", also provide it.
-    - "pron.ko": Hangul pronunciation.
-    - "pron.en": Romanized pronunciation.
-    - "trans.ko": Korean translation.
-    - "trans.en": English translation.
+    - "pron":
+      - "ko": Hangul pronunciation.
+      - "en": Romanized pronunciation.
+      - "ja": Katakana pronunciation (if User Language is "ja").
+      - "zh": Pinyin or local phonetic (if User Language is "zh").
+    - "trans":
+      - "ko": Korean translation.
+      - "en": English translation.
+      - "${userLanguage}": Translation in the user's language.
     - If source is already Korean, "trans.ko" can be empty/same.
     - If source is already English, "trans.en" can be empty/same.
-    - **Vietnamese Pronunciation Standard**: When transcribing Vietnamese lyrics to other languages (ko/en), STRICTLY use Northern Vietnamese pronunciation (Hanoi standard).
-      - Consonant Rules (Northern): 
-        - 'r', 'd', 'gi' -> pronounced as 'z' (Korean 'ㅈ' or 'ㅉ', English 'z')
-        - 'v' -> pronounced as 'v' (Korean 'ㅂ/ㅂㅂ', NOT 'y/j' sound)
-        - 'ch', 'tr' -> pronounced as 'ch' (Korean 'ㅊ/ㅉ')
-      - Examples:
-        - "rộng" -> "쫑" (ko), "zong/jong" (en) [Northern], NOT "롱/공/쿰" (Southern)
-        - "vẫn" -> "번" (ko), "vun" (en) [Northern], NOT "언/연" (Southern)
-        - "dù" -> "주" (ko), "zu" (en) [Northern], NOT "유" (Southern)
-        - "Không" -> "콩" (ko), "khong" (en)
-        - "Cảm ơn" -> "깜 언" (ko), "cam un" (en)
-    - **Korean Pronunciation Style**: When transcribing Korean lyrics to alphabet-based languages (English, Vietnamese, etc.), add a hyphen (-) between each syllable block to clearly distinguish words and improve readability.
-      - Example: "안녕하세요" -> "an-nyeong-ha-se-yo" (NOT "annyeong haseyo")
-      - Example: "사랑해" -> "sa-rang-hae"
+    - **Vietnamese Pronunciation Standard**: When transcribing related lyrics (especially if source IS Vietnamese), use Northern Vietnamese pronunciation (Hanoi standard).
+      - Examples: "rộng" -> "쫑" (ko), "vẫn" -> "번" (ko).
+    - **Korean Pronunciation Style**: When transcribing Korean lyrics to alphabet-based languages (English, Vietnamese, etc.), add a hyphen (-) between each syllable block.
+      - Example: "안녕하세요" -> "an-nyeong-ha-se-yo"
+    - **Japanese Pronunciation Style**: If target is Japanese ("pron.ja"), use Katakana.
+    - **Chinese Pronunciation Style**: If target is Chinese ("pron.zh"), use Pinyin or appropriate phonetic characters.
     
     Return ONLY a JSON object with this structure (no markdown code blocks):
     {
@@ -140,25 +137,19 @@ export const enrichLyrics = async (apiKey: string, currentSong: Song, userLangua
     Rules:
     - Always provide "ko" (Korean) and "en" (English).
     - If User Language ("${userLanguage}") is not "ko" or "en", also provide it.
-    - "pron.ko": Hangul pronunciation.
-    - "pron.en": Romanized pronunciation.
-    - "trans.ko": Korean translation.
-    - "trans.en": English translation.
+    - "pron":
+      - "ko": Hangul pronunciation.
+      - "en": Romanized pronunciation.
+      - "ja": Katakana pronunciation (if User Language is "ja").
+      - "zh": Pinyin or local phonetic (if User Language is "zh").
+    - "trans":
+      - "ko": Korean translation.
+      - "en": English translation.
+      - "${userLanguage}": Translation in the user's language.
     - Maintain strict JSON format.
-    - **Vietnamese Pronunciation Standard**: When transcribing Vietnamese lyrics to other languages (ko/en), STRICTLY use Northern Vietnamese pronunciation (Hanoi standard).
-      - Consonant Rules (Northern): 
-        - 'r', 'd', 'gi' -> pronounced as 'z' (Korean 'ㅈ' or 'ㅉ', English 'z')
-        - 'v' -> pronounced as 'v' (Korean 'ㅂ/ㅂㅂ', NOT 'y/j' sound)
-        - 'ch', 'tr' -> pronounced as 'ch' (Korean 'ㅊ/ㅉ')
-      - Examples:
-        - "rộng" -> "쫑" (ko), "zong/jong" (en) [Northern], NOT "롱/공/쿰" (Southern)
-        - "vẫn" -> "번" (ko), "vun" (en) [Northern], NOT "언/연" (Southern)
-        - "dù" -> "주" (ko), "zu" (en) [Northern], NOT "유" (Southern)
-        - "Không" -> "콩" (ko), "khong" (en)
-        - "Cảm ơn" -> "깜 언" (ko), "cam un" (en)
-    - **Korean Pronunciation Style**: When transcribing Korean lyrics to alphabet-based languages (English, Vietnamese, etc.), add a hyphen (-) between each syllable block to clearly distinguish words and improve readability.
-      - Example: "안녕하세요" -> "an-nyeong-ha-se-yo" (NOT "annyeong haseyo")
-      - Example: "사랑해" -> "sa-rang-hae"
+    - **Vietnamese Pronunciation Standard**: Northern Vietnamese (Hanoi).
+    - **Korean Pronunciation Style**: Hyphenate syllables (e.g. "an-nyeong-ha-se-yo").
+    - **Japanese Pronunciation Style**: If target is Japanese ("pron.ja"), use Katakana.
     
     Return ONLY a JSON object with this structure (no markdown code blocks):
     {

@@ -45,6 +45,10 @@ interface AppState {
 
     // Sync Persistence
     saveCurrentOffset: () => Promise<void>;
+
+    // Persistent Local Sync Map (SongID -> Offset)
+    localSyncMap: Record<string, number>;
+    setLocalSync: (songId: string, offset: number) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -111,6 +115,15 @@ export const useAppStore = create<AppState>()(
                     throw error;
                 }
             },
+
+            // New: Persistent Local Sync Map
+            localSyncMap: {},
+            setLocalSync: (songId, offset) => set((state) => ({
+                localSyncMap: { ...state.localSyncMap, [songId]: offset },
+                userOffset: offset // Also update current session offset immediately if it matches? 
+                // Actually, userOffset in the component usually tracks the slider. 
+                // We should probably just rely on localSyncMap or init userOffset from it when song loads.
+            })),
         }),
         {
             name: 'singlue-storage',
@@ -119,6 +132,7 @@ export const useAppStore = create<AppState>()(
                 showPronunciation: state.showPronunciation,
                 showTranslation: state.showTranslation,
                 history: state.history,
+                localSyncMap: state.localSyncMap, // Persist this
             }),
             merge: (persistedState, currentState) => {
                 const merged = { ...currentState, ...(persistedState as object) } as AppState;

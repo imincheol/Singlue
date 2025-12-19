@@ -173,3 +173,17 @@ export const updateSongMetadata = async (songId: string, title: string, artist: 
 
     if (error) throw error;
 };
+
+export const incrementUsageCount = async (userId: string) => {
+    // call RPC or just update
+    // Since we don't have an RPC for atomic increment, we can just fetch and update or use rpc if available.
+    // For now, simple update is fine for MVP.
+    // Ideally: supabase.rpc('increment_usage_count', { user_id: userId })
+    // But let's assume we read-modify-write or just let it be loose.
+    // Actually, let's try to do it via rpc if we can, but we don't have the rpc defined in the prompt.
+    // So read-update.
+    const { data: profile } = await supabase.from('profiles').select('usage_count').eq('id', userId).single();
+    if (profile) {
+        await supabase.from('profiles').update({ usage_count: (profile.usage_count || 0) + 1 }).eq('id', userId);
+    }
+};
