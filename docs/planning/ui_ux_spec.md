@@ -144,12 +144,19 @@
   - **Container**: Video Player 영역(`relative`) 내부의 하단(`absolute bottom-0`).
   - **Visual Style**: 가독성을 위해 **반투명 검정 배경**을 사용하며, 상단 모서리에 **Rounded(둥근)** 효과를 적용하여 부드러운 느낌을 줍니다.
 - **콘텐츠 표시 (Lyrics Area)**:
-  - **3-Line Display**: 원문(Source), 발음(Pronunciation), 해석(Translation)을 세로로 적층하여 표시합니다.
-  - **View Options**: 오버레이 내부에 각 라인(원문/발음/해석)을 On/Off 할 수 있는 **토글 버튼(Chip)**을 제공합니다. 진입 시 **기본값은 모두 ON**입니다.
-  - **Font Control**:
-    - **Dual Scale System**: 일반 모드와 전체화면 모드의 폰트 크기를 **독립적으로 관리**합니다.
-      - **일반 모드**: 기본값 `3vmin`, 범위 `1` ~ `10`.
-      - **전체화면**: 기본값 `10vmin`, 범위 `1` ~ `20`.
+  - **Interleaved Layout**: 가독성을 위해 **현재 라인**과 **다음 라인**을 교차하여 배치합니다.
+    - 순서: `가사(현)` -> `가사(다음)` -> `발음(현)` -> `발음(다음)` -> `해석(현)` -> `해석(다음)`
+  - **Visual Hierarchy**:
+    - **Current Line**: 밝은 색상, 높은 불투명도(100%), 굵은 폰트.
+    - **Next Line**: 무채색(Gray), 낮은 불투명도(50%), 일반 폰트.
+  - **View Options**:
+    - **Source(가사)**: 항상 표시 (토글 없음).
+    - **Next Line**: 토글 가능 (아이콘: 목록/화살표 등).
+    - **Pronunciation/Translation**: 토글 가능.
+  - **Font Control (Calibration)**:
+    - **Dual Scale System**: 단순 배율이 아닌 **사용성 기반의 범위 매핑**을 사용합니다.
+      - **일반 모드**: 1~10단계. (실제 크기: `2vmin` ~ `6vmin`)
+      - **전체화면**: 1~20단계. (실제 크기: `4vmin` ~ `15vmin`)
     - 사용자가 크기를 조절할 수 있는 **[가사 크기 + / -]** 버튼을 제공합니다.
 - **제어 영역 (Controls Area)**:
   - **Layering (Z-Index)**: 가사 폰트가 커지더라도 제어바를 덮지 않도록, 제어 영역은 항상 가사 영역보다 **상위 레이어(High Z-Index)**에 위치해야 합니다.

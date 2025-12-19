@@ -1,0 +1,20 @@
+{
+    "order_id": "20251219_05",
+    "status": "COMPLETED",
+    "completed_at": "2025-12-19 17:15:00",
+    "implemented_features": [
+        "Interleaved Layout (Current/Next pair rendering)",
+        "Next Line Preview with Visual Hierarchy (Dimmed style)",
+        "Font Size Calibration (Mapped vmin ranges)",
+        "Next Line Toggle (ArrowDownToLine Icon)"
+    ],
+    "changed_files": [
+        "src/components/KaraokeOverlay.tsx",
+        "docs/planning/ui_ux_spec.md"
+    ],
+    "verification_results": {
+        "manual_test": "Walkthrough 문서를 통한 수동 검증 필요",
+        "auto_test": "N/A"
+    },
+    "notes": "다음 가사 미리보기를 통해 가창 편의성을 높이고, 폰트 크기 단계를 실사용 가능한 범위로 재조정함."
+}

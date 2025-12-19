@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { useTranslation } from 'react-i18next';
-import { Play, Pause, Maximize, Type, Languages, Plus, Minus } from 'lucide-react';
+import { Play, Pause, Maximize, Type, Languages, Plus, Minus, ArrowDownToLine } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export const KaraokeOverlay: React.FC = () => {
@@ -21,8 +21,9 @@ export const KaraokeOverlay: React.FC = () => {
     const { i18n } = useTranslation();
     const lang = i18n.language?.split('-')[0] || 'ko'; // Default to 'ko' or current language
 
-    // View Options State - Default ALL VISIBLE - Default ALL VISIBLE
-    const [showSource, setShowSource] = useState(true);
+    // View Options State
+    // showSource removed (Always ON)
+    const [showNextLine, setShowNextLine] = useState(true);
     const [showPronunciation, setShowPronunciation] = useState(true);
     const [showTranslation, setShowTranslation] = useState(true);
 
@@ -60,6 +61,25 @@ export const KaraokeOverlay: React.FC = () => {
         }
     };
 
+    // Helper: Calculate font size in vmin based on scale step
+    const getFontSize = (step: number, mode: 'normal' | 'fullscreen'): string => {
+        if (mode === 'normal') {
+            // Normal: 1..10 -> 2.0vmin .. 6.0vmin
+            const min = 2.0;
+            const max = 6.0;
+            const size = min + ((step - 1) / 9) * (max - min);
+            return `${size.toFixed(2)}vmin`;
+        } else {
+            // Fullscreen: 1..20 -> 4.0vmin .. 16.0vmin
+            const min = 4.0;
+            const max = 16.0;
+            const size = min + ((step - 1) / 19) * (max - min);
+            return `${size.toFixed(2)}vmin`;
+        }
+    };
+
+    const computedBaseSize = getFontSize(currentScale, isFullscreen ? 'fullscreen' : 'normal');
+
     const globalOffset = currentSong?.global_offset || 0;
     const totalOffset = globalOffset + userOffset;
     const syncedTime = currentTime - totalOffset;
@@ -70,9 +90,11 @@ export const KaraokeOverlay: React.FC = () => {
         setActiveLineIndex(index);
     }, [syncedTime, currentSong]);
 
-    const currentLine = useMemo(() => {
+    const lyricsData = useMemo(() => {
         if (!currentSong || activeLineIndex === -1) return null;
-        return currentSong.lyrics[activeLineIndex];
+        const current = currentSong.lyrics[activeLineIndex];
+        const next = currentSong.lyrics[activeLineIndex + 1]; // Can be undefined
+        return { current, next };
     }, [currentSong, activeLineIndex]);
 
     const formatTime = (seconds: number) => {
@@ -83,13 +105,8 @@ export const KaraokeOverlay: React.FC = () => {
 
     if (!currentSong) return null;
 
-    // Scale Logic: vmin
-    // Normal mode: 1~10 vmin (Default 3)
-    // Fullscreen mode: 1~20 vmin (Default 10)
-    const baseSize = currentScale;
-
     return (
-        <div className="absolute bottom-0 left-0 w-full max-h-[50%] flex flex-col z-20 pointer-events-none">
+        <div className="absolute bottom-0 left-0 w-full max-h-[60%] flex flex-col z-20 pointer-events-none">
             {/* Main Content Container (Rounded Top, Pointer Events Auto) */}
             <div className="flex-1 w-full bg-black/60 backdrop-blur-sm rounded-t-3xl flex flex-col overflow-hidden pointer-events-auto transition-all duration-300">
 
@@ -99,11 +116,11 @@ export const KaraokeOverlay: React.FC = () => {
                     {/* View Toggles (Floating Top Right within Lyrics Area) */}
                     <div className="absolute top-4 right-6 flex gap-2 opacity-0 group-hover/lyrics:opacity-100 transition-opacity duration-300 bg-black/40 p-1.5 rounded-full backdrop-blur-md z-30 pointer-events-auto">
                         <button
-                            onClick={() => setShowSource(!showSource)}
-                            className={clsx("w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors", showSource ? "bg-white text-black" : "bg-white/10 text-white/50")}
-                            title="Toggle Source"
+                            onClick={() => setShowNextLine(!showNextLine)}
+                            className={clsx("w-8 h-8 rounded-full flex items-center justify-center transition-colors", showNextLine ? "bg-white text-black" : "bg-white/10 text-white/50")}
+                            title="Toggle Next Line"
                         >
-                            Aa
+                            <ArrowDownToLine size={14} />
                         </button>
                         <button
                             onClick={() => setShowPronunciation(!showPronunciation)}
@@ -121,41 +138,59 @@ export const KaraokeOverlay: React.FC = () => {
                         </button>
                     </div>
 
-                    {currentLine ? (
-                        <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col gap-[0.5em] transition-all" style={{ fontSize: `${baseSize}vmin` }}>
-                            {/* Source */}
-                            {showSource && (
-                                <p
-                                    className="font-bold text-white drop-shadow-md leading-tight transition-all duration-300"
-                                    style={{ fontSize: '1em' }}
-                                >
-                                    {currentLine.source}
+                    {lyricsData ? (
+                        <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col gap-[0.2em] transition-all" style={{ fontSize: computedBaseSize }}>
+
+                            {/* Group 1: Source */}
+                            <p className="font-bold text-white drop-shadow-md leading-tight transition-all duration-300" style={{ fontSize: '1em' }}>
+                                {lyricsData.current.source}
+                            </p>
+                            {showNextLine && lyricsData.next && (
+                                <p className="font-medium text-zinc-400 opacity-60 leading-tight transition-all duration-300" style={{ fontSize: '1em' }}>
+                                    {lyricsData.next.source}
                                 </p>
                             )}
 
-                            {/* Pronunciation */}
-                            {showPronunciation && currentLine.pron && (
-                                <p
-                                    className="text-indigo-300 drop-shadow-md leading-tight transition-all duration-300 font-medium"
-                                    style={{ fontSize: '0.5em' }}
-                                >
-                                    {typeof currentLine.pron === 'string'
-                                        ? currentLine.pron
-                                        : (currentLine.pron[lang] || currentLine.pron['en'] || Object.values(currentLine.pron)[0] || '')}
-                                </p>
+                            {/* Group 2: Pronunciation */}
+                            {showPronunciation && (
+                                <>
+                                    {lyricsData.current.pron && (
+                                        <p className="text-indigo-300 drop-shadow-md leading-tight transition-all duration-300 font-medium mt-[0.3em]" style={{ fontSize: '0.6em' }}>
+                                            {typeof lyricsData.current.pron === 'string'
+                                                ? lyricsData.current.pron
+                                                : (lyricsData.current.pron[lang] || lyricsData.current.pron['en'] || Object.values(lyricsData.current.pron)[0] || '')}
+                                        </p>
+                                    )}
+                                    {showNextLine && lyricsData.next && lyricsData.next.pron && (
+                                        <p className="text-indigo-200 opacity-50 leading-tight transition-all duration-300 font-medium" style={{ fontSize: '0.6em' }}>
+                                            {typeof lyricsData.next.pron === 'string'
+                                                ? lyricsData.next.pron
+                                                : (lyricsData.next.pron[lang] || lyricsData.next.pron['en'] || Object.values(lyricsData.next.pron)[0] || '')}
+                                        </p>
+                                    )}
+                                </>
                             )}
 
-                            {/* Translation */}
-                            {showTranslation && currentLine.trans && (
-                                <p
-                                    className="text-emerald-300 drop-shadow-md leading-tight transition-all duration-300 font-medium"
-                                    style={{ fontSize: '0.45em' }}
-                                >
-                                    {typeof currentLine.trans === 'string'
-                                        ? currentLine.trans
-                                        : (currentLine.trans[lang] || currentLine.trans['en'] || Object.values(currentLine.trans)[0] || '')}
-                                </p>
+                            {/* Group 3: Translation */}
+                            {showTranslation && (
+                                <>
+                                    {lyricsData.current.trans && (
+                                        <p className="text-emerald-300 drop-shadow-md leading-tight transition-all duration-300 font-medium mt-[0.2em]" style={{ fontSize: '0.55em' }}>
+                                            {typeof lyricsData.current.trans === 'string'
+                                                ? lyricsData.current.trans
+                                                : (lyricsData.current.trans[lang] || lyricsData.current.trans['en'] || Object.values(lyricsData.current.trans)[0] || '')}
+                                        </p>
+                                    )}
+                                    {showNextLine && lyricsData.next && lyricsData.next.trans && (
+                                        <p className="text-emerald-200 opacity-50 leading-tight transition-all duration-300 font-medium" style={{ fontSize: '0.55em' }}>
+                                            {typeof lyricsData.next.trans === 'string'
+                                                ? lyricsData.next.trans
+                                                : (lyricsData.next.trans[lang] || lyricsData.next.trans['en'] || Object.values(lyricsData.next.trans)[0] || '')}
+                                        </p>
+                                    )}
+                                </>
                             )}
+
                         </div>
                     ) : (
                         <div className="text-white/30 italic text-[2vmin]">
