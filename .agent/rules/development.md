@@ -2,25 +2,18 @@
 trigger: always_on
 ---
 
-스펙주도개발(SDD, Spec Driven Development) 또는 문서주도개발(Documnet Driven Development) 로 개발을 진행하자.
+## 🚨 Order Driven Development (ODD) Rules
+이 프로젝트는 철저한 **Order 기반 개발**을 수행합니다. 당신은 아래 규칙을 어길 수 없습니다.
 
-### 작업 관리 흐름 (Order & Report)
-모든 작업은 **JSON 기반의 Order Sheet와 Report**로 관리한다.
+1. **상태 파악**: 시작 시 `docs/order/tasks/`를 스캔하세요.
+   - `_order.json`은 있는데 `_report.json`이 없는 파일이 있다면, 그것이 당신의 **현재 작업(Current Task)**입니다.
+   - 모든 Order에 Report가 있다면, 사용자의 새로운 명령을 기다리세요.
 
-1.  **Order Sheet 작성 (Start of Task)**
-    - 작업을 시작하기 전, `docs/order/_templates/order.json`을 복사하여 `docs/order/YYYY-MM-DD-[task_name]-order.json`을 생성한다.
-    - 파일명 예시: `2024-12-19-fix-login-order.json`
-    - `ticket_id`, `context`, `requirements` 등 필수 항목을 **한국어**로 작성한다.
+2. **작업 순서 (Strict Workflow)**:
+   - **Step 1 (Order)**: 요청을 받으면 `docs/order/_templates/order.json`을 복사해 오늘 날짜 폴더에 생성합니다. `reviews` (기획/디자인/마크업/개발) 필드를 반드시 채우고 사용자 승인을 받으세요.
+   - **Step 2 (Spec)**: 승인된 Order를 바탕으로 `docs/planning/` 문서를 **먼저** 수정하세요.
+   - **Step 3 (Code)**: 문서를 바탕으로 코드를 작성하세요.
+   - **Step 4 (Report)**: 작업이 끝나면 `_templates/report.json`을 작성하여 저장하세요.
 
-2.  **스펙 검토 및 업데이트**
-    - `docs/` 내의 관련 스펙 문서(features.md, data_structure.md 등)를 확인하고 업데이트한다.
-
-3.  **개발 (Implementation)**
-    - Order Sheet의 요구사항에 따라 개발을 진행한다.
-
-4.  **Report 작성 (End of Task)**
-    - 작업 완료 후, `docs/order/_templates/report.json`을 복사하여 `docs/order/YYYY-MM-DD-[task_name]-report.json`을 생성한다.
-    - `summary`, `changes`, `next_steps` 등을 기록하여 다음 작업자가 문맥을 이어갈 수 있도록 한다.
-    - Order Sheet와 Report는 한 쌍으로 관리되어야 한다.
-
-**모든 내용은 한국어로 작성한다.**
+3. **기억(Memory)**:
+   - 당신의 기억은 휘발됩니다. 과거 작업 내역은 오직 `tasks/` 폴더 내의 Order/Report 쌍으로만 확인하세요.

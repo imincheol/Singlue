@@ -1,24 +1,29 @@
 {
-    "ticket_id": "OR-YYYYMMDD-XXX",
-    "project": "Singlue",
-    "created_at": "YYYY-MM-DDTHH:mm:ss+09:00",
-    "author": "User",
+    "order_id": "YYYYMMDD_01",
+    "title": "작업 제목 (예: 로그인 API 및 UI 구현)",
     "type": "FEATURE | BUGFIX | REFACTOR | DOCS",
-    "status": "OPEN",
-    "title": "Task Title (Korean)",
-    "description": "Detailed description of the task in Korean.",
+    "status": "DRAFT",
+    "created_at": "YYYY-MM-DD HH:mm:ss",
     "context": {
-        "prev_ticket_id": "OR-YYYYMMDD-PREV",
+        "request_summary": "사용자의 자연어 요청을 한 줄로 요약",
         "related_docs": [
             "docs/planning/features.md"
-        ],
-        "discussion_summary": "Summary of previous discussion or context (Korean)."
+        ]
     },
+    "reviews": {
+        "planning": "기획 의도 및 정책 분석 (예: 예외 처리, 데이터 흐름)",
+        "design": "UI/UX 요구사항 분석 (예: 컴포넌트 재사용, 반응형)",
+        "markup": "HTML 구조 및 접근성 분석 (예: 시맨틱 태그, ARIA)",
+        "development": "기술적 구현 분석 (예: 스키마, 상태 관리, 성능)"
+    },
+    "plan_specs": [
+        "작업 전 업데이트해야 할 문서 목록 (예: docs/planning/ui_ux_spec.md)"
+    ],
     "requirements": [
-        "Requirement 1 (Korean)",
-        "Requirement 2 (Korean)"
+        "구체적인 요구사항 1",
+        "구체적인 요구사항 2"
     ],
     "expected_files": [
-        "src/components/Example.tsx"
+        "생성 또는 수정될 파일 경로 예상"
     ]
 }

@@ -1,21 +1,28 @@
 {
-    "ticket_id": "OR-YYYYMMDD-XXX",
-    "closed_at": "YYYY-MM-DDTHH:mm:ss+09:00",
-    "status": "DONE",
-    "summary": "Summary of work done in Korean.",
+    "order_id": "YYYYMMDD_01",
+    "status": "SUCCESS | FAIL",
+    "completed_at": "YYYY-MM-DD HH:mm:ss",
+    "summary": "작업 결과 요약 (무엇을 완료했는지 명확하게)",
     "changes": {
-        "files_modified": [
-            "src/components/Example.tsx"
+        "spec_updated": [
+            "docs/planning/features.md (로그인 섹션 추가)"
         ],
-        "files_created": [],
-        "files_deleted": []
+        "code_updated": [
+            "src/pages/LoginPage.tsx",
+            "src/api/auth.ts"
+        ]
+    },
+    "review_validation": {
+        "planning": "YES - 기획 의도대로 예외 처리 완료",
+        "design": "YES - 디자인 시스템 버튼 컴포넌트 활용",
+        "markup": "YES - Form 태그 및 Label 연결 완료",
+        "development": "YES - React Hook Form 유효성 검사 적용"
     },
     "findings": {
-        "issues_encountered": [],
-        "decisions_made": []
+        "issues": "작업 중 발견한 문제점이나 버그 (없으면 None)",
+        "notes": "참고할 만한 특이사항"
     },
     "next_steps": [
-        "Next task 1",
-        "Next task 2"
+        "이어서 진행해야 할 다음 작업 (구체적으로)"
     ]
 }
