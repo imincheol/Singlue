@@ -2,16 +2,23 @@
     "order_id": "YYYYMMDD_SEQ",
     "status": "DONE",
     "completed_at": "YYYY-MM-DD HH:mm:ss",
-    "summary": "",
+    "summary": "최종 작업 결과 요약",
     "changes": {
-        "spec_updated": [],
-        "code_updated": []
+        "spec_updated": [
+            "수정된 스펙 문서 목록 (예: docs/specs/1_planning/features.md)"
+        ],
+        "code_updated": [
+            "수정된 코드 파일 목록"
+        ]
     },
     "review_validation": {
+        "spec_integrity": "YES - 코드를 작성하기 전 스펙 문서가 실제로 업데이트되었습니까?",
         "1_planning": "YES",
         "2_design": "YES",
         "3_markup": "YES",
         "4_development": "YES"
     },
-    "next_steps": []
+    "next_steps": [
+        "다음으로 이어질 추천 작업"
+    ]
 }
