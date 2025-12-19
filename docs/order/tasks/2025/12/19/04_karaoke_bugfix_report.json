@@ -1,0 +1,21 @@
+{
+    "order_id": "20251219_04",
+    "status": "COMPLETED",
+    "completed_at": "2025-12-19 16:20:00",
+    "implemented_features": [
+        "기본 3단 가사 모두 노출 (Default ON)",
+        "데이터 접근 로직 수정 (`pron`/`trans` Record 타입 처리 및 언어별 추출)",
+        "독립적 폰트 스케일링 (Normal: 1-10 / Fullscreen: 1-20)",
+        "Z-Index 레이어링 수정 (Controls > Lyrics)",
+        "fullscreenchange 이벤트 리스너를 통한 모드 감지"
+    ],
+    "changed_files": [
+        "src/components/KaraokeOverlay.tsx",
+        "docs/planning/ui_ux_spec.md"
+    ],
+    "verification_results": {
+        "manual_test": "Walkthrough 문서를 통한 수동 검증 필요",
+        "auto_test": "N/A"
+    },
+    "notes": "가사/발음/해석 데이터가 Record 타입으로 저장되어 있어 스트링으로 접근하던 오를 수정하고 언어별 텍스트 추출 로직을 적용함."
+}

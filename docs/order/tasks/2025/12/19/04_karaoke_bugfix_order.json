@@ -1,0 +1,42 @@
+{
+    "order_id": "20251219_04",
+    "title": "노래방 모드 버그 수정 및 폰트 제어 고도화",
+    "type": "FIX",
+    "status": "OPEN",
+    "created_at": "2025-12-19 15:55:00",
+    "context": {
+        "request_summary": "기본 3단 표시 미노출 수정, 제어바 가림 현상 수정, 일반/전체화면 폰트 크기 분리",
+        "related_docs": [
+            "docs/order/tasks/2025/12/19/03_karaoke_refinement_report.json"
+        ]
+    },
+    "reviews": {
+        "planning": [
+            "기본 표시: 진입 시 원문/발음/해석 3줄이 모두 기본적으로 보여야 함.",
+            "레이어링: 가사가 너무 커져도 제어바(Slider, Buttons)를 가리면 안 됨. 제어바가 최상위.",
+            "폰트 정책: 일반 모드와 전체화면 모드의 최적 크기가 다르므로 설정을 분리하여 관리."
+        ],
+        "design": [
+            "가독성: 일반 모드 기본 3vmin (범위 1~10).",
+            "임팩트: 전체화면 모드 기본 10vmin (범위 1~20)."
+        ],
+        "development": [
+            "State: `fontSizeScale`을 `normalScale`과 `fullscreenScale`로 분리.",
+            "Logic: `document.fullscreenElement` 여부에 따라 적용할 Scale 값 스위칭.",
+            "Z-Index: Lyrics Area(`z-10`), Controls Area(`z-50` 이상)로 계층 확실히 분리."
+        ]
+    },
+    "plan_specs": [
+        "docs/planning/ui_ux_spec.md"
+    ],
+    "requirements": [
+        "초기 상태: 가사/발음/뜻 3개 모두 On 상태로 시작",
+        "Z-Index 수정: 가사 영역이 제어바를 덮지 않도록 수정 (제어바가 위로)",
+        "폰트 크기 분리: 일반 모드와 전체화면 모드의 폰트 크기 상태를 독립적으로 관리",
+        "일반 모드 폰트: 기본 3, 최소 1 ~ 최대 10",
+        "전체화면 폰트: 기본 10, 최소 1 ~ 최대 20"
+    ],
+    "expected_files": [
+        "src/components/KaraokeOverlay.tsx"
+    ]
+}
