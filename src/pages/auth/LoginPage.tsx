@@ -47,7 +47,9 @@ export default function LoginPage() {
             }
 
             console.log('Navigating to root...');
-            navigate('/');
+            console.log('Navigating to root...');
+            const returnUrl = location.state?.returnUrl || '/';
+            navigate(returnUrl, { replace: true });
         } catch (err: any) {
             console.error('Login error:', err);
             setError(err.message === 'Invalid login credentials' ? t('auth.invalid_credentials') : err.message);
@@ -108,7 +110,7 @@ export default function LoginPage() {
                     </div>
                 </form>
                 <div className="text-center">
-                    <Link to="/register" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                    <Link to="/register" state={{ returnUrl: location.state?.returnUrl }} className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                         {t('auth.no_account')}
                     </Link>
                 </div>

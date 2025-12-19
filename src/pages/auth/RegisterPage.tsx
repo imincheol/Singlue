@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../../services/supabase';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +12,8 @@ export default function RegisterPage() {
     const [error, setError] = useState<string | null>(null);
     const [isSuccess, setIsSuccess] = useState(false);
     const { t } = useTranslation();
+    const location = useLocation();
+    const returnUrl = location.state?.returnUrl;
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -80,6 +82,7 @@ export default function RegisterPage() {
                     </p>
                     <Link
                         to="/login"
+                        state={{ returnUrl }}
                         className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
                     >
                         {t('auth.reg_success_action')}
@@ -139,7 +142,7 @@ export default function RegisterPage() {
                     </div>
                 </form>
                 <div className="text-center">
-                    <Link to="/login" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
+                    <Link to="/login" state={{ returnUrl }} className="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
                         {t('auth.already_have_account')}
                     </Link>
                 </div>

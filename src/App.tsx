@@ -136,7 +136,11 @@ function App() {
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
               ) : (!user) ? (
-                <Link to="/login" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors">
+                <Link
+                  to="/login"
+                  state={{ returnUrl: location.pathname + location.search }}
+                  className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors"
+                >
                   {t('nav.signin')}
                 </Link>
               ) : (

@@ -111,6 +111,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ user, profile, isAdmin, 
                             !isLoading && (
                                 <Link
                                     to="/login"
+                                    state={{ returnUrl: location.pathname + location.search }}
                                     onClick={closeMenu}
                                     className="block w-full text-center py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors"
                                 >
