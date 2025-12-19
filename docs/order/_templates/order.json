@@ -1,4 +1,5 @@
 {
+    "__CONSTRAINT__": "� 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
     "order_id": "YYYYMMDD_SEQ",
     "title": "Task Title",
     "type": "FEATURE | BUGFIX | REFACTOR | DOCS",
