@@ -1,0 +1,44 @@
+{
+    "order_id": "20251219_06",
+    "title": "공지사항(Release Note) 시스템 구축",
+    "type": "FEATURE",
+    "status": "APPROVED",
+    "created_at": "2025-12-19 18:05:00",
+    "context": {
+        "request_summary": "상단 GNB 브랜드명 옆에 공지사항(업데이트 내역) 노출 기능 추가. 이번 배포(v0.0.22) 내용부터 시작.",
+        "related_docs": [
+            "src/App.tsx"
+        ]
+    },
+    "reviews": {
+        "planning": [
+            "UI Location: GNB 좌측 [Logo + BrandName] 바로 우측에 [공지사항/News] 아이콘 또는 텍스트 배치.",
+            "Interaction: 클릭 시 모달(Modal) 또는 팝오버(Popover)로 버전 히스토리 표시.",
+            "Content: 버전, 날짜, 주요 변경사항 리스트."
+        ],
+        "design": [
+            "Icon: `Bell`, `Megaphone`, or `Info` icon (Lucide).",
+            "Badge: 읽지 않은 내용이 있을 경우 Red Dot (Optional, 이번엔 제외).",
+            "List Style: Timeline or Simple Accordion."
+        ],
+        "development": [
+            "Component: `ChangelogModal.tsx` 생성.",
+            "Data: `src/data/changelog.ts`에 상수 데이터로 관리.",
+            "Integration: `App.tsx` 내 Header 영역에 버튼 추가."
+        ]
+    },
+    "plan_specs": [
+        "docs/planning/features.md",
+        "docs/planning/ui_ux_spec.md"
+    ],
+    "requirements": [
+        "위치: 헤더 좌측 로고 영역 옆",
+        "기능: 클릭 시 모달 오픈 -> 변경사항 목록 표시",
+        "데이터: 0.0.22 버전 내역 (Karaoke Refinement, Bugfixes, Next Line Preview) 포함"
+    ],
+    "expected_files": [
+        "src/App.tsx",
+        "src/components/ChangelogModal.tsx",
+        "src/data/changelog.ts"
+    ]
+}

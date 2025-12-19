@@ -9,7 +9,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import SettingsPage from './pages/SettingsPage';
 import NotFoundPage from './pages/NotFoundPage';
-import { Headphones, Loader2, Settings as SettingsIcon, LogOut, ChevronDown } from 'lucide-react';
+import { Headphones, Loader2, Settings as SettingsIcon, LogOut, ChevronDown, Bell } from 'lucide-react';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { MobileMenu } from './components/MobileMenu';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useState, useRef, useEffect } from 'react';
 import pkg from '../package.json';
 import { useAuth } from './contexts/AuthContext';
+import { ChangelogModal } from './components/ChangelogModal';
 
 // Simple Protected Route Component
 const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.ReactNode, requireAdmin?: boolean }) => {
@@ -93,24 +94,37 @@ function App() {
   const { t } = useTranslation();
   const location = useLocation();
   const { user, profile, isAdmin, isLoading } = useAuth();
+  const [isChangelogOpen, setIsChangelogOpen] = useState(false);
 
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-white font-sans selection:bg-indigo-500/30">
+      <ChangelogModal isOpen={isChangelogOpen} onClose={() => setIsChangelogOpen(false)} />
       {/* Header */}
       <header className="relative w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2 cursor-pointer">
-            <div className="bg-indigo-600 p-2 rounded-lg">
-              <Headphones className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-400">
-                Singlue
-              </span>
-              <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-600 font-mono">v{pkg.version}</span>
-            </div>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center space-x-2 cursor-pointer">
+              <div className="bg-indigo-600 p-2 rounded-lg">
+                <Headphones className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-400">
+                  Singlue
+                </span>
+                <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-600 font-mono">v{pkg.version}</span>
+              </div>
+            </Link>
+
+            {/* Changelog Button */}
+            <button
+              onClick={() => setIsChangelogOpen(true)}
+              className="p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors"
+              title={t('changelog.title', 'Changes')}
+            >
+              <Bell className="w-4 h-4" />
+            </button>
+          </div>
 
           <div className="flex items-center gap-3 sm:gap-6">
             {/* Desktop Menu */}
