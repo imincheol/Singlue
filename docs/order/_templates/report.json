@@ -1,0 +1,21 @@
+{
+    "ticket_id": "OR-YYYYMMDD-XXX",
+    "closed_at": "YYYY-MM-DDTHH:mm:ss+09:00",
+    "status": "DONE",
+    "summary": "Summary of work done in Korean.",
+    "changes": {
+        "files_modified": [
+            "src/components/Example.tsx"
+        ],
+        "files_created": [],
+        "files_deleted": []
+    },
+    "findings": {
+        "issues_encountered": [],
+        "decisions_made": []
+    },
+    "next_steps": [
+        "Next task 1",
+        "Next task 2"
+    ]
+}

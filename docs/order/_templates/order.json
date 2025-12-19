@@ -1,0 +1,24 @@
+{
+    "ticket_id": "OR-YYYYMMDD-XXX",
+    "project": "Singlue",
+    "created_at": "YYYY-MM-DDTHH:mm:ss+09:00",
+    "author": "User",
+    "type": "FEATURE | BUGFIX | REFACTOR | DOCS",
+    "status": "OPEN",
+    "title": "Task Title (Korean)",
+    "description": "Detailed description of the task in Korean.",
+    "context": {
+        "prev_ticket_id": "OR-YYYYMMDD-PREV",
+        "related_docs": [
+            "docs/planning/features.md"
+        ],
+        "discussion_summary": "Summary of previous discussion or context (Korean)."
+    },
+    "requirements": [
+        "Requirement 1 (Korean)",
+        "Requirement 2 (Korean)"
+    ],
+    "expected_files": [
+        "src/components/Example.tsx"
+    ]
+}
