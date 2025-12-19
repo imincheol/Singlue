@@ -1,15 +1,20 @@
 {
+    "__CONSTRAINT__": "🚨 작업 완료 시 status를 'REVIEW_REQUIRED'로 변경하고 멈추시오. 사용자 승인 전까지 절대 report.json을 생성하거나 이 파일을 삭제하지 마시오.",
     "status": "IN_PROGRESS",
     "current_step": "Initializing",
     "last_updated": "YYYY-MM-DD HH:mm:ss",
     "todo_list": [
         {
             "task": "스펙 문서 업데이트",
-            "status": "DONE"
+            "status": "TODO"
         },
         {
-            "task": "API 코드 작성",
-            "status": "IN_PROGRESS"
+            "task": "코드 구현",
+            "status": "TODO"
+        },
+        {
+            "task": "테스트 수행",
+            "status": "TODO"
         }
     ],
     "logs": [
