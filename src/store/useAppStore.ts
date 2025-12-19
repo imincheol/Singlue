@@ -30,6 +30,10 @@ interface AppState {
     showTranslation: boolean;
     toggleTranslation: () => void;
 
+    // View Modes
+    isKaraokeMode: boolean;
+    toggleKaraokeMode: () => void;
+
     // History
     history: HistoryItem[];
     addToHistory: (item: HistoryItem) => void;
@@ -76,6 +80,9 @@ export const useAppStore = create<AppState>()(
             togglePronunciation: () => set((state) => ({ showPronunciation: !state.showPronunciation })),
             showTranslation: true,
             toggleTranslation: () => set((state) => ({ showTranslation: !state.showTranslation })),
+
+            isKaraokeMode: false,
+            toggleKaraokeMode: () => set((state) => ({ isKaraokeMode: !state.isKaraokeMode })),
 
             history: [],
             addToHistory: (item) => set((state) => {

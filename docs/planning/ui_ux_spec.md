@@ -112,14 +112,13 @@
   - 다음 가사 (Next Line)
 
 ### 5.2. 콘텐츠 표시 규칙
-- **현재 가사 (Current Line)**:
-  - 원문 (Source): 크게 강조 표시
-  - 발음 (Pronunciation): 있을 경우 표시 (강조 색상 및 폰트 크기 확대)
-  - 번역 (Translation): 있을 경우 표시
-- **이전/다음 가사 (Previous/Next Lines)**:
-  - 원문, 발음, 번역 모두 표시 (사용자 학습 편의를 위해 전체 데이터 노출)
-  - **다음 가사(Next Line)**: 노래를 미리 준비할 수 있도록 투명도를 높게 유지하고 블러를 제거하여 가독성 확보. 특히 발음 부분을 강조함.
-  - **이전 가사(Previous Line)**: 지나간 가사임을 알 수 있도록 상대적으로 낮은 불투명도 적용.
+- **항목 구성**:
+  - 원문 (Source): 가장 크게 강조 표시
+  - 발음 (Pronunciation): 선택 시 표시
+  - 번역 (Translation): 선택 시 표시
+- **표시 방식**:
+  - **ThreeLineLyrics (기본)**: 현재 가사를 중심으로 이전/다음 가사를 함께 표시할 수 있으나, 가독성을 위해 현재 가사 집중 형식을 권장합니다.
+  - **KaraokeOverlay (노래방)**: **오직 현재 가사(Current Line)만 표시**합니다. 다음 가사는 표시하지 않아 몰입도를 높입니다.
 
 ### 5.3. Lyrics Control Bars (Split System)
 - **구조**: 기능의 목적에 따라 두 개의 바(Bar)로 분리하여 레이아웃을 정돈합니다.
@@ -139,13 +138,22 @@
 
     - [AI 생성 관리]: "AI로 채우기" 또는 "언어별 생성" 버튼.
 
-### 5.4. Karaoke & Fullscreen UI
-- **Karaoke Overlay**:
-  - `absolute` 포지셔닝을 사용하여 YouTube Iframe 위에 가사 뷰어와 제어 바를 띄웁니다.
-  - 배경: 가독성을 위해 반투명 검정 배경(`bg-black/50` 등)을 텍스트 뒤에 깔아줍니다.
-  - **전체화면 (Fullscreen)**:
-    - 브라우저 Fullscreen API (`requestFullscreen`)를 사용하여 컨테이너 전체를 전체화면으로 만듭니다.
-    - **Resizable Lyrics**: 가사 표시 영역의 크기를 사용자가 조절하거나 프리셋(Small, Medium, Large)으로 선택할 수 있게 하여, 영상의 중요 부위를 가리지 않도록 합니다.
+### 5.4. Karaoke Mode & Overlay UI
+- **진입점**: Player Page 상단 정보 영역 아이콘 (Toggle).
+- **레이아웃 구조**:
+  - **Container**: Video Player 영역(`relative`) 내부의 하단(`absolute bottom-0`).
+  - **Size Limit**: 높이는 영상 전체 높이는 **Max 50%**로 제한합니다.
+  - **배경**: 영상 위의 텍스트 가독성을 위해 **반투명 검정 배경(rgba)**을 사용하며, 이는 다크/라이트 테마와 무관하게 **항상 흰색 텍스트**를 유지합니다 (Theme Exception).
+- **영역 분할 (Vertical Split)**:
+  1. **Lyrics Area (Top)**:
+     - `flex-grow`, 유동적 높이.
+     - 텍스트 크기는 화면 크기에 비례(`vmin`)하여, 전체화면 시 시원하게 커져야 합니다.
+  2. **Controls Area (Bottom)**:
+     - **Fixed Height** (높이 고정).
+     - 재생 바(Timeline slider)가 포함되어 전체화면 시 좌우로 길어집니다.
+     - 재생/일시정지, 가사 폰트/싱크 조절 버튼 포함.
+- **전체화면 (Fullscreen)**:
+  - 브라우저 Fullscreen API를 Video Container 요소에 적용하여 오버레이가 영상과 함께 커지도록 합니다.
 
 ### 5.5. 동적 높이 처리
 - **문제**: 고정 높이(`min-h-[180px]`)로 인해 현재 가사에 발음과 번역이 추가되면 이전/다음 가사가 잘리는 현상 발생

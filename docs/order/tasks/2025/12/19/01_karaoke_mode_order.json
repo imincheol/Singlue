@@ -8,7 +8,9 @@
         "request_summary": "유튜브 영상 위에 가사 및 제어바를 오버레이하는 노래방 모드와 전체화면 기능 제공",
         "related_docs": [
             "docs/planning/features.md",
-            "docs/planning/ui_ux_spec.md"
+            "docs/planning/ui_ux_spec.md",
+            "docs/development/theme_spec.md",
+            "docs/development/tech_stack.md"
         ],
         "findings_from_previous_attempt": [
             "초기 구현 시 폰트 크기가 고정되어 작은 화면이나 전체화면에서 비율이 맞지 않는 문제 발생 -> vmin 단위로 수정하여 해결.",
@@ -16,24 +18,45 @@
         ]
     },
     "reviews": {
-        "planning": "사용자가 노래방 경험을 원함. 영상 위에 가사와 제어바를 올리고 원어/발음/뜻을 모두 표시. 전체화면 시에도 동일하게 동작해야 함.",
-        "design": "전체화면 오버레이 UI, 투명 배경, 폰트 크기 반응형 조절 (vmin 적용).",
-        "markup": "Video Container 내부에 Overlay 요소를 배치하여 Fullscreen API가 컨테이너 전체를 다루도록 구성.",
-        "development": "Layout 변경 없이 PlayerPage 내에서 상태값(isKaraokeMode)에 따라 조건부 렌더링. Fullscreen API 연동."
+        "planning": [
+            "진입점: PlayerPage 상단 영상 정보 영역의 '노래방 모드' 버튼으로 진입.",
+            "진입 시 동작: 기존 미니 가사 영역(ThreeLineLyrics)은 숨김 처리하고, 영상 위에 오버레이만 표시.",
+            "표시 내용: '현재 가사'만 표시. (다음/이전 가사 표시 기능 제외)."
+        ],
+        "design": [
+            "레이아웃 구조: 영상 하단에 위치하며, 세로 높이는 영상의 50%를 절대 초과하지 않음.",
+            "영역 분할: [가사 영역 (가변 높이)] + [제어 영역 (고정 높이)].",
+            "화면 모드별 디자인:",
+            "  - 일반 모드: 미니 가사보다 작을 수 있음. 영상 가림 최소화.",
+            "  - 전체화면 모드: 시원시원하게 큰 텍스트 표시. 제어 영역 높이는 고정되나 가로 폭은 반응형으로 확장.",
+            "제어 영역 구성: 재생 바(Timeline)가 포함되며 전체화면 시 좌우로 늘어남. 기존 미니 가사 제어 버튼 포함."
+        ],
+        "markup": [
+            "DOM 구조: Video Container > Overlay (absolute bottom-0 width-full max-h-[50%]).",
+            "Z-Index: YouTube Player 위에 오도록 설정.",
+            "Fullscreen API: Video Container 레벨에서 호출하여 Overlay가 영상과 함께 전체화면이 되도록 구현."
+        ],
+        "development": [
+            "상태 관리: `isKaraokeMode` (boolean) 추가.",
+            "조건부 렌더링: `!isKaraokeMode && <ThreeLineLyrics />`.",
+            "컴포넌트 개발: `KaraokeOverlay` (내부에 LyricsArea, ControlArea 분리)."
+        ]
     },
     "plan_specs": [
         "docs/planning/features.md",
         "docs/planning/ui_ux_spec.md"
     ],
     "requirements": [
-        "노래방 모드 (Overlay): 유튜브 영상 위에 미니 가사 뷰어와 재생 제어바를 오버레이하여 표시",
-        "반응형 타이포그래피: 화면 크기에 비례하여 폰트 크기 자동 조절 (vmin)",
-        "전체화면 모드: 영상과 가사, 제어바를 포함한 전체화면 뷰 제공",
-        "가사 뷰어 가로 레이아웃: 현재 가사 -> 다음 가사 (좌우 배치) 및 이전 가사 숨김"
+        "노래방 버튼: 상단 영상 정보 영역에 배치, 토글 시 미니 가사 영역 숨김/표시",
+        "오버레이 레이아웃: 영상 하단 배치, 높이 Max 50% 제한",
+        "내부 구조: 가변 높이 가사 영역 + 고정 높이 제어 영역",
+        "가사 표시: '현재 가사'만 단독 표시 (Next Line 제외)",
+        "제어 영역: 재생 컨트롤(Timeline 포함) + 가사 제어 기능 통합, 높이 고정",
+        "전체화면 대응: 컨테이너 전체 Fullscreen, 제어 영역 가로 확장(높이 고정), 텍스트 크기 확대(vmin)"
     ],
     "expected_files": [
+        "src/store/useAppStore.ts",
         "src/pages/PlayerPage.tsx",
-        "src/components/ThreeLineLyrics.tsx",
         "src/components/KaraokeOverlay.tsx"
     ]
 }

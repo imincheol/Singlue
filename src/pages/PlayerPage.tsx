@@ -13,6 +13,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { SongCreationWizard } from '../components/SongCreationWizard';
 import type { Song, HistoryItem } from '../types';
 import { getFlagEmoji } from '../utils/country';
+import { Mic, MicOff } from 'lucide-react';
+import { KaraokeOverlay } from '../components/KaraokeOverlay';
 
 export default function PlayerPage() {
     const { id } = useParams<{ id: string }>();
@@ -26,7 +28,7 @@ export default function PlayerPage() {
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const { currentSong, setCurrentSong } = useAppStore();
+    const { currentSong, setCurrentSong, isKaraokeMode, toggleKaraokeMode } = useAppStore();
 
     useEffect(() => {
         if (!id) return;
@@ -117,6 +119,18 @@ export default function PlayerPage() {
                                 {getFlagEmoji(currentSong.country_code)}
                             </span>
                         )}
+
+                        {/* Karaoke Switch */}
+                        <button
+                            onClick={toggleKaraokeMode}
+                            className={`p-2 rounded-lg transition-colors flex items-center gap-1.5 ${isKaraokeMode
+                                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
+                                : 'hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-500'
+                                }`}
+                            title="Karaoke Mode"
+                        >
+                            {isKaraokeMode ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5 opacity-50" />}
+                        </button>
 
                         {/* Song Info Inputs */}
                         <div className="flex-1 flex gap-2 items-center min-w-0">
@@ -242,41 +256,53 @@ export default function PlayerPage() {
                 </div>
 
                 {/* Video Player */}
-                <div className="w-full shrink-0">
-                    <YouTubePlayer
-                        videoId={id}
-                        onVideoData={async (data) => {
-                            // Auto-Register Song (Stage 1)
-                            if (user && !loading && !hasSelectedSong && !songs.find(s => s.created_by === user.id)) {
-                                console.log("Auto-registering new song (Stage 1)...");
-                                const newSong: Song = {
-                                    id: crypto.randomUUID(),
-                                    video_id: id,
-                                    title: data.title,
-                                    artist: data.author,
-                                    lyrics: [],
-                                    created_by: user.id,
-                                    stage: 1,
-                                    is_public: false,
-                                    global_offset: 0,
-                                    created_at: new Date().toISOString()
-                                };
+                <div
+                    id="video-container"
+                    className={`w-full shrink-0 relative group transition-all duration-500 ${isKaraokeMode ? 'aspect-video' : ''}`}
+                >
+                    <div className="relative w-full">
+                        <YouTubePlayer
+                            videoId={id}
+                            onVideoData={async (data) => {
+                                // Auto-Register Song (Stage 1)
+                                if (user && !loading && !hasSelectedSong && !songs.find(s => s.created_by === user.id)) {
+                                    console.log("Auto-registering new song (Stage 1)...");
+                                    const newSong: Song = {
+                                        id: crypto.randomUUID(),
+                                        video_id: id,
+                                        title: data.title,
+                                        artist: data.author,
+                                        lyrics: [],
+                                        created_by: user.id,
+                                        stage: 1,
+                                        is_public: false,
+                                        global_offset: 0,
+                                        created_at: new Date().toISOString()
+                                    };
 
-                                try {
-                                    await saveSong(newSong);
-                                    // Refresh songs to reflect the new entry
-                                    loadSongs(id);
-                                } catch (err) {
-                                    console.error("Failed to auto-register song:", err);
+                                    try {
+                                        await saveSong(newSong);
+                                        // Refresh songs to reflect the new entry
+                                        loadSongs(id);
+                                    } catch (err) {
+                                        console.error("Failed to auto-register song:", err);
+                                    }
                                 }
-                            }
-                        }}
-                    />
+                            }}
+                        />
+                        {/* Karaoke Overlay */}
+                        {isKaraokeMode && <KaraokeOverlay />}
+                    </div>
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col gap-4 lg:overflow-y-auto pb-4 scrollbar-hide">
-                    <PlayerControls />
-                    <ThreeLineLyrics />
+                    {/* Hide controls/mini-lyrics in Karaoke Mode */}
+                    {!isKaraokeMode && (
+                        <>
+                            <PlayerControls />
+                            <ThreeLineLyrics />
+                        </>
+                    )}
                 </div>
             </div>
 
