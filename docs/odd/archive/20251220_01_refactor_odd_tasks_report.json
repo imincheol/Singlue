@@ -1,0 +1,23 @@
+{
+    "order_id": "20251220_01",
+    "title": "Refactor ODD Tasks Structure",
+    "type": "REFACTOR",
+    "status": "DONE",
+    "review_date": "2025-12-20 00:50:00",
+    "context": {
+        "request_summary": "docs/odd/README.md의 규칙에 맞춰 기존 tasks 폴더 구조를 재구성 (Nested -> Flat)",
+        "changes": [
+            "docs/odd/tasks/2025/12/19/ 내의 모든 파일을 docs/odd/archive/로 이동 (파일명에 20251219_ prefix 추가)",
+            "docs/odd/tasks/2025/ 디렉토리 삭제"
+        ]
+    },
+    "verification": {
+        "checked_items": [
+            "docs/odd/tasks/ 폴더가 Flat 구조로 유지되는지 확인",
+            "docs/odd/archive/ 폴더에 이전 작업들이 백업되었는지 확인",
+            "모든 파일명 규칙 준수 확인"
+        ],
+        "issues": []
+    },
+    "conclusion": "SUCCESS"
+}
