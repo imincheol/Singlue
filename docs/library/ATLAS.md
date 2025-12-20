@@ -7,7 +7,7 @@
 
 ### 1. 🎵 Player Cluster
 > **Context**: 영상 재생, 가사 렌더링, 싱크 조절 등 사용자 경험의 핵심 영역.
-- **Entry Book**: `domains/player_ui.md` (플레이어의 구조)
+- **Entry Book**: `domains/player_karaoke.md` (플레이어 및 카라오케)
 
 ### 2. 🛠️ Editor Cluster
 > **Context**: 자막 제작, 데이터 수정, 어드민 기능 영역.

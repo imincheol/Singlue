@@ -7,9 +7,9 @@
 
 - **Current Phase**: Phase 1 (Core UX Fixes)
 - **Status**:
-  - [ ] Pending: 0
-  - [ ] In Progress: 1
-  - [ ] Done: 2
+  - [ ] Pending: 7
+  - [ ] In Progress: 2
+  - [ ] Done: 3
 
 ---
 
@@ -27,10 +27,14 @@
   - Priority: Critical
   - Description: 재생(임시) vs 편집(영구) 로직 분리, 슬라이더 -> 버튼형 UI 변경
 
-- [ ] **[08_player_refactor]**: 플레이어 UX 개선
+- [x] **[08_player_refactor]**: 플레이어 UX 개선
   - Priority: Medium
-  - Description: 50% 높이 제한 해제 & 폰트 크기 기준 변경 (#Fixing)
+  - Status: Done
+
+- [ ] **[13_theme_lang_visibility]**: 테마 및 다국어 가시성 개선 (진행 중)
+  - Priority: High
   - Status: In Progress
+  - Description: GNB 드롭다운 고착화 및 언어 분리 정책 적용
 
 ### Phase 2. Feature Expansion (Upcoming)
 >

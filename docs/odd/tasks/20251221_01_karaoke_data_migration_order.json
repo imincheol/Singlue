@@ -1,0 +1,31 @@
+{
+    "__CONSTRAINT__": " 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
+    "order_id": "20251221_01",
+    "title": "Karaoke Data Migration & Source Language Awareness",
+    "type": "REFACTOR",
+    "status": "DRAFT",
+    "created_at": "2025-12-21 00:00:00",
+    "context": {
+        "request_summary": "기존 카라오케 데이터의 국가 정보(country_code) 누락 해결 및 원어 인식 로직 보강",
+        "related_docs": [
+            "docs/specs/4_development/api_spec.md",
+            "src/types/index.ts"
+        ]
+    },
+    "requirements": [
+        "기존 Song 데이터 중 `country_code`가 누락된 항목에 대한 마이그레이션 (Title/Artist 분석 또는 수동 매핑)",
+        "카라오케 정보 (`pron`, `trans`)가 구형 스트링 방식인 경우 `Record<string, string>` 구조로 마이그레이션",
+        "곡의 원어(Source Language)를 선택했을 때 AI 생성을 요구하지 않고 즉시 원문 데이터를 표시하도록 로직 개선",
+        "베트남 노래 등 특정 국가 곡에서 해당 언어 선택 시 'Empty'로 표시되는 현상 근본 해결"
+    ],
+    "plan_specs": [
+        {
+            "check": "Data Migration Strategy",
+            "comment": "Supabase Edge Function 또는 스크립트를 통한 일괄 업데이트 계획 수립 필요"
+        },
+        {
+            "check": "Source Language Recognition",
+            "comment": "Song 객체에 `language` 필드를 명시적으로 추가하거나 `country_code` 기반 매핑 강화"
+        }
+    ]
+}
