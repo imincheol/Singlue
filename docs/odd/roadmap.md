@@ -7,9 +7,9 @@
 
 - **Current Phase**: Phase 1 (Core UX Fixes)
 - **Status**:
-  - [ ] Pending: 7
+  - [ ] Pending: 8
   - [ ] In Progress: 2
-  - [ ] Done: 3
+  - [ ] Done: 2
 
 ---
 
@@ -27,10 +27,6 @@
   - Priority: Critical
   - Description: 재생(임시) vs 편집(영구) 로직 분리, 슬라이더 -> 버튼형 UI 변경
 
-- [x] **[08_player_refactor]**: 플레이어 UX 개선
-  - Priority: Medium
-  - Status: Done
-
 - [x] **[14_urgent_build_fix]**: 긴급 빌드 수정 (미사용 변수 제거)
   - Priority: Critical
   - Status: Done
@@ -40,9 +36,19 @@
   - Status: In Progress
   - Description: GNB 드롭다운 고착화 및 언어 분리 정책 적용
 
+- [ ] **[21_03_player_subtitle_fix]**: 플레이어 자막 크기 및 레이아웃 재수정
+  - Priority: High
+  - Status: Pending
+  - Description: Container Query 적용 실패 건 재진행 (Replaces Order 08)
+
 ### Phase 2. Feature Expansion & Infrastructure
 >
 > **Goal**: 에디터 고도화, 비즈니스 모델 연동 및 배포 안정화
+
+- [ ] **[21_01_karaoke_data_migration]**: 카라오케 데이터 마이그레이션 & 원어 인식
+  - Priority: High
+  - Status: Pending
+  - Description: country_code 추가 및 Legacy 데이터 마이그레이션
 
 - [ ] **[02_branch_strategy]**: 브랜치 전략 수립 및 배포 파이프라인 분리
   - Priority: High
