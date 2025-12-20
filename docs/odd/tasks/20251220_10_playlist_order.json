@@ -1,0 +1,38 @@
+{
+    "__CONSTRAINT__": " 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
+    "order_id": "20251220_10",
+    "title": "Premium Karaoke Playlist",
+    "type": "FEATURE",
+    "status": "DRAFT",
+    "created_at": "2025-12-20 02:02:00",
+    "context": {
+        "request_summary": "연속 재생 가능한 카라오케 전용 재생목록 기능 (유료 모델 연계)",
+        "related_docs": [
+            "docs/specs/1_planning/features.md"
+        ]
+    },
+    "reviews": {
+        "1_planning": {
+            "check": "Playlist Logic",
+            "comment": "일반 재생목록 vs 카라오케 재생목록(연속 모드). 유료 구독자 전용 기능으로 차별화."
+        },
+        "2_design": {
+            "check": "Queue UI",
+            "comment": "Karaoke Mode 유지 상태에서의 Playlist UI."
+        },
+        "3_markup": {
+            "check": "N/A",
+            "comment": ""
+        },
+        "4_development": {
+            "check": "Playback State",
+            "comment": "곡 변경 시 카라오케 모드 유지 및 자동 실행 로직."
+        }
+    },
+    "plan_specs": [],
+    "requirements": [
+        "일반 재생목록 외에 '카라오케 모드' 전용 연속 재생 기능 구현",
+        "재생목록 관리 기능 (추가/삭제/순서변경)",
+        "해당 기능의 접근 권한 제어 (구독 회원 전용 기능으로 설계)"
+    ]
+}

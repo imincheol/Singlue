@@ -1,0 +1,37 @@
+{
+    "__CONSTRAINT__": " 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
+    "order_id": "20251220_07",
+    "title": "Business Model Implementation (AdSense & Payment)",
+    "type": "FEATURE",
+    "status": "DRAFT",
+    "created_at": "2025-12-20 01:51:00",
+    "context": {
+        "request_summary": "수익 모델 구축을 위한 Google AdSense 연동 및 결제(구독) 모듈 준비",
+        "related_docs": [
+            "docs/specs/4_development/api_spec.md"
+        ]
+    },
+    "reviews": {
+        "1_planning": {
+            "check": "BM 정책 수립",
+            "comment": "광고 노출 위치(Slot) 선정 및 구독 결제 플로우(PG사 선정 등) 기획."
+        },
+        "2_design": {
+            "check": "Ad/Payment UI",
+            "comment": "컨텐츠를 해치지 않는 광고 영역 디자인, 신뢰감을 주는 결제 페이지/모달 디자인."
+        },
+        "3_markup": {
+            "check": "N/A",
+            "comment": ""
+        },
+        "4_development": {
+            "check": "Payment Integration",
+            "comment": "결제 모듈(Stripe/Toss 등) 연동 요구사항 분석 및 DB 스키마(Subscription) 설계."
+        }
+    },
+    "plan_specs": [],
+    "requirements": [
+        "Google AdSense 광고 슬롯 배치 (Home, Player Page 등 수익성/사용성 고려)",
+        "광고 차단(AdBlock) 감지 시 안내 메시지 팝업 (선택 사항)"
+    ]
+}

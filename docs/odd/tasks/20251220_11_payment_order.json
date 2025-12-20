@@ -1,0 +1,38 @@
+{
+    "__CONSTRAINT__": " 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
+    "order_id": "20251220_11",
+    "title": "Payment & Subscription System",
+    "type": "FEATURE",
+    "status": "DRAFT",
+    "created_at": "2025-12-20 02:04:00",
+    "context": {
+        "request_summary": "결제 모듈 연동 및 구독 시스템 구축 (분할된 오더)",
+        "related_docs": [
+            "docs/specs/4_development/api_spec.md"
+        ]
+    },
+    "reviews": {
+        "1_planning": {
+            "check": "Subscription Plan",
+            "comment": "구독 상품 정의 및 PG사 연동 프로세스."
+        },
+        "2_design": {
+            "check": "Payment UI",
+            "comment": "결제 페이지, 내 구독 정보 페이지."
+        },
+        "3_markup": {
+            "check": "N/A",
+            "comment": ""
+        },
+        "4_development": {
+            "check": "Transaction & Webhook",
+            "comment": "결제 검증 및 자동 갱신 처리를 위한 Webhook 구현."
+        }
+    },
+    "plan_specs": [],
+    "requirements": [
+        "결제 모듈(PortOne/Toss/Stripe 등) 연동",
+        "구독(Subscription) 데이터 베이스 설계 및 구현",
+        "사용자 등급(Role)과 결제 상태 동기화 로직 구현"
+    ]
+}

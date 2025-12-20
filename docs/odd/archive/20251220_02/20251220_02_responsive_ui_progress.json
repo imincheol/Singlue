@@ -1,0 +1,47 @@
+{
+    "order_id": "20251220_02",
+    "status": "IN_PROGRESS",
+    "current_step": "IMPLEMENTATION",
+    "logs": [
+        {
+            "timestamp": "2025-12-20T03:13:00+09:00",
+            "level": "INFO",
+            "message": "Order APPROVED by user. Starting Phase 2 (Spec Update)."
+        },
+        {
+            "timestamp": "2025-12-20T03:20:00+09:00",
+            "level": "INFO",
+            "message": "Spec updated and Implementation Plan approved."
+        },
+        {
+            "timestamp": "2025-12-20T03:30:00+09:00",
+            "level": "INFO",
+            "message": "Implemented UI fix: Removed duplicate sync slider, Updated Karaoke button."
+        },
+        {
+            "timestamp": "2025-12-20T03:35:00+09:00",
+            "level": "INFO",
+            "message": "Fixed Critical Bug: AuthContext Hook order violation."
+        },
+        {
+            "timestamp": "2025-12-20T03:40:00+09:00",
+            "level": "INFO",
+            "message": "Fixed Mobile Layout: Applied padding to PlayerPage containers."
+        },
+        {
+            "timestamp": "2025-12-20T03:45:00+09:00",
+            "level": "INFO",
+            "message": "Fixed Visual Bug: Karaoke Overlay rounding issue on mobile (applied floating card style)."
+        },
+        {
+            "timestamp": "2025-12-20T13:25:00+09:00",
+            "level": "INFO",
+            "message": "User Feedback: Revert Karaoke Overlay to bottom-attached style. Action: Changed to w-full with rounded-t-3xl (Bottom Sheet style)."
+        },
+        {
+            "timestamp": "2025-12-20T13:30:00+09:00",
+            "level": "INFO",
+            "message": "Refined Mobile Layout: Added padding to Video Player for alignment and applied rounded-3xl to Video/Overlay."
+        }
+    ]
+}

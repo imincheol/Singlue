@@ -1,0 +1,33 @@
+{
+    "order_id": "20251220_08",
+    "type": "FIX",
+    "status": "DONE",
+    "completed_at": "2025-12-20 21:15:00",
+    "summary": {
+        "what_changed": "플레이어 자막 폰트 크기 기준 수정(cqi 도입) 및 Z-index 시스템 전면 개편을 통한 드랍다운 가림 현상 해결",
+        "files_modified": [
+            "tailwind.config.mjs",
+            "src/components/KaraokeOverlay.tsx",
+            "src/components/LanguageSwitcher.tsx",
+            "src/App.tsx"
+        ]
+    },
+    "history_log": {
+        "tags": [
+            "#player_ux",
+            "#z-index",
+            "#dropdown",
+            "#container_query"
+        ],
+        "context": "Z-index 시스템 불일치로 인한 UI 가림 현상 및 플레이어 가사 가독성 문제",
+        "decision": "Tailwind Config에 1000 단위 Semantic Z-index 도입 및 cqi 단위를 통한 플레이어 크기 비례 폰트 구현",
+        "caution": "향후 UI 추가 시 z-index 하드코딩을 지양하고 tailwind config의 semantic 클래스(z-dropdown 등)를 사용할 것"
+    },
+    "commit_suggestion": {
+        "type": "fix",
+        "scope": "player-ux",
+        "subject": "standardize z-index system and improve player font scaling",
+        "body": "- Align tailwind z-index config with web_layer_system spec\n- Use cqi units for KaraokeOverlay font size\n- Fix language dropdown visibility by setting correct z-index hierarchy\n- Remove height constraints in karaoke mode",
+        "footer": "Ref: 20251220_08"
+    }
+}

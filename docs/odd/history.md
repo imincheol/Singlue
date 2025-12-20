@@ -14,8 +14,6 @@
 
 ---
 
----
-
 ## 📜 Log Entries (Latest First)
 
 > **[Format Guide]**

@@ -1,0 +1,38 @@
+{
+    "__CONSTRAINT__": " 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
+    "order_id": "20251220_09",
+    "title": "Watch History Feature",
+    "type": "FEATURE",
+    "status": "DRAFT",
+    "created_at": "2025-12-20 02:01:00",
+    "context": {
+        "request_summary": "계정 귀속 시청 기록 기능 구현",
+        "related_docs": [
+            "docs/specs/4_development/api_spec.md"
+        ]
+    },
+    "reviews": {
+        "1_planning": {
+            "check": "User Activity Tracking",
+            "comment": "유튜브와 유사한 시청 기록 리스트(History) 페이지 및 저장 로직."
+        },
+        "2_design": {
+            "check": "History UI",
+            "comment": "날짜별, 최신순 리스트 뷰 디자인."
+        },
+        "3_markup": {
+            "check": "N/A",
+            "comment": ""
+        },
+        "4_development": {
+            "check": "DB Schema",
+            "comment": "`watch_history` 테이블 설계 (user_id, video_id, timestamp, progress 등)."
+        }
+    },
+    "plan_specs": [],
+    "requirements": [
+        "DB에 사용자별 시청 기록(Watch History) 저장 (로그인 유저 기준)",
+        "최근 시청한 영상 목록 페이지 구현 (/history)",
+        "시청 기록 삭제/관리 기능"
+    ]
+}

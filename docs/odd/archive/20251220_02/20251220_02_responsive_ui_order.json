@@ -1,0 +1,39 @@
+{
+    "__CONSTRAINT__": " 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
+    "order_id": "20251220_02",
+    "title": "Mobile Responsive & UI Text Updates",
+    "type": "FIX",
+    "status": "APPROVED",
+    "created_at": "2025-12-20 01:20:00",
+    "context": {
+        "request_summary": "1024px 브레이크포인트에서의 반응형 동작 오류 수정 및 자잘한 UI 텍스트/요소 개선",
+        "related_docs": [
+            "docs/specs/2_design/ui_ux.md"
+        ],
+        "ref_image": "/Users/user/.gemini/antigravity/brain/6481fe9c-bf4d-43ba-8333-5cbe8ee14702/uploaded_image_1766160719237.png"
+    },
+    "reviews": {
+        "1_planning": {
+            "check": "docs/specs/2_design/ui_ux.md",
+            "comment": "반응형 Breakpoint(1024px) 정의 누락 확인. UI/UX 스펙 업데이트 필요."
+        },
+        "2_design": {
+            "check": "마이크 아이콘 -> KARAOKE 텍스트 변경",
+            "comment": "범용적인 'KARAOKE' 영문 표기로 변경하여 다국어 처리 제외."
+        },
+        "3_markup": {
+            "check": "PlayerPage Layout",
+            "comment": "1023px 이하 시 Player 영역의 width/height 처리 방식(Full width vs Fixed) 수정 필요."
+        },
+        "4_development": {
+            "check": "N/A",
+            "comment": "로직 변경 없음"
+        }
+    },
+    "plan_specs": [],
+    "requirements": [
+        "1023px 이하 해상도에서 모바일 레이아웃으로 전환 시, 영상 플레이어 우측에 공백이 생기지 않도록 사이즈 자동 조절 (Ref Image 참조)",
+        "노래방 모드 진입 버튼: 기존 마이크 아이콘을 'KARAOKE' 텍스트 버튼으로 변경 (다국어 미적용, 영문 고정)",
+        "PlayerPage 우측 패널의 '싱크 슬라이더'가 중복 노출되는 문제 해결 (하나는 제거하고 편집용 하나만 유지)"
+    ]
+}
