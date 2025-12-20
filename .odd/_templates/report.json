@@ -1,0 +1,14 @@
+{
+    "order_id": "YYYYMMDD_SEQ_TaskName",
+    "status": "COMPLETED",
+    "completed_at": "YYYY-MM-DD",
+    "summary": "Task completion summary",
+    "changes": {
+        "files": [],
+        "features": []
+    },
+    "review": {
+        "decision": "Decision made",
+        "lesson": "Lesson learned"
+    }
+}

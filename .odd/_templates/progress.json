@@ -1,0 +1,14 @@
+{
+    "order_id": "YYYYMMDD_SEQ_TaskName",
+    "status": "IN_PROGRESS",
+    "updated_at": "YYYY-MM-DD HH:MM:ss",
+    "current_step": 0,
+    "steps": [
+        {
+            "step": 1,
+            "desc": "Step Description",
+            "status": "pending",
+            "logs": []
+        }
+    ]
+}
