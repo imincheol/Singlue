@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/useAppStore';
 import { Type, Languages as LanguagesIcon, ChevronDown, Check, ChevronUp } from 'lucide-react';
@@ -10,9 +10,15 @@ interface PlaybackControlBarProps {
     isExpanded: boolean;
     toggleExpand: () => void;
     onGenerateLanguage: (lang: string) => void;
+    showSyncSlider?: boolean;
 }
 
-export const PlaybackControlBar: React.FC<PlaybackControlBarProps> = ({ isExpanded, toggleExpand, onGenerateLanguage }) => {
+export const PlaybackControlBar: React.FC<PlaybackControlBarProps> = ({
+    isExpanded,
+    toggleExpand,
+    onGenerateLanguage,
+    showSyncSlider = true
+}) => {
     const { t, i18n } = useTranslation();
     const { user } = useAuth();
     const {
@@ -21,31 +27,11 @@ export const PlaybackControlBar: React.FC<PlaybackControlBarProps> = ({ isExpand
         togglePronunciation,
         showTranslation,
         toggleTranslation,
-        localSyncMap,
-        setLocalSync,
         setUserOffset,
+        userOffset, // Needed for display
     } = useAppStore();
 
-    // Local state for the slider to avoid too many store updates on drag
-    const [sliderValue, setSliderValue] = useState(0);
-
-    // Initialize slider from store (persisted localSyncMap)
-    useEffect(() => {
-        if (currentSong) {
-            const savedOffset = localSyncMap[currentSong.id] || 0;
-            setSliderValue(savedOffset);
-            setUserOffset(savedOffset); // Apply immediately
-        }
-    }, [currentSong?.id, localSyncMap, setUserOffset]);
-
-    const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = parseFloat(e.target.value);
-        setSliderValue(val);
-        if (currentSong) {
-            setLocalSync(currentSong.id, val);
-            setUserOffset(val); // Update live offset
-        }
-    };
+    // userOffset is now directly manipulated via buttons
 
     const handleLanguageChange = (code: string) => {
         // Check availability
@@ -77,25 +63,57 @@ export const PlaybackControlBar: React.FC<PlaybackControlBarProps> = ({ isExpand
     };
 
     return (
-        <div className="flex flex-col border-b border-zinc-200 dark:border-white/5 bg-zinc-50/50 dark:bg-black/20 backdrop-blur-sm">
+        <div className="flex flex-col border-b border-zinc-200 dark:border-white/5 bg-zinc-50/50 dark:bg-black/20 backdrop-blur-sm relative z-20">
             {/* Top Row: Playback Sync Slider */}
-            <div className="px-4 py-2 flex items-center gap-3 border-b border-zinc-200/50 dark:border-white/5">
-                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider shrink-0">
-                    Sync
-                </span>
-                <input
-                    type="range"
-                    min="-5"
-                    max="5"
-                    step="0.1"
-                    value={sliderValue}
-                    onChange={handleSliderChange}
-                    className="w-full h-1 bg-zinc-300 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-600 hover:accent-indigo-500"
-                />
-                <span className="text-xs font-mono text-zinc-500 w-12 text-right">
-                    {sliderValue > 0 ? '+' : ''}{sliderValue.toFixed(1)}s
-                </span>
-            </div>
+            {/* Top Row: Playback Sync Adjustment (Buttons) */}
+            {showSyncSlider && (
+                <div className="px-4 py-2 flex items-center justify-between border-b border-zinc-200/50 dark:border-white/5 bg-zinc-50/30 dark:bg-white/5">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider shrink-0 mr-2">
+                            SYNC
+                        </span>
+
+                        {/* Display Current Offset */}
+                        <div className="flex items-center gap-1 min-w-[3.5rem] justify-end font-mono text-sm text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-900/20 px-2 py-0.5 rounded border border-indigo-100 dark:border-indigo-500/20">
+                            {userOffset > 0 ? '+' : ''}{userOffset.toFixed(1)}s
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={() => setUserOffset(Math.round((userOffset - 1.0) * 10) / 10)}
+                            className="px-2 py-1 text-xs font-medium bg-white dark:bg-white/10 hover:bg-zinc-100 dark:hover:bg-white/20 border border-zinc-200 dark:border-white/10 rounded text-zinc-600 dark:text-zinc-300 transition-colors"
+                        >
+                            -1.0
+                        </button>
+                        <button
+                            onClick={() => setUserOffset(Math.round((userOffset - 0.1) * 10) / 10)}
+                            className="px-2 py-1 text-xs font-medium bg-white dark:bg-white/10 hover:bg-zinc-100 dark:hover:bg-white/20 border border-zinc-200 dark:border-white/10 rounded text-zinc-600 dark:text-zinc-300 transition-colors"
+                        >
+                            -0.1
+                        </button>
+                        <button
+                            onClick={() => setUserOffset(0)}
+                            className="px-2 py-1 text-xs font-medium bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/15 border border-zinc-200 dark:border-white/10 rounded text-zinc-500 dark:text-zinc-400 transition-colors"
+                            title="Reset"
+                        >
+                            0.0
+                        </button>
+                        <button
+                            onClick={() => setUserOffset(Math.round((userOffset + 0.1) * 10) / 10)}
+                            className="px-2 py-1 text-xs font-medium bg-white dark:bg-white/10 hover:bg-zinc-100 dark:hover:bg-white/20 border border-zinc-200 dark:border-white/10 rounded text-zinc-600 dark:text-zinc-300 transition-colors"
+                        >
+                            +0.1
+                        </button>
+                        <button
+                            onClick={() => setUserOffset(Math.round((userOffset + 1.0) * 10) / 10)}
+                            className="px-2 py-1 text-xs font-medium bg-white dark:bg-white/10 hover:bg-zinc-100 dark:hover:bg-white/20 border border-zinc-200 dark:border-white/10 rounded text-zinc-600 dark:text-zinc-300 transition-colors"
+                        >
+                            +1.0
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Bottom Row: Controls */}
             <div className="flex items-center justify-between p-3 px-4">

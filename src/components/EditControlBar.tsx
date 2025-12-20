@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/useAppStore';
-import { Loader2, Save, Search, Wand2 } from 'lucide-react';
-import { saveSong } from '../services/supabase';
-import type { Song } from '../types';
+import { Loader2, Search, Wand2, Save } from 'lucide-react';
+
 
 interface EditControlBarProps {
     onSearchClick: () => void;
@@ -19,32 +18,30 @@ export const EditControlBar: React.FC<EditControlBarProps> = ({
     enrichProgress
 }) => {
     const { t } = useTranslation();
-    const { currentSong, setCurrentSong } = useAppStore();
+    const { currentSong, updateLyricsTimeShift, draftOffset, setDraftOffset, userOffset } = useAppStore();
     const [saving, setSaving] = useState(false);
 
-    // Global Sync Slider State
-    const [globalOffset, setGlobalOffset] = useState(currentSong?.global_offset || 0);
-
-    const handleGlobalOffsetChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = parseFloat(e.target.value);
-        setGlobalOffset(val);
-        // DB Save is debounced/manual usually, but for now lets do manual save button or debounce?
-        // Spec says: "[원어 싱크 조절 Slider]: DB 데이터 수정"
-        // Ideally we should just update local state and have a save button, OR debounce save.
-        // Let's implement debounce save or just update store and rely on a sync mechanism?
-        // The store `saveCurrentOffset` exists but that merges userOffset.
-        // Here we want to edit `global_offset` directly.
+    // Adjust the draft visual offset
+    const handleAdjustOffset = (amount: number) => {
+        const newOffset = Math.round((draftOffset + amount) * 10) / 10;
+        setDraftOffset(newOffset);
     };
 
-    const handleSaveGlobalSync = async () => {
-        if (!currentSong) return;
+    // Commit the draft offset to DB
+    const handleSaveSync = async () => {
+        if (!currentSong || draftOffset === 0) return;
+
+        if (!window.confirm(t('curator.confirm_sync_save', {
+            defaultValue: `Apply sync shift of ${draftOffset > 0 ? '+' : ''}${draftOffset}s to all lyrics?`
+        }))) return;
+
         setSaving(true);
         try {
-            const updated: Song = { ...currentSong, global_offset: globalOffset };
-            await saveSong(updated);
-            setCurrentSong(updated);
+            await updateLyricsTimeShift(draftOffset);
+            setDraftOffset(0); // Reset draft offset since it's now baked into lyrics
         } catch (e) {
             console.error(e);
+            alert("Failed to save sync changes.");
         } finally {
             setSaving(false);
         }
@@ -54,37 +51,45 @@ export const EditControlBar: React.FC<EditControlBarProps> = ({
         <div className="flex flex-col border-b border-zinc-200 dark:border-white/5 bg-amber-50/50 dark:bg-amber-900/10 backdrop-blur-sm">
             {/* Header / Label */}
             <div className="px-4 py-1.5 flex items-center justify-between bg-amber-100/50 dark:bg-amber-900/20 text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest">
-                <span>Creator Controls</span>
-                <span>Editable</span>
+                <span>{t('curator.ctrl_title', 'Creator Controls')}</span>
+                <span>{t('curator.ctrl_editable', 'Editable')}</span>
             </div>
 
-            {/* Global Sync Slider */}
-            <div className="px-4 py-2 flex items-center gap-3 border-b border-amber-200/20 dark:border-amber-500/10">
-                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider shrink-0">
-                    Global Sync
-                </span>
-                <input
-                    type="range"
-                    min="-5"
-                    max="5"
-                    step="0.1"
-                    value={globalOffset}
-                    onChange={handleGlobalOffsetChange}
-                    className="w-full h-1 bg-zinc-300 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-amber-600 hover:accent-amber-500"
-                />
-                <div className="flex items-center gap-2 w-24 justify-end">
-                    <span className="text-xs font-mono text-zinc-500 text-right">
-                        {globalOffset > 0 ? '+' : ''}{globalOffset.toFixed(1)}s
+            {/* Global Sync Controls (Draft + Save) */}
+            <div className="px-4 py-2 flex items-center justify-between border-b border-amber-200/20 dark:border-amber-500/10">
+                <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider shrink-0 mr-2">
+                        {t('curator.edit_sync', 'EDIT SYNC')}
                     </span>
-                    {currentSong?.global_offset !== globalOffset && (
-                        <button
-                            onClick={handleSaveGlobalSync}
-                            disabled={saving}
-                            className="p-1 rounded bg-amber-500 text-white hover:bg-amber-600 transition-colors"
-                        >
-                            {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
-                        </button>
+                    {draftOffset !== 0 && (
+                        <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/40 px-1.5 py-0.5 rounded">
+                            {draftOffset > 0 ? '+' : ''}{draftOffset.toFixed(1)}s
+                        </span>
                     )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                    {/* Adjustment Buttons */}
+                    <div className="flex items-center gap-1">
+                        <button onClick={() => handleAdjustOffset(-1.0)} className="px-2 py-1 text-xs font-medium bg-white dark:bg-white/10 hover:bg-amber-50 border border-zinc-200 dark:border-white/10 rounded text-zinc-600 dark:text-zinc-300">-1.0</button>
+                        <button onClick={() => handleAdjustOffset(-0.1)} className="px-2 py-1 text-xs font-medium bg-white dark:bg-white/10 hover:bg-amber-50 border border-zinc-200 dark:border-white/10 rounded text-zinc-600 dark:text-zinc-300">-0.1</button>
+                        <button onClick={() => setDraftOffset(0)} className="px-2 py-1 text-xs font-medium bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/15 border border-zinc-200 dark:border-white/10 rounded text-zinc-500 dark:text-zinc-400" title="Reset">0.0</button>
+                        <button onClick={() => handleAdjustOffset(0.1)} className="px-2 py-1 text-xs font-medium bg-white dark:bg-white/10 hover:bg-amber-50 border border-zinc-200 dark:border-white/10 rounded text-zinc-600 dark:text-zinc-300">+0.1</button>
+                        <button onClick={() => handleAdjustOffset(1.0)} className="px-2 py-1 text-xs font-medium bg-white dark:bg-white/10 hover:bg-amber-50 border border-zinc-200 dark:border-white/10 rounded text-zinc-600 dark:text-zinc-300">+1.0</button>
+                    </div>
+
+                    {/* Save Button */}
+                    <button
+                        onClick={handleSaveSync}
+                        disabled={draftOffset === 0 || saving}
+                        className={`flex items-center gap-1 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider transition-colors ${draftOffset !== 0
+                            ? "bg-amber-500 text-white hover:bg-amber-600 shadow-sm"
+                            : "bg-zinc-200 text-zinc-400 cursor-not-allowed dark:bg-white/5 dark:text-zinc-600"
+                            }`}
+                    >
+                        {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                        Save
+                    </button>
                 </div>
             </div>
 

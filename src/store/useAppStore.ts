@@ -24,6 +24,10 @@ interface AppState {
     userOffset: number;
     setUserOffset: (offset: number) => void;
 
+    // Edit Mode Shift (Draft)
+    draftOffset: number;
+    setDraftOffset: (offset: number) => void;
+
     // Settings
     showPronunciation: boolean;
     togglePronunciation: () => void;
@@ -43,16 +47,17 @@ interface AppState {
     metadataRefreshTrigger: number;
     triggerMetadataRefresh: () => void;
 
+    // Localization Context
+    contentLanguage: 'ko' | 'en' | 'ja'; // Target language for lyrics/translation
+    setContentLanguage: (lang: 'ko' | 'en' | 'ja') => void;
+
     // Player Sync
     requestedSeekTime: number | null;
     requestSeek: (time: number | null) => void;
 
-    // Sync Persistence
-    saveCurrentOffset: () => Promise<void>;
-
-    // Persistent Local Sync Map (SongID -> Offset)
-    localSyncMap: Record<string, number>;
-    setLocalSync: (songId: string, offset: number) => void;
+    // Sync persistence (Edit Mode)
+    // Shifts all lyrics by a certain amount (seconds) and saves to DB.
+    updateLyricsTimeShift: (shiftAmount: number) => Promise<void>;
 }
 
 export const useAppStore = create<AppState>()(
@@ -76,6 +81,9 @@ export const useAppStore = create<AppState>()(
             userOffset: 0,
             setUserOffset: (userOffset) => set({ userOffset }),
 
+            draftOffset: 0,
+            setDraftOffset: (draftOffset) => set({ draftOffset }),
+
             showPronunciation: true,
             togglePronunciation: () => set((state) => ({ showPronunciation: !state.showPronunciation })),
             showTranslation: true,
@@ -93,44 +101,57 @@ export const useAppStore = create<AppState>()(
             metadataRefreshTrigger: 0,
             triggerMetadataRefresh: () => set((state) => ({ metadataRefreshTrigger: state.metadataRefreshTrigger + 1 })),
 
+            contentLanguage: 'ko', // Default content language
+            setContentLanguage: (lang) => set({ contentLanguage: lang }),
+
             requestedSeekTime: null,
             requestSeek: (time) => set({ requestedSeekTime: time }),
 
             saveCurrentOffset: async () => {
-                const state = get();
-                const { currentSong, userOffset } = state;
+                // Deprecated in Order 03? 
+                // We keep it for now if needed, but Order 03 focuses on updateLyricsTimeShift.
+                // Or maybe we can reuse this for "Edit Sync" if we decided to use global_offset.
+                // But user requested "change lyrics time itself".
+                // So this might be unused or we repurpose it.
+                // Let's implement updateLyricsTimeShift below.
+            },
 
+            updateLyricsTimeShift: async (shiftAmount: number) => {
+                const state = get();
+                const { currentSong } = state;
                 if (!currentSong) return;
 
-                const newGlobalOffset = (currentSong.global_offset || 0) + userOffset;
+                // Create new lyrics with shifted times
+                const newLyrics = currentSong.lyrics.map(line => {
+                    let newTime = line.time + shiftAmount;
+                    // Prevent negative time
+                    if (newTime < 0) newTime = 0;
+                    // Round to 1 decimal place (00.0s)
+                    newTime = Math.round(newTime * 10) / 10;
+                    return { ...line, time: newTime };
+                });
+
+                // Update Song object
+                const updatedSong: Song = {
+                    ...currentSong,
+                    lyrics: newLyrics
+                    // We do NOT change global_offset here, as we are baking the offset into the lyrics.
+                };
 
                 try {
-                    const updatedSong: Song = {
-                        ...currentSong,
-                        global_offset: newGlobalOffset
-                    };
-
                     await saveSong(updatedSong);
 
                     // Update local state
-                    set({
-                        currentSong: updatedSong,
-                        userOffset: 0 // Reset user offset as it's now merged
-                    });
+                    set({ currentSong: updatedSong });
+
+                    console.log(`Lyrics shifted by ${shiftAmount}s and saved.`);
                 } catch (error) {
-                    console.error("Failed to save offset:", error);
+                    console.error("Failed to shift lyrics time:", error);
                     throw error;
                 }
             },
 
-            // New: Persistent Local Sync Map
-            localSyncMap: {},
-            setLocalSync: (songId, offset) => set((state) => ({
-                localSyncMap: { ...state.localSyncMap, [songId]: offset },
-                userOffset: offset // Also update current session offset immediately if it matches? 
-                // Actually, userOffset in the component usually tracks the slider. 
-                // We should probably just rely on localSyncMap or init userOffset from it when song loads.
-            })),
+
         }),
         {
             name: 'singlue-storage',
@@ -139,7 +160,8 @@ export const useAppStore = create<AppState>()(
                 showPronunciation: state.showPronunciation,
                 showTranslation: state.showTranslation,
                 history: state.history,
-                localSyncMap: state.localSyncMap, // Persist this
+                contentLanguage: state.contentLanguage,
+                // localSyncMap removed as per order 03 requirements (temporary sync only)
             }),
             merge: (persistedState, currentState) => {
                 const merged = { ...currentState, ...(persistedState as object) } as AppState;
