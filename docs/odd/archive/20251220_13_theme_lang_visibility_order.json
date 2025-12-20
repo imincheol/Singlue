@@ -1,0 +1,33 @@
+{
+    "__CONSTRAINT__": " 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
+    "order_id": "20251220_13",
+    "title": "Theme & Language Visibility Refinement",
+    "type": "REFACTOR",
+    "status": "APPROVED",
+    "created_at": "2025-12-20 23:15:00",
+    "context": {
+        "request_summary": "테마 토글 아이콘 가시성 개선, GNB 다국어 드롭다운 잘림 해결 및 사이트/컨텐츠 언어 분리",
+        "related_docs": [
+            "docs/specs/3_markup/theme_system.md",
+            "docs/library/domains/web_layer_system.md",
+            "docs/library/domains/player_karaoke.md"
+        ]
+    },
+    "requirements": [
+        "테마 토글 아이콘을 현재 모드에 맞게 표시 (Sun=Light, Moon=Dark)",
+        "GNB 사이트 언어 드롭다운이 레이아웃에 의해 잘리지 않도록 강제 노출 (`fixed` 포지셔닝)",
+        "사이트 UI 언어(i18n)와 가사/자막 언어(Store)의 상태 분리 및 동기화",
+        "가사 목록(`LyricsDisplay`) 및 노래방 오버레이(`KaraokeOverlay`)에 새로운 언어 상태 적용",
+        "곡의 원어(Source Language)를 인식하여 AI 생성 없이도 항상 사용 가능하도록 개선"
+    ],
+    "plan_specs": [
+        {
+            "check": "Layer Visibility",
+            "comment": "GNB 드롭다운에 `z-[9999]` 및 `fixed` 적용하여 레이어 충돌 회피"
+        },
+        {
+            "check": "Localization Logic",
+            "comment": "contentLanguage 전역 상태 도입 및 관련 컴포넌트 마이그레이션"
+        }
+    ]
+}

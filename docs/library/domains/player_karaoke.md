@@ -47,6 +47,11 @@
 - **Problem**: iOS Safari에서는 사용자 제스처(Click)가 없는 비동기 로직 내에서 Fullscreen 요청이 차단됨.
 - **Workaround**: Fullscreen 토글은 반드시 버튼의 `onClick` 핸들러 내에서 직접 호출되도록 설계해야 함.
 
+### [2025-12-20] Language State Isolation
+- **Issue**: 사이트 UI 언어를 바꿀 때마다 가사 언어가 강제로 바뀌어, 특정 언어 가사 데이터가 없는 곡의 경우 가사가 사라지는 '언어 데드락' 발생.
+- **Decision**: 사이트 언어(i18next)와 콘텐츠 가사 언어(`contentLanguage` in Store)를 완전히 분리.
+- **Benefit**: 사이트 메뉴가 한국어라도 베트남어 곡의 원어 가사를 독립적으로 감상 가능.
+
 ## ⚠️ Cautions
 
 1. **YouTube Iframe Click Jacking**:

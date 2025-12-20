@@ -1,0 +1,22 @@
+{
+    "order_id": "20251220_13",
+    "title": "Theme & Language Visibility Refinement",
+    "status": "SUCCESS",
+    "completed_at": "2025-12-20 23:45:00",
+    "results": [
+        "테마 토글 아이콘 가시성 수정 (Dark=Moon, Light=Sun 일치)",
+        "공통 Portal Dropdown 컴포넌트(`Dropdown.tsx`) 구축 및 전역 적용",
+        "GNB 사이트 언어 드롭다운 및 프로필 드롭다운의 클리핑/클릭 불가 문제 해결",
+        "사이트 i18n 언어와 컨텐츠 가사 언어 상태 분리(`contentLanguage`) 및 동기화",
+        "가사 컴포넌트(`LyricsDisplay`, `KaraokeOverlay`, `ThreeLineLyrics`) 전면 리팩토링",
+        "곡 원어(Source Language) 인식 로직 보강 및 상시 활성화 체계 구축"
+    ],
+    "learned": [
+        "전역 드롭다운이나 모달은 `document.body`로 Portal링하는 것이 CSS 클리핑(`overflow: hidden`) 문제를 피하는 가장 확실한 방법임.",
+        "복잡한 UI 로직이 파편화되어 있을 때는 이를 공통 컴포넌트로 추상화하여 한 번에 해결하는 것이 효율적임.",
+        "애니메이션이 Portal 렌더링 시점에 시각적 좌표 글리치를 유발할 수 있으므로, UX와 안정성 사이의 균형이 중요함."
+    ],
+    "caution": [
+        "기존 곡 데이터에 `country_code`가 누락되어 있어 원어 인식 기능이 즉시 동작하지 않는 데이터 갭이 존재함. 반드시 데이터 마이그레이션 오더를 통해 해결해야 함."
+    ]
+}

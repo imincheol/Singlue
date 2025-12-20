@@ -16,6 +16,13 @@
 
 ## 📜 Log Entries (Latest First)
 
+- **Task**: [20251220_13] Theme & Language Visibility Refinement
+- **Date**: 2025-12-20
+- **Tags**: #ui, #theme, #portal, #refactor
+- **Context**: 테마 아이콘 반전, GNB 드롭다운 클리핑 및 클릭 불가, 프로필 드롭다운 가려짐 문제 발생.
+- **Decision**: 공통 `Dropdown.tsx`(Portal 기반) 구축하여 전역 적용. 사이트/컨텐츠 언어 분리(`contentLanguage`).
+- **Caution**: 드롭다운에 `fixed`+Portal 사용 시 부자연스러운 애니메이션은 DX/UX를 위해 제거 권장. 원어 인식은 데이터 마이그레이션 선행 필요.
+
 > **[Format Guide]**
 >
 > - **Task**: [Task-ID] 작업명

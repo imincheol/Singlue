@@ -1,0 +1,73 @@
+{
+    "status": "COMPLETED",
+    "current_step": "Order Completed",
+    "last_updated": "2025-12-20 23:40:00",
+    "todo_list": [
+        {
+            "task": "테마 토글 아이콘 로직 반전 (현재 모드 표시)",
+            "status": "DONE"
+        },
+        {
+            "task": "GNB 사이트 언어 드롭다운 Brute-force 고정 (Fixed position)",
+            "status": "DONE"
+        },
+        {
+            "task": "사이트 언어 vs 컨텐츠 언어 상태 분리 (Decoupling)",
+            "status": "DONE"
+        },
+        {
+            "task": "LyricsDisplay 및 KaraokeOverlay 언어 동기화",
+            "status": "DONE"
+        },
+        {
+            "task": "곡 원어(Source Language) 인식 로직 보강",
+            "status": "DONE"
+        },
+        {
+            "task": "공통 Portal Dropdown 컴포넌트 구축 및 전역 적용",
+            "status": "DONE"
+        }
+    ],
+    "logs": [
+        {
+            "timestamp": "22:30:00",
+            "type": "INFO",
+            "message": "세션 시작 및 테마 토글 아이콘 수정 완료."
+        },
+        {
+            "timestamp": "22:45:00",
+            "type": "INFO",
+            "message": "언어 데드락 문제 확인 및 사이트/컨텐츠 언어 분리 구현."
+        },
+        {
+            "timestamp": "23:05:00",
+            "type": "INFO",
+            "message": "GNB 드롭다운 가시성 문제 해결을 위해 brute-force 방식(`fixed`) 적용."
+        },
+        {
+            "timestamp": "23:15:00",
+            "type": "PROGRESS",
+            "message": "작업 내용에 대한 공식 Order 및 Progress 생성."
+        },
+        {
+            "timestamp": "23:45:00",
+            "type": "FIX",
+            "message": "React Portal 기반 LanguageSwitcher 재구현으로 클릭 불가 및 클리핑 문제 해결."
+        },
+        {
+            "timestamp": "23:55:00",
+            "type": "REFACTOR",
+            "message": "공통 Portal Dropdown 컴포넌트(`Dropdown.tsx`) 구축 및 UserDropdown(프로필) 적용."
+        },
+        {
+            "timestamp": "00:02:00",
+            "type": "FIX",
+            "message": "드롭다운 부자연스러운 애니메이션 제거 및 UX 최적화."
+        },
+        {
+            "timestamp": "00:08:00",
+            "type": "REFACTOR",
+            "message": "PlaybackControlBar에 공통 Dropdown 적용 및 국가 코드 기반 원어 인식 로직 보강."
+        }
+    ]
+}
