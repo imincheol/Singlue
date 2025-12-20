@@ -39,7 +39,7 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose 
 
                 {/* Body (Scrollable) */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-8">
-                    {changelogData.map((item, index) => (
+                    {changelogData.map((item) => (
                         <div key={item.version} className="relative pl-6 border-l-2 border-indigo-100 dark:border-indigo-500/20 last:border-0 last:pb-0">
                             {/* Dot */}
                             <div className="absolute top-0 left-[-7px] w-3 h-3 rounded-full bg-indigo-500 ring-4 ring-white dark:ring-zinc-900" />

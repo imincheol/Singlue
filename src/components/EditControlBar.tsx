@@ -18,7 +18,7 @@ export const EditControlBar: React.FC<EditControlBarProps> = ({
     enrichProgress
 }) => {
     const { t } = useTranslation();
-    const { currentSong, updateLyricsTimeShift, draftOffset, setDraftOffset, userOffset } = useAppStore();
+    const { currentSong, updateLyricsTimeShift, draftOffset, setDraftOffset } = useAppStore();
     const [saving, setSaving] = useState(false);
 
     // Adjust the draft visual offset
