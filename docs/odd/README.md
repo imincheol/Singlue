@@ -129,10 +129,20 @@ Order가 확정되지 않았다면, 스펙 문서 수정이나 코드 작성 등
 * 사용자가 결과물을 테스트하고 승인합니다.
 
 3. **Generate Report (최종 완료)**:
+    * 사용자 승인 후 `_templates/report.json` 기반으로 리포트 생성 및 `progress.json` 삭제.
 
-* 사용자 승인 후 `_templates/report.json` 기반으로 리포트 생성 및 `progress.json` 삭제.
+4. **Git Commit Suggestion (커밋 제안)**:
+    * 리포트 생성과 동시에, AI는 **Task Name**을 포함한 커밋 메시지를 제안해야 합니다.
+    * **Format**: `type(task_name): description`
+    * **Footer**: `Ref: YYYYMMDD_SEQ` (아카이브 파일 추적용)
+    * **Example**:
 
-4. **Archive (아카이빙)**:
+        ```text
+        feat(sync_refactor): 재생/편집 싱크 로직 분리 및 UI 개선
 
-* 최종 완료된 `..._order.json`과 `..._report.json` 파일을 **`docs/odd/archive/` 폴더로 이동**시킵니다.
-* (Optional) `docs/odd/roadmap.md`의 해당 Task에 체크(`[x]`) 표시를 합니다.
+        Ref: 20251220_03
+        ```
+
+5. **Archive (아카이빙)**:
+    * 최종 완료된 `..._order.json`과 `..._report.json` 파일을 `docs/odd/archive/` 폴더로 이동시킵니다.
+    * `docs/odd/roadmap.md`의 해당 Task에 체크(`[x]`) 표시를 합니다.
