@@ -14,6 +14,8 @@
 
 ---
 
+---
+
 ## 📜 Log Entries (Latest First)
 
 > **[Format Guide]**
@@ -25,5 +27,44 @@
 > - **Decision (What)**: 어떤 해결책을 선택했는지
 > - **Caution (Side Effect)**: 미래의 작업자가 주의해야 할 점
 
----
-(아직 기록된 히스토리가 없습니다. 첫 번째 리포트 제출 후 관장 에이전트가 작성할 예정입니다.)
+- **Task**: [20251220_03] Sync Logic Refactor
+- **Date**: 2025-12-20
+- **Tags**: #sync, #logic, #ux
+- **Context**: 슬라이더 방식의 싱크 조절이 저장 여부를 헷갈리게 하고 조작이 어려움.
+- **Decision**: 재생용(User, 휘발성)과 편집용(Draft, 영구적) 오프셋을 분리하고, 버튼형 UI 도입.
+- **Caution**: Total Offset 계산 시 반드시 Global + Draft + User를 합산해야 함.
+
+- **Task**: [20251220_03] Layer System Definition
+- **Date**: 2025-12-20
+- **Tags**: #ui, #z-index, #theme
+- **Context**: Z-index 충돌(Dropdown이 가려짐 등)이 빈번하게 발생.
+- **Decision**: Semantic Z-Index System (z-gnb, z-overlay) 도입 및 Tailwind Config에 적용.
+- **Caution**: 매직 넘버 사용 금지.
+
+- **Task**: [20251220_01] Refactor ODD Tasks Structure
+- **Date**: 2025-12-20
+- **Tags**: #odd, #process, #archive
+- **Context**: 태스크 관리가 복잡해져서 폴더 구조를 플랫하게 변경 필요.
+- **Decision**: `docs/odd/tasks/`를 플랫하게 유지하고, 완료된 것은 `archive/`로 이동.
+- **Caution**: 파일 이동 시 시스템 동기화 주의.
+
+- **Task**: [20251219_08] Specs Restructuring
+- **Date**: 2025-12-19
+- **Tags**: #odd, #docs, #structure
+- **Context**: 문서가 산발적으로 흩어져 접근성이 떨어짐.
+- **Decision**: 4-Layer Specs (Planning, Design, Markup, Dev) 구조로 통합 정리.
+- **Caution**: 모든 문서는 해당 레이어 폴더에 위치해야 함.
+
+- **Task**: [20251219_07] Mobile UI/UX Improvement
+- **Date**: 2025-12-19
+- **Tags**: #mobile, #ui, #responsive
+- **Context**: 모바일에서 폰트와 여백이 너무 커서 가독성이 떨어짐.
+- **Decision**: Mobile-first Tailwind 클래스 적용 (`gap-4`, `p-4`, `text-4xl` Hero). 불필요한 로그 제거.
+- **Caution**: `overflow-x-hidden` 주의.
+
+- **Task**: [20251219_01] Karaoke Mode Implementation
+- **Date**: 2025-12-19
+- **Tags**: #karaoke, #player, #feature
+- **Context**: 사용자가 노래를 따라 부를 수 있는 기능 부재.
+- **Decision**: `KaraokeOverlay` 컴포넌트 추가, `useAppStore` 전역 상태 관리, Fullscreen API 연동.
+- **Caution**: Safari 모바일에서는 사용자 액션 없이 전체화면 불가.
