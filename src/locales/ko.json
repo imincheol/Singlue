@@ -57,7 +57,12 @@
         "preview_result": "결과 미리보기",
         "save_start": "저장 & 시작",
         "enrich_btn": "AI로 채우기",
-        "more_lines": "줄 더보기"
+        "more_lines": "줄 더보기",
+        "search_lyrics": "가사 검색",
+        "confirm_sync_save": "모든 가사에 싱크 보정 {{defaultValue}}을 적용하시겠습니까?",
+        "ctrl_title": "제작자 컨트롤",
+        "ctrl_editable": "편집 가능",
+        "edit_sync": "편집 싱크"
     },
     "lyrics": {
         "no_song": "로드된 노래가 없습니다. 시작하려면 YouTube 링크를 입력하세요.",

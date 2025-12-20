@@ -1,0 +1,23 @@
+{
+    "order_id": "20251220_03",
+    "status": "DONE",
+    "completed_at": "2025-12-20 19:30:00",
+    "implemented_features": [
+        "Semantic Z-Index System (z-gnb, z-overlay, z-modal)",
+        "Separated Content Language State in useAppStore",
+        "Fixed locale key duplications and missing keys"
+    ],
+    "changed_files": [
+        "docs/specs/3_markup/theme_system.md",
+        "tailwind.config.mjs",
+        "src/components/KaraokeOverlay.tsx",
+        "src/App.tsx",
+        "src/store/useAppStore.ts",
+        "src/locales/ko.json",
+        "src/locales/en.json"
+    ],
+    "verification_results": {
+        "manual_test": "Verified Z-Index hierarchy via walkthrough",
+        "auto_test": "Fixed lint errors"
+    }
+}

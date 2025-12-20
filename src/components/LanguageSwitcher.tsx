@@ -53,7 +53,7 @@ export const LanguageSwitcher: React.FC = () => {
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl overflow-hidden z-dropdown animate-in fade-in zoom-in-95 duration-200">
                     {languages.map((lang) => (
                         <button
                             key={lang.code}

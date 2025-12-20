@@ -55,6 +55,11 @@
         "generating": "AI is generating lyrics and pronunciation...",
         "generate_btn": "Generate Lyrics",
         "preview_result": "Preview Result",
+        "search_lyrics": "Search Lyrics",
+        "confirm_sync_save": "Apply sync shift of {{defaultValue}} to all lyrics?",
+        "ctrl_title": "Creator Controls",
+        "ctrl_editable": "Editable",
+        "edit_sync": "Edit Sync",
         "save_start": "Save & Start",
         "enrich_btn": "Enrich with AI",
         "more_lines": "more lines"
