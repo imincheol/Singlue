@@ -18,6 +18,19 @@
   - `Next` 라인은 미리보기를 위해 약간 투명하게(Opacity 90%).
 
 ---
+### 3. Global State Management
+- **Decision**: 노래방 모드(`isKaraokeMode`)와 같은 전역 상태는 `useAppStore` (Zustand)에서 관리합니다.
+- **Why**: 플레이어 페이지뿐만 아니라, 오버레이 컴포넌트(`KaraokeOverlay`) 등 앱 전역에서 접근해야 하기 때문입니다.
+- **Source**: `20251219_01_karaoke_mode_order`
+
+### 4. Responsive Typography (Container Queries)
+- **Problem**: 기존 `vmin` 단위는 브라우저 창(Window) 전체 크기를 기준으로 하므로, 데스크탑 멀티컬럼 레이아웃에서 영상이 작아져도 폰트가 과도하게 커지는 문제 발생.
+- **Solution**: CSS Container Queries (`cqi`) 단위를 사용하여 **부모 컨테이너(영상 플레이어)의 너비**에 비례하도록 폰트 크기를 조절했습니다.
+    - 예: `font-size: 5cqi;`
+    - `PlayerPage`의 영상 Wrapper에 `container-type: size;`를 적용하여 기준을 잡습니다.
+- **Result**: 창 크기가 변하거나 레이아웃이 바뀌어도, 영상 크기에 맞춰 텍스트가 자연스럽게 스케일링됨.
+
+---
 
 ## 🏛️ Decision History
 

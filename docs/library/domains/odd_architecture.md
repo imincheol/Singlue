@@ -21,6 +21,10 @@
 - **Archive**: 완료된 작업은 `docs/odd/archive/`로 즉시 이동합니다.
 - **Naming**: `YYYYMMDD_{Seq}_{TaskName}_{Type}.json` 형식을 엄수합니다.
 
+### Report Logic
+- 모든 Order는 반드시 짝이 되는 Report를 가져야 합니다.
+- Report가 없는 Order는 "진행 중(In Progress)"으로 간주합니다.
+
 ## 🏛️ Decision History
 
 ### [2025-12-19] Specs Restructuring

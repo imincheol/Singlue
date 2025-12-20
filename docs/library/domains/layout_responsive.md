@@ -7,6 +7,10 @@
 - **Tablet**: `sm` (`640px`) ~ `md` (`768px`)
 - **Desktop**: `lg` (`1024px`) ~
 
+## 🔍 Debugging & Logging
+- **Rule**: `console.log`는 개발 중에만 사용하고, PR/Merge 시점에는 제거해야 합니다. 특히 `window.innerWidth` 등 화면 사이즈를 찍는 로그는 모바일 디버깅 시 노이즈가 될 수 있습니다.
+- **Action**: 과거 작업(`20251219_07`)에서 불필요한 로그 전수 제거함.
+
 ## 🏛️ Decision History
 
 ### [2025-12-19] Mobile Typography & Spacing
