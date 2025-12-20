@@ -6,7 +6,15 @@ import { Type, Languages, Clock } from 'lucide-react';
 
 export const ThreeLineLyrics: React.FC = () => {
     const { t } = useTranslation();
-    const { currentSong, currentTime, userOffset, draftOffset, showPronunciation, showTranslation } = useAppStore();
+    const {
+        currentSong,
+        currentTime,
+        userOffset,
+        draftOffset,
+        showPronunciation,
+        showTranslation,
+        contentLanguage
+    } = useAppStore();
     const [activeLineIndex, setActiveLineIndex] = useState<number>(-1);
 
     const {
@@ -74,7 +82,7 @@ export const ThreeLineLyrics: React.FC = () => {
 
     if (!currentSong) return null;
 
-    const lang = t('language_code', { defaultValue: 'en' });
+    const lang = contentLanguage;
 
     return (
         <div className="w-full bg-zinc-100 dark:bg-black/40 border border-zinc-200 dark:border-white/5 rounded-xl flex flex-col items-center justify-center backdrop-blur-sm overflow-hidden relative">

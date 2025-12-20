@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { saveSong } from '../services/supabase';
 import type { Song, HistoryItem } from '../types';
+import type { LanguageCode } from '../constants/languages';
 
 interface AppState {
     apiKey: string | null;
@@ -48,8 +49,8 @@ interface AppState {
     triggerMetadataRefresh: () => void;
 
     // Localization Context
-    contentLanguage: 'ko' | 'en' | 'ja'; // Target language for lyrics/translation
-    setContentLanguage: (lang: 'ko' | 'en' | 'ja') => void;
+    contentLanguage: LanguageCode; // Target language for lyrics/translation
+    setContentLanguage: (lang: LanguageCode) => void;
 
     // Player Sync
     requestedSeekTime: number | null;

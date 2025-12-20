@@ -28,6 +28,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
         showTranslation,
         apiKey,
         requestSeek,
+        contentLanguage,
     } = useAppStore();
     const { t, i18n } = useTranslation();
     const { user } = useAuth();
@@ -151,7 +152,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
 
     return (
         <div className={clsx(
-            "flex flex-col bg-zinc-100 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-sm overflow-hidden transition-all duration-300",
+            "flex flex-col bg-zinc-100 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-white/5 backdrop-blur-sm transition-all duration-300",
             "lg:h-full",
             isExpanded ? "h-[60vh]" : "h-auto"
         )}>
@@ -184,7 +185,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
             <div
                 ref={containerRef}
                 className={clsx(
-                    "flex-1 overflow-y-auto px-6 py-12 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 transition-all duration-300",
+                    "flex-1 overflow-y-auto overflow-x-hidden rounded-b-xl px-6 py-12 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 transition-all duration-300",
                     !isExpanded && "hidden lg:block lg:flex-1"
                 )}
                 style={{ maxHeight: !isExpanded ? '0px' : undefined }}
@@ -240,14 +241,14 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
                                         {showPronunciation && line.pron && (
                                             <p className="text-base font-mono text-indigo-600 dark:text-indigo-300/80 tracking-wide">
                                                 {/* @ts-ignore */}
-                                                {typeof line.pron === 'string' ? line.pron : (line.pron[t('language_code', { defaultValue: 'en' })] || line.pron['en'] || Object.values(line.pron)[0])}
+                                                {typeof line.pron === 'string' ? line.pron : (line.pron[contentLanguage] || line.pron['en'] || Object.values(line.pron)[0])}
                                             </p>
                                         )}
 
                                         {showTranslation && line.trans && (
                                             <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mt-1">
                                                 {/* @ts-ignore */}
-                                                {typeof line.trans === 'string' ? line.trans : (line.trans[t('language_code', { defaultValue: 'en' })] || line.trans['en'] || Object.values(line.trans)[0])}
+                                                {typeof line.trans === 'string' ? line.trans : (line.trans[contentLanguage] || line.trans['en'] || Object.values(line.trans)[0])}
                                             </p>
                                         )}
                                     </div>
