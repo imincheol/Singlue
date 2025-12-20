@@ -23,6 +23,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
         setCurrentSong,
         currentTime,
         userOffset,
+        draftOffset,
         showPronunciation,
         showTranslation,
         apiKey,
@@ -117,7 +118,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
 
     // Calculate synchronized time
     const globalOffset = currentSong?.global_offset || 0;
-    const totalOffset = globalOffset + userOffset;
+    const totalOffset = globalOffset + userOffset + (draftOffset || 0);
     const syncedTime = currentTime - totalOffset;
 
     useEffect(() => {
@@ -176,6 +177,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
                 isExpanded={isExpanded}
                 toggleExpand={() => setIsExpanded(!isExpanded)}
                 onGenerateLanguage={handleGenerateLanguage}
+                showSyncSlider={!isOwner}
             />
 
             {/* Lyrics Scroll Area */}
@@ -192,24 +194,37 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
                         <div className="h-[20vh] lg:hidden" />
 
                         {currentSong.lyrics.map((line, idx) => {
-                            const isActive = idx === activeLineIndex;
-                            const m = Math.floor(line.time / 60);
-                            const s = Math.floor(line.time % 60).toString().padStart(2, '0');
+                            // Duplicate Lyrics Hiding Logic
+                            const isDuplicate = idx > 0 && Math.abs(line.time - currentSong.lyrics[idx - 1].time) < 0.01;
+                            if (isDuplicate) return null;
+
+                            // Active Logic: Active if it matches the current active timestamp
+                            const isActiveTime = activeLineIndex !== -1 && Math.abs(line.time - currentSong.lyrics[activeLineIndex].time) < 0.01;
+
+                            // Display Time (shifted by offset)
+                            // We add totalOffset because if offset is +1s (delay), the lyric at 10s should be displayed as 11s to match audio position?
+                            // Wait, if I have a lyric at 10s, and I set offset +1s. It means I want it to play at 11s.
+                            // So visually it should say "0:11" if that's the new effective time.
+                            // userOffset is defined as "Visual Offset". If positive, it delays lyrics relative to audio.
+                            // So effectiveTime = line.time + totalOffset.
+                            const effectiveTime = Math.max(0, line.time + totalOffset);
+                            const m = Math.floor(effectiveTime / 60);
+                            const s = Math.floor(effectiveTime % 60).toString().padStart(2, '0');
                             const timeStr = `${m}:${s}`;
 
                             return (
                                 <div
                                     key={idx}
-                                    ref={isActive ? activeLineRef : null}
+                                    ref={isActiveTime ? activeLineRef : null}
                                     onClick={() => handleLineClick(line.time)}
                                     className={clsx(
                                         "transition-all duration-300 flex items-start space-x-6 cursor-pointer group/line",
-                                        isActive ? "opacity-100 scale-105 origin-left" : "opacity-30 blur-[0.5px] scale-100 hover:opacity-70"
+                                        isActiveTime ? "opacity-100 scale-105 origin-left" : "opacity-30 blur-[0.5px] scale-100 hover:opacity-70"
                                     )}
                                 >
                                     <div className={clsx(
                                         "flex-shrink-0 w-12 text-sm font-mono pt-2 text-right",
-                                        isActive ? "text-indigo-600 dark:text-indigo-400" : "text-zinc-500 dark:text-zinc-600"
+                                        isActiveTime ? "text-indigo-600 dark:text-indigo-400" : "text-zinc-500 dark:text-zinc-600"
                                     )}>
                                         {timeStr}
                                     </div>
@@ -217,7 +232,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ onSearchClick, onR
                                     <div className="flex flex-col space-y-1">
                                         <p className={clsx(
                                             "text-2xl font-bold tracking-tight leading-normal",
-                                            isActive ? "text-zinc-900 dark:text-white" : "text-zinc-500 dark:text-zinc-300"
+                                            isActiveTime ? "text-zinc-900 dark:text-white" : "text-zinc-500 dark:text-zinc-300"
                                         )}>
                                             {line.source}
                                         </p>

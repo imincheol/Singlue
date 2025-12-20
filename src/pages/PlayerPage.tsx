@@ -13,7 +13,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { SongCreationWizard } from '../components/SongCreationWizard';
 import type { Song, HistoryItem } from '../types';
 import { getFlagEmoji } from '../utils/country';
-import { Mic, MicOff } from 'lucide-react';
+// Mic, MicOff removed
 import { KaraokeOverlay } from '../components/KaraokeOverlay';
 
 export default function PlayerPage() {
@@ -76,7 +76,7 @@ export default function PlayerPage() {
     const canCreate = !!(user && !loading && !songs.find(s => s.created_by === user.id));
 
     return (
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 min-h-[calc(100vh-4rem)] lg:h-[calc(100vh-4rem)] bg-white dark:bg-black animate-in fade-in duration-500 pt-6 lg:pt-10 px-4 sm:px-6 max-w-7xl mx-auto lg:overflow-hidden relative pb-8 lg:pb-25 items-start">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 min-h-[calc(100vh-4rem)] lg:h-[calc(100vh-4rem)] bg-white dark:bg-black animate-in fade-in duration-500 pt-6 lg:pt-10 px-0 sm:px-6 max-w-7xl mx-auto lg:overflow-hidden relative pb-8 lg:pb-25 lg:items-start">
             {error && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-2 rounded-full shadow-lg animate-in fade-in slide-in-from-top-4 duration-300 text-sm font-medium">
                     {error}
@@ -86,7 +86,7 @@ export default function PlayerPage() {
 
 
                 {/* Quick Info & Controls */}
-                <div className="bg-zinc-100 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-white/5 mb-0 shrink-0 flex flex-col gap-2">
+                <div className="bg-zinc-100 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-white/5 mb-0 shrink-0 flex flex-col gap-2 mx-4 lg:mx-0">
                     {/* Row 1: YouTube Info */}
                     <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-500 overflow-hidden">
                         <span className="truncate flex-1 font-medium">{songs.find(s => s.video_id === id)?.title || 'Video Title'}</span>
@@ -246,13 +246,13 @@ export default function PlayerPage() {
                         {/* Karaoke Switch (Moved to Right End) */}
                         <button
                             onClick={toggleKaraokeMode}
-                            className={`p-2 rounded-lg transition-colors flex items-center gap-1.5 ${isKaraokeMode
-                                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                                : 'hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-500'
+                            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 text-sm font-bold tracking-wide ${isKaraokeMode
+                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                                : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-700'
                                 }`}
                             title="Karaoke Mode"
                         >
-                            {isKaraokeMode ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5 opacity-50" />}
+                            KARAOKE
                         </button>
                     </div>
                 </div>
@@ -260,9 +260,9 @@ export default function PlayerPage() {
                 {/* Video Player */}
                 <div
                     id="video-container"
-                    className={`w-full shrink-0 relative group transition-all duration-500 ${isKaraokeMode ? 'aspect-video' : ''}`}
+                    className={`w-full shrink-0 relative group transition-all duration-500 ${isKaraokeMode ? 'aspect-video' : ''} px-4 lg:px-0`}
                 >
-                    <div className="relative w-full">
+                    <div className="relative w-full h-full rounded-3xl overflow-hidden" style={{ containerType: 'inline-size' }}>
                         <YouTubePlayer
                             videoId={id}
                             onVideoData={async (data) => {
@@ -297,7 +297,7 @@ export default function PlayerPage() {
                     </div>
                 </div>
 
-                <div className="flex-1 min-h-0 flex flex-col gap-4 lg:overflow-y-auto pb-4 scrollbar-hide">
+                <div className="flex-1 min-h-0 flex flex-col gap-4 lg:overflow-y-auto pb-4 scrollbar-hide px-4 lg:px-0">
                     {/* Hide controls/mini-lyrics in Karaoke Mode */}
                     {!isKaraokeMode && (
                         <>
@@ -308,7 +308,7 @@ export default function PlayerPage() {
                 </div>
             </div>
 
-            <div className="lg:col-span-5 relative lg:h-full lg:overflow-hidden">
+            <div className="lg:col-span-5 relative lg:h-full lg:overflow-hidden px-4 lg:px-0">
                 {loading ? (
                     <div className="flex min-h-[300px] lg:h-full items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500" />

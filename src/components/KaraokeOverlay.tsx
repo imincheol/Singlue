@@ -9,6 +9,7 @@ export const KaraokeOverlay: React.FC = () => {
         currentSong,
         currentTime,
         userOffset,
+        draftOffset,
         isPlaying,
         setIsPlaying,
         requestSeek,
@@ -64,24 +65,24 @@ export const KaraokeOverlay: React.FC = () => {
     // Helper: Calculate font size in vmin based on scale step
     const getFontSize = (step: number, mode: 'normal' | 'fullscreen'): string => {
         if (mode === 'normal') {
-            // Normal: 1..10 -> 2.0vmin .. 6.0vmin
+            // Normal: 1..10 -> 2.0cqi .. 6.0cqi
             const min = 2.0;
             const max = 6.0;
             const size = min + ((step - 1) / 9) * (max - min);
-            return `${size.toFixed(2)}vmin`;
+            return `${size.toFixed(2)}cqi`;
         } else {
-            // Fullscreen: 1..20 -> 4.0vmin .. 16.0vmin
+            // Fullscreen: 1..20 -> 4.0cqi .. 16.0cqi
             const min = 4.0;
             const max = 16.0;
             const size = min + ((step - 1) / 19) * (max - min);
-            return `${size.toFixed(2)}vmin`;
+            return `${size.toFixed(2)}cqi`;
         }
     };
 
     const computedBaseSize = getFontSize(currentScale, isFullscreen ? 'fullscreen' : 'normal');
 
     const globalOffset = currentSong?.global_offset || 0;
-    const totalOffset = globalOffset + userOffset;
+    const totalOffset = globalOffset + userOffset + (draftOffset || 0);
     const syncedTime = currentTime - totalOffset;
 
     useEffect(() => {
@@ -106,15 +107,15 @@ export const KaraokeOverlay: React.FC = () => {
     if (!currentSong) return null;
 
     return (
-        <div className="absolute bottom-0 left-0 w-full max-h-[60%] flex flex-col z-20 pointer-events-none">
-            {/* Main Content Container (Rounded Top, Pointer Events Auto) */}
-            <div className="flex-1 w-full bg-black/60 backdrop-blur-sm rounded-t-3xl flex flex-col overflow-hidden pointer-events-auto transition-all duration-300">
+        <div className="absolute inset-0 w-full h-full flex flex-col z-overlay pointer-events-none">
+            {/* Main Content Container (Rounded All to match Video Container) */}
+            <div className="flex-1 w-full bg-black/60 backdrop-blur-sm rounded-3xl flex flex-col overflow-hidden pointer-events-auto transition-all duration-300">
 
                 {/* Lyrics Area (z-10) */}
-                <div className="flex-1 min-h-0 flex flex-col items-center justify-center px-8 pb-2 pt-6 relative group/lyrics z-10">
+                <div className="flex-1 min-h-0 flex flex-col items-center justify-center px-8 pb-2 pt-6 relative group/lyrics z-fab">
 
                     {/* View Toggles (Floating Top Right within Lyrics Area) */}
-                    <div className="absolute top-4 right-6 flex gap-2 opacity-0 group-hover/lyrics:opacity-100 transition-opacity duration-300 bg-black/40 p-1.5 rounded-full backdrop-blur-md z-30 pointer-events-auto">
+                    <div className="absolute top-4 right-6 flex gap-2 opacity-0 group-hover/lyrics:opacity-100 transition-opacity duration-300 bg-black/40 p-1.5 rounded-full backdrop-blur-md z-tooltip pointer-events-auto">
                         <button
                             onClick={() => setShowNextLine(!showNextLine)}
                             className={clsx("w-8 h-8 rounded-full flex items-center justify-center transition-colors", showNextLine ? "bg-white text-black" : "bg-white/10 text-white/50")}
@@ -193,14 +194,14 @@ export const KaraokeOverlay: React.FC = () => {
 
                         </div>
                     ) : (
-                        <div className="text-white/30 italic text-[2vmin]">
+                        <div className="text-white/30 italic text-[2cqi]">
                             ...
                         </div>
                     )}
                 </div>
 
-                {/* Controls Area (z-50 High-Z to prevent overlapping issues from large text) */}
-                <div className="h-[70px] w-full flex flex-col justify-end px-6 pb-5 shrink-0 bg-gradient-to-t from-black/20 to-transparent relative z-50">
+                {/* Controls Area (z-gnb High-Z to prevent overlapping issues from large text) */}
+                <div className="h-[70px] w-full flex flex-col justify-end px-6 pb-5 shrink-0 bg-gradient-to-t from-black/20 to-transparent relative z-gnb">
                     <div className="flex items-center gap-4 w-full">
 
                         {/* Playback Controls */}

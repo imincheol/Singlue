@@ -58,7 +58,7 @@ const UserDropdown = ({ user, profile, signOut }: { user: any, profile: any, sig
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-lg py-1 z-50">
+        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-lg py-1 z-dropdown">
           <div className="px-4 py-2 border-b border-zinc-100 dark:border-zinc-800">
             <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</p>
           </div>
@@ -93,15 +93,14 @@ const UserDropdown = ({ user, profile, signOut }: { user: any, profile: any, sig
 function App() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { user, profile, isAdmin, isLoading } = useAuth();
+  const { user, profile, isAdmin, isLoading, signOut } = useAuth();
   const [isChangelogOpen, setIsChangelogOpen] = useState(false);
-
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-white font-sans selection:bg-indigo-500/30">
       <ChangelogModal isOpen={isChangelogOpen} onClose={() => setIsChangelogOpen(false)} />
       {/* Header */}
-      <header className="relative w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-white/5">
+      <header className="relative w-full z-gnb bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center space-x-2 cursor-pointer">
@@ -158,7 +157,7 @@ function App() {
                   {t('nav.signin')}
                 </Link>
               ) : (
-                <UserDropdown user={user} profile={profile} signOut={useAuth().signOut} />
+                <UserDropdown user={user} profile={profile} signOut={signOut} />
               )}
 
               <ThemeToggle />
@@ -170,7 +169,7 @@ function App() {
               profile={profile}
               isAdmin={isAdmin}
               isLoading={isLoading}
-              signOut={useAuth().signOut}
+              signOut={signOut}
             />
           </div>
         </div>
