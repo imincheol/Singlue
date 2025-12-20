@@ -1,36 +1,38 @@
 {
-    "__CONSTRAINT__": "� 작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
-    "order_id": "YYYYMMDD_SEQ",
-    "title": "Task Title",
-    "type": "FEATURE | BUGFIX | REFACTOR | DOCS",
+    "__CONSTRAINT__": "작성 후 즉시 정지(STOP). 사용자가 'APPROVED'할 때까지 절대 진행하지 마시오.",
+    "order_id": "YYYYMMDD_SEQ_TaskName",
+    "type": "FEATURE | BUGFIX | REFACTOR | CHORE",
     "status": "DRAFT",
-    "created_at": "YYYY-MM-DD HH:mm:ss",
+    "created_at": "YYYY-MM-DD HH:mm:00",
     "context": {
-        "request_summary": "",
-        "related_docs": [
-            "docs/specs/1_planning/features.md"
-        ]
+        "request_summary": "사용자의 요청 사항 요약",
+        "related_history_tags": [
+            "#tag1",
+            "#tag2"
+        ],
+        "atlas_guide": "ATLAS.md에서 확인한 연관 지식/문서 경로"
     },
     "reviews": {
         "1_planning": {
-            "check": "docs/specs/1_planning 참조",
-            "comment": "기획 의도 및 정책 분석"
+            "check": "기획/정책 위반 여부 확인",
+            "comment": ""
         },
         "2_design": {
-            "check": "docs/specs/2_design 참조",
-            "comment": "UI/UX 레이아웃 및 디자인 자산 분석"
+            "check": "UI/UX 디자인 가이드 준수 여부",
+            "comment": ""
         },
         "3_markup": {
-            "check": "docs/specs/3_markup 참조",
-            "comment": "HTML 구조, 접근성, 테마(CSS) 전략"
+            "check": "기존 CSS/구조 영향도 파악",
+            "comment": ""
         },
         "4_development": {
-            "check": "docs/specs/4_development 참조",
-            "comment": "API, 상태 관리, 컴포넌트 로직 분석"
+            "check": "데이터 구조 및 로직 영향도 파악",
+            "comment": ""
         }
     },
-    "plan_specs": [
-        "작업 전 업데이트할 문서 목록"
-    ],
-    "requirements": []
+    "requirements": [
+        "요구사항 1",
+        "요구사항 2",
+        "요구사항 3"
+    ]
 }

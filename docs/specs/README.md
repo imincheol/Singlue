@@ -3,7 +3,7 @@
 이 프로젝트의 문서는 **관심사의 분리(Separation of Concerns)** 원칙에 따라 5단계 레이어로 구성됩니다.
 AI와 개발자는 작업 시 해당 관점에 맞는 폴더와 파일을 찾아 내용을 작성해야 합니다.
 
-## �️ The Structure
+## 🏗️ The Structure
 
 ### 0. Origin (참조 & 원본) - `0_origin/`
 
@@ -45,7 +45,7 @@ AI와 개발자는 작업 시 해당 관점에 맞는 폴더와 파일을 찾아
 
 ---
 
-## � Dependency Rule (의존성 규칙)
+## 🔄 Dependency Rule (의존성 규칙)
 
 **"상류(Upstream)가 맑아야 하류(Downstream)가 맑다."**
 

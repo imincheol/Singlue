@@ -1,27 +1,23 @@
 {
-    "__CONSTRAINT__": "� 작업 완료 시 status를 'REVIEW_REQUIRED'로 변경하고 멈추시오. (Report 생성 금지)",
+    "order_id": "YYYYMMDD_SEQ_TaskName",
     "status": "IN_PROGRESS",
-    "order_id": "YYYYMMDD_SEQ",
-    "current_step": "Initializing",
-    "last_updated": "YYYY-MM-DD HH:mm:ss",
-    "constraints_mirror": {
-        "reviews": "Order의 reviews 내용을 여기에 복사하여 작업 내내 참고하시오.",
-        "requirements": "Order의 requirements 내용을 여기에 복사하시오."
-    },
-    "todo_list": [
-        {
-            "task": "스펙 문서 업데이트",
-            "status": "TODO"
-        },
-        {
-            "task": "코드 구현",
-            "status": "TODO"
-        }
+    "last_updated": "YYYY-MM-DD HH:mm:00",
+    "constraints_mirror": [
+        "Order의 requirements 항목을 여기에 복사하여 작업 내내 잊지 않도록 하십시오."
     ],
+    "tasks": {
+        "todo": [
+            "세부 작업 항목 1",
+            "세부 작업 항목 2"
+        ],
+        "in_progress": [],
+        "done": []
+    },
     "logs": [
         {
-            "timestamp": "...",
-            "message": "Task started"
+            "timestamp": "YYYY-MM-DD HH:mm:00",
+            "action": "작업 시작",
+            "details": "Order 내용을 확인하고 관련 파일 분석 시작"
         }
     ]
 }
