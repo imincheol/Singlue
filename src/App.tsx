@@ -13,8 +13,9 @@ import { Headphones, Loader2, Settings as SettingsIcon, LogOut, ChevronDown, Bel
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { MobileMenu } from './components/MobileMenu';
 import { ThemeToggle } from './components/ThemeToggle';
+import { Dropdown } from './components/ui/Dropdown';
 import { useTranslation } from 'react-i18next';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import pkg from '../package.json';
 import { useAuth } from './contexts/AuthContext';
 import { ChangelogModal } from './components/ChangelogModal';
@@ -34,59 +35,39 @@ const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.Re
 
 const UserDropdown = ({ user, profile, signOut }: { user: any, profile: any, signOut: () => void }) => {
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors"
+    <Dropdown
+      trigger={
+        <button className="flex items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+          <span>{profile?.nickname || user.email?.split('@')[0] || 'User'}</span>
+          <ChevronDown className="w-4 h-4" />
+        </button>
+      }
+      dropdownClassName="w-48 py-1"
+    >
+      <div className="px-4 py-2 border-b border-zinc-100 dark:border-zinc-800">
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</p>
+      </div>
+
+      <Link
+        to="/settings"
+        className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
       >
-        <span>{profile?.nickname || user.email?.split('@')[0] || 'User'}</span>
-        <ChevronDown className="w-4 h-4" />
-      </button>
+        <SettingsIcon className="w-4 h-4" />
+        {t('nav.settings')}
+      </Link>
 
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-lg py-1 z-dropdown">
-          <div className="px-4 py-2 border-b border-zinc-100 dark:border-zinc-800">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</p>
-          </div>
-
-          <Link
-            to="/settings"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-          >
-            <SettingsIcon className="w-4 h-4" />
-            {t('nav.settings')}
-          </Link>
-
-          <div className="border-t border-zinc-100 dark:border-zinc-800 mt-1">
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                signOut();
-              }}
-              className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left"
-            >
-              <LogOut className="w-4 h-4" />
-              {t('nav.signout')}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+      <div className="border-t border-zinc-100 dark:border-zinc-800 mt-1">
+        <button
+          onClick={signOut}
+          className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
+          {t('nav.signout')}
+        </button>
+      </div>
+    </Dropdown>
   );
 };
 
@@ -100,8 +81,8 @@ function App() {
     <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-white font-sans selection:bg-indigo-500/30">
       <ChangelogModal isOpen={isChangelogOpen} onClose={() => setIsChangelogOpen(false)} />
       {/* Header */}
-      <header className="relative w-full z-gnb bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-0 w-full z-toast bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-white/5 overflow-visible">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between overflow-visible">
           <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center space-x-2 cursor-pointer">
               <div className="bg-indigo-600 p-2 rounded-lg">
@@ -125,9 +106,9 @@ function App() {
             </button>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-6">
+          <div className="flex items-center gap-3 sm:gap-6 overflow-visible">
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-6 overflow-visible">
               <Link
                 to="/library"
                 className={`text-sm font-medium transition-colors ${location.pathname === '/library'
